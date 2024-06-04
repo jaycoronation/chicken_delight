@@ -15,3 +15,4 @@ String dashboardUrl = "dashboard";
 String orderListUrl = "outwardorder/list";
 String notificationUrl = "";
 
+String itemList = "rawitems/list";

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import '../constant/colors.dart';
+import '../screens/AddOrderScreen.dart';
 import '../screens/DashboardPage.dart';
 import '../screens/OrderListPage.dart';
 import '../utils/app_utils.dart';
@@ -23,7 +24,7 @@ class _TabNavigationPageState extends State<TabNavigation> {
   static final List<Widget> _pages = <Widget>[
     const DashboardPage(),
     Container(),
-    Container(),//AddProductPage("", "", false),
+    AddOrderScreen(),
     const OrderListPage(),
     Container()
   ];
@@ -138,13 +139,13 @@ class _TabNavigationPageState extends State<TabNavigation> {
                               else if (value == 2)//&& isAddProductPage)
                                   {
                                 print("AddProductPage------------------------>");
-                                //Navigator.push(context, MaterialPageRoute(builder: (context) => const AddProductPage("", "", false)));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => AddOrderScreen()));
 
                                 setState(() {
                                   isOrderListSearch = false;
-                                  // _currentIndex = 0;
-                                  // _pages.removeAt(2);
-                                  // _pages.insert(2, AddProductPage("", "", false, key: UniqueKey()));
+                                  _currentIndex = 0;
+                                  _pages.removeAt(2);
+                                  _pages.insert(2, AddOrderScreen());
                                 });
                               }
                               else if (value == 3 && isOrderListLoad)
