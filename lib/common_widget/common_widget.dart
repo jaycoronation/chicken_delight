@@ -8,15 +8,15 @@ Widget getBackArrow() {
     margin: const EdgeInsets.only(top: 4,bottom: 4),
     child: Padding(
       padding: const EdgeInsets.only(left: 18.0),
-      child: Image.asset('assets/images/ic_Left_Arrow.png', width: 22, height: 22,color: black,),
+      child: Image.asset('assets/images/ic_back_white.png', width: 22, height: 22,color: black,),
     ),
   );
 }
 
-Widget getBackArrowWhite() {
+Widget getBackArrowBlack() {
   return Container(
     alignment: Alignment.center,
-    child: Image.asset('assets/images/ic_Left_Arrow.png', color: white, height: 28, width: 28),
+    child: Image.asset('assets/images/ic_back_white.png', color: black, height: 28, width: 28),
   );
 }
 
@@ -24,13 +24,13 @@ Widget getTitle(String title) {
   return Text(
     title,
     textAlign: TextAlign.center,
-    style: getAppBarBlackTitleStyle(),
+    style: getAppBarTitleStyle(),
   );
 }
 
 PreferredSizeWidget getMyAppBar(BuildContext context,{String title = '', bool isLeadingVisible = true}) {
   return AppBar(
-    backgroundColor: appBg,
+    backgroundColor: appBG,
     titleSpacing: 0,
     centerTitle: true,
     leading: isLeadingVisible ? GestureDetector(

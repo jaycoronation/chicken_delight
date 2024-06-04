@@ -2,9 +2,7 @@
 import 'dart:convert';
 
 import 'package:chicken_delight/model/common/CommonResponseModel.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import '../common_widget/common_widget.dart';
@@ -15,8 +13,8 @@ import '../utils/app_utils.dart';
 import '../utils/base_class.dart';
 
 class OrderDetailScreen extends StatefulWidget {
-
-  const OrderDetailScreen( {super.key});
+  final String orderId;
+  const OrderDetailScreen(this.orderId, {super.key});
 
   @override
   BaseState<OrderDetailScreen> createState() => _OrderDetailScreenState();
@@ -39,29 +37,36 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
   String paymentStatus = "";
   String orderNumber = "";
   String status = "";
+  String orderId = "";
+
 
   @override
-  void initState(){
+  void initState() {
+    orderId = (widget as OrderDetailScreen).orderId.toString();
+
     getOrderDetail();
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
+        onWillPop: () {
+         Navigator.pop(context);
+         return Future.value(true);
+        },
         child: Scaffold(
           backgroundColor: chicken_bg,
           appBar:AppBar(
             toolbarHeight: kToolbarHeight,
             automaticallyImplyLeading: false,
-            title: getTitle("Notifications"),
+            title: getTitle("Order Detail"),
             leading: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  Navigator.pop(context,null);
+                  Navigator.pop(context);
                 },
-                // child:getBackArrowBlack()
+                child:getBackArrowBlack()
             ),
             centerTitle: true,
             elevation: 0,
@@ -145,7 +150,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                           child: GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: (){
-                              makePaymnetDialog();
+                              makePaymentDialog();
                             },
                             child: Container(
                               alignment: Alignment.center,
@@ -383,10 +388,6 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
             ),
           ),
         ),
-      onWillPop: () {
-        Navigator.pop(context);
-        return Future.value(true);
-      },
     );
   }
 
@@ -395,94 +396,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
    widget is OrderDetailScreen;
   }
 
-
-  _saveOrder(String orderStatus) async {
-    setState(() {
-      isLoading = true;
-    });
-
-    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.BODY),
-    ]);
-
-    final url = Uri.parse(MAIN_URL + orderSave);
-    Map<String, String> jsonBody = {
-
-    };
-    if(orderStatus == "Completed")
-      {
-         jsonBody = {
-          'id': "14",
-          'payment_status': orderStatus
-        };
-      }
-    else
-      {
-        jsonBody = {
-          'id': "14",
-          'order_stages': orderStatus,
-          'remarks': remarksController.value.text,
-        };
-      }
-
-    final response = await http.post(url, body: jsonBody);
-    final statusCode = response.statusCode;
-    print(response);
-    final body = response.body;
-    Map<String, dynamic> user = jsonDecode(body);
-    var dataResponse = CommonResponseModel.fromJson(user);
-
-    if (statusCode == 200 && dataResponse.success == 1) {
-      setState(() {
-        isLoading = false;
-      });
-      Navigator.pop(context,"success");
-    } else {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  _deleteOrder() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.BODY),
-    ]);
-
-    final url = Uri.parse(MAIN_URL + orderDelete);
-
-    Map<String, String> jsonBody = {
-      'id': "14",
-      'remarks': cancelRemarksController.value.text,
-    };
-
-    final response = await http.post(url, body: jsonBody);
-
-    final statusCode = response.statusCode;
-    print(response);
-    final body = response.body;
-    Map<String, dynamic> user = jsonDecode(body);
-    var dataResponse = CommonResponseModel.fromJson(user);
-
-    if (statusCode == 200 && dataResponse.success == 1) {
-      setState(() {
-        isLoading = false;
-      });
-      Navigator.pop(context);
-    }
-    else {
-      setState(() {
-        isLoading = false;
-      });
-
-    }
-  }
-
-  makePaymnetDialog() async {
+  makePaymentDialog() async {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: white,
@@ -524,7 +438,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                                 left: 12, right: 12, bottom: 30, top: 30),
                             child: TextButton(
                               onPressed: () {
-                                _saveOrder("Completed");
+                                saveOrder("Completed");
                               },
                               style: ButtonStyle(
                                 shape: MaterialStateProperty.all<
@@ -680,7 +594,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                                 left: 12, right: 12, bottom: 30, top: 30),
                             child: TextButton(
                               onPressed: () {
-                                _saveOrder("Processed");
+                                saveOrder("Processed");
                               },
                               style: ButtonStyle(
                                 shape: MaterialStateProperty.all<
@@ -835,7 +749,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                                 left: 12, right: 12, bottom: 30, top: 30),
                             child: TextButton(
                               onPressed: () {
-                                _deleteOrder();
+                                deleteOrder();
                               },
                               style: ButtonStyle(
                                 shape: MaterialStateProperty.all<
@@ -913,50 +827,161 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
     );
   }
 
-  getOrderDetail() async {
-    setState(() {
-      isLoading = true;
-    });
+  // API Call func...
 
-    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.BODY),
-    ]);
-
-    final url = Uri.parse(MAIN_URL + orderDetail);
-    Map<String, String> jsonBody = {
-      'id': "11",
-    };
-
-    final response = await http.post(url, body: jsonBody, headers:  {"Authorization": sessionManager.getToken().toString().trim()});
-
-    final statusCode = response.statusCode;
-
-    final body = response.body;
-    Map<String, dynamic> user = jsonDecode(body);
-    var dataResponse = OrderDetailResponseModel.fromJson(user);
-
-    if (statusCode == 200 && dataResponse.success == 1)
+  saveOrder(String orderStatus) async {
+    if (isOnline)
     {
-      isLoading = false;
-      listItems = dataResponse.record?.itemsList ?? [];
-      subTotal = dataResponse.record?.subTotal ?? "";
-      grandTotal = dataResponse.record?.grandTotal ?? "";
-      wareAddressLine1 = dataResponse.record?.wareAddressLine1 ?? "";
-      warehouseName = dataResponse.record?.warehouseName ?? "";
-      addressLine1 = dataResponse.record?.addressLine1 ?? "";
-      addressLine2 = dataResponse.record?.addressLine2 ?? "";
-      franchiseName = dataResponse.record?.franchiseName ?? "";
-      paymentStatus = dataResponse.record?.paymentStatus ?? "";
-      orderNumber = dataResponse.record?.orderNumber ?? "";
-      status = dataResponse.record?.status ?? "";
+      setState(() {
+        isLoading = true;
+      });
+
+      HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+        HttpLogger(logLevel: LogLevel.BODY),
+      ]);
+
+      final url = Uri.parse(MAIN_URL + orderSave);
+      Map<String, String> jsonBody = {
+
+      };
+      if(orderStatus == "Completed")
+      {
+        jsonBody = {
+          'id': "14",
+          'payment_status': orderStatus
+        };
+      }
+      else
+      {
+        jsonBody = {
+          'id': "14",
+          'order_stages': orderStatus,
+          'remarks': remarksController.value.text,
+        };
+      }
+
+      final response = await http.post(url, body: jsonBody);
+      final statusCode = response.statusCode;
+      print(response);
+      final body = response.body;
+      Map<String, dynamic> user = jsonDecode(body);
+      var dataResponse = CommonResponseModel.fromJson(user);
+
+      if (statusCode == 200 && dataResponse.success == 1) {
+        setState(() {
+          isLoading = false;
+        });
+        Navigator.pop(context,"success");
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
     else
     {
-      showSnackBar(dataResponse.message.toString(), context);
+      noInternetSnackBar(context);
     }
-    setState(() {
-      isLoading = false;
-    });
+
+  }
+
+  deleteOrder() async {
+    if (isOnline)
+    {
+      setState(() {
+        isLoading = true;
+      });
+
+      HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+        HttpLogger(logLevel: LogLevel.BODY),
+      ]);
+
+      final url = Uri.parse(MAIN_URL + orderDelete);
+
+      Map<String, String> jsonBody = {
+        'id': "14",
+        'remarks': cancelRemarksController.value.text,
+      };
+
+      final response = await http.post(url, body: jsonBody);
+
+      final statusCode = response.statusCode;
+      print(response);
+      final body = response.body;
+      Map<String, dynamic> user = jsonDecode(body);
+      var dataResponse = CommonResponseModel.fromJson(user);
+
+      if (statusCode == 200 && dataResponse.success == 1) {
+        setState(() {
+          isLoading = false;
+        });
+        Navigator.pop(context);
+      }
+      else {
+        setState(() {
+          isLoading = false;
+        });
+
+      }
+    }
+    else
+    {
+      noInternetSnackBar(context);
+    }
+
+  }
+
+  getOrderDetail() async {
+    if (isOnline) {
+      setState(() {
+        isLoading = true;
+      });
+
+      HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+        HttpLogger(logLevel: LogLevel.BODY),
+      ]);
+
+      final url = Uri.parse(MAIN_URL + orderDetail);
+      Map<String, String> jsonBody = {
+        'id': orderId,
+      };
+
+      final response = await http.post(url, body: jsonBody, headers:  {"Authorization": sessionManager.getToken().toString().trim()});
+
+      final statusCode = response.statusCode;
+
+      final body = response.body;
+      Map<String, dynamic> user = jsonDecode(body);
+      var dataResponse = OrderDetailResponseModel.fromJson(user);
+
+      if (statusCode == 200 && dataResponse.success == 1)
+      {
+        isLoading = false;
+        listItems = dataResponse.record?.itemsList ?? [];
+        subTotal = dataResponse.record?.subTotal ?? "";
+        grandTotal = dataResponse.record?.grandTotal ?? "";
+        wareAddressLine1 = dataResponse.record?.wareAddressLine1 ?? "";
+        warehouseName = dataResponse.record?.warehouseName ?? "";
+        addressLine1 = dataResponse.record?.addressLine1 ?? "";
+        addressLine2 = dataResponse.record?.addressLine2 ?? "";
+        franchiseName = dataResponse.record?.franchiseName ?? "";
+        paymentStatus = dataResponse.record?.paymentStatus ?? "";
+        orderNumber = dataResponse.record?.orderNumber ?? "";
+        status = dataResponse.record?.status ?? "";
+      }
+      else
+      {
+        showSnackBar(dataResponse.message.toString(), context);
+      }
+      setState(() {
+        isLoading = false;
+      });
+    }
+    else
+      {
+        noInternetSnackBar(context);
+      }
+
   }
 
 }

@@ -1,7 +1,6 @@
 
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
@@ -11,8 +10,7 @@ import '../constant/colors.dart';
 import '../model/common/CommonResponseModel.dart';
 import '../utils/app_utils.dart';
 import '../utils/base_class.dart';
-import 'ForgotPwOtpScreen.dart';
-import 'LoginChikenScreen.dart';
+import 'LoginScreen.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   final String email;
@@ -40,10 +38,13 @@ class _ChangePasswordScreenState extends BaseState<ChangePasswordScreen> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
+      onWillPop: () {
+        Navigator.pop(context);
+        return Future.value(true);
+      },
       child: Scaffold(
         backgroundColor: chicken_bg,
         body: Padding(
@@ -173,10 +174,6 @@ class _ChangePasswordScreenState extends BaseState<ChangePasswordScreen> {
           ),
         ),
       ),
-      onWillPop: () {
-        Navigator.pop(context);
-        return Future.value(true);
-      },
     );
   }
 
@@ -187,44 +184,52 @@ class _ChangePasswordScreenState extends BaseState<ChangePasswordScreen> {
 
 
   resetPasswordApi() async {
-    setState(() {
-      isLoading = true;
-    });
+    if (isOnline)
+      {
+        setState(() {
+          isLoading = true;
+        });
 
-    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.BODY),
-    ]);
+        HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+          HttpLogger(logLevel: LogLevel.BODY),
+        ]);
 
-    final url = Uri.parse(MAIN_URL + resetPw);
+        final url = Uri.parse(MAIN_URL + resetPw);
 
-    Map<String, String> jsonBody = {
-    'email':email,
-    'password': passwordController.value.text,
-    'confirm_password': confirmController.value.text,
-    };
+        Map<String, String> jsonBody = {
+          'email':email,
+          'password': passwordController.value.text,
+          'confirm_password': confirmController.value.text,
+        };
 
 
-    final response = await http.post(url, body: jsonBody);
+        final response = await http.post(url, body: jsonBody);
 
-    final statusCode = response.statusCode;
+        final statusCode = response.statusCode;
 
-    final body = response.body;
-    Map<String, dynamic> user = jsonDecode(body);
-    var loginResponse = CommonResponseModel.fromJson(user);
+        final body = response.body;
+        Map<String, dynamic> user = jsonDecode(body);
+        var loginResponse = CommonResponseModel.fromJson(user);
 
-    if (statusCode == 200 && loginResponse.success == 1) {
-      setState(() {
-        isLoading = false;
-      });
+        if (statusCode == 200 && loginResponse.success == 1) {
+          setState(() {
+            isLoading = false;
+          });
+          showSnackBar(loginResponse.message, context);
+          startActivity(context,  LoginScreen());
 
-      Navigator.push(context, MaterialPageRoute(builder: (context) => LoginChikenScreen()));
+        } else {
+          setState(() {
+            isLoading = false;
+          });
+          showSnackBar(loginResponse.message, context);
+        }
+      }
+    else
+      {
+        noInternetSnackBar(context);
+      }
 
-    } else {
-      setState(() {
-        isLoading = false;
-      });
-      showSnackBar(loginResponse.message, context);
-    }
   }
 
 }

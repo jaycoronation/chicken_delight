@@ -1,7 +1,6 @@
 
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
@@ -35,6 +34,10 @@ class _ForgotPwOtpScreenState extends BaseState<ForgotPwOtpScreen> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
+      onWillPop: () {
+        Navigator.pop(context);
+        return Future.value(true);
+      },
       child: Scaffold(
         backgroundColor: chicken_bg,
         body: Padding(
@@ -111,7 +114,7 @@ class _ForgotPwOtpScreenState extends BaseState<ForgotPwOtpScreen> {
                           }
                           else
                           {
-                            forgOtPasswordApi();
+                            forgotPasswordApi();
                           }
                         }
                       }),
@@ -123,10 +126,6 @@ class _ForgotPwOtpScreenState extends BaseState<ForgotPwOtpScreen> {
           ),
         ),
       ),
-      onWillPop: () {
-        Navigator.pop(context);
-        return Future.value(true);
-      },
     );
   }
 
@@ -136,44 +135,52 @@ class _ForgotPwOtpScreenState extends BaseState<ForgotPwOtpScreen> {
   }
 
 
-  forgOtPasswordApi() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.BODY),
-    ]);
-
-    final url = Uri.parse(MAIN_URL + forgotPwOtp);
-
-    Map<String, String> jsonBody = {
-      'email':email,
-      'code': otpController.value.text,
-    };
-
-
-    final response = await http.post(url, body: jsonBody);
-
-    final statusCode = response.statusCode;
-
-    final body = response.body;
-    Map<String, dynamic> user = jsonDecode(body);
-    var loginResponse = CommonResponseModel.fromJson(user);
-
-    if (statusCode == 200 && loginResponse.success == 1) {
+  forgotPasswordApi() async {
+    if (isOnline)
+    {
       setState(() {
-        isLoading = false;
+        isLoading = true;
       });
 
-      Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordScreen(email, otpController.value.text)));
+      HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+        HttpLogger(logLevel: LogLevel.BODY),
+      ]);
 
-    } else {
-      setState(() {
-        isLoading = false;
-      });
-      showSnackBar(loginResponse.message, context);
+      final url = Uri.parse(MAIN_URL + forgotPwOtp);
+
+      Map<String, String> jsonBody = {
+        'email':email,
+        'code': otpController.value.text,
+      };
+
+      final response = await http.post(url, body: jsonBody);
+
+      final statusCode = response.statusCode;
+
+      final body = response.body;
+      Map<String, dynamic> user = jsonDecode(body);
+      var loginResponse = CommonResponseModel.fromJson(user);
+
+      if (statusCode == 200 && loginResponse.success == 1) {
+        setState(() {
+          isLoading = false;
+        });
+        showSnackBar(loginResponse.message, context);
+
+        startActivity(context, ChangePasswordScreen(email, otpController.value.text));
+
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        showSnackBar(loginResponse.message, context);
+      }
     }
+    else
+      {
+        noInternetSnackBar(context);
+      }
+
   }
 
 }

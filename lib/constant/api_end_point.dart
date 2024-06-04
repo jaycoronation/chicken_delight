@@ -11,3 +11,7 @@ String orderDetail = "outwardorder/details";
 String orderSave = "outwardorder/save";
 String orderDelete = "outwardorder/delete";
 
+String dashboardUrl = "dashboard";
+String orderListUrl = "outwardorder/list";
+String notificationUrl = "";
+

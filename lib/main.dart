@@ -1,7 +1,9 @@
 import 'dart:async';
 
-import 'package:chicken_delight/screens/LoginChikenScreen.dart';
+import 'package:chicken_delight/screens/LoginScreen.dart';
 import 'package:chicken_delight/screens/OrderDetailScreen.dart';
+import 'package:chicken_delight/screens/DashboardPage.dart';
+import 'package:chicken_delight/tabs/tabnavigation.dart';
 import 'package:chicken_delight/utils/app_utils.dart';
 import 'package:chicken_delight/utils/base_class.dart';
 import 'package:chicken_delight/utils/session_manager_methods.dart';
@@ -71,12 +73,11 @@ class _MyHomePageState extends BaseState<MyHomePage> {
     Timer(const Duration(seconds: 3), () {
       if (sessionManager.checkIsLoggedIn() ?? false)
       {
-       // startActivityAnimationRemove(context, const BottomNavigationBarScreen());
-        startAndRemoveActivity(context, const OrderDetailScreen());
+       startActivityAnimationRemove(context, const TabNavigation(0));
       }
       else
       {
-        startAndRemoveActivity(context, const LoginChikenScreen());
+        startAndRemoveActivity(context, const LoginScreen());
       }
     });
   }

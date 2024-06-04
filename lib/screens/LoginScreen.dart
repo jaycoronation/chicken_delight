@@ -1,33 +1,29 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
+import 'package:chicken_delight/tabs/tabnavigation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import '../common_widget/common_widget.dart';
 import '../constant/api_end_point.dart';
 import '../constant/colors.dart';
 import '../model/LoginResponseModel.dart';
-import '../model/common/CommonResponseModel.dart';
 import '../utils/app_utils.dart';
 import '../utils/base_class.dart';
 import 'ForgotPasswordScreen.dart';
-import 'OrderDetailScreen.dart';
 
-class LoginChikenScreen extends StatefulWidget {
+class LoginScreen extends StatefulWidget {
 
-  const LoginChikenScreen( {super.key});
+  const LoginScreen( {super.key});
 
   @override
-  BaseState<LoginChikenScreen> createState() => _LoginChikenScreenState();
+  BaseState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginChikenScreenState extends BaseState<LoginChikenScreen> {
+class _LoginScreenState extends BaseState<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  bool _isLoading = false;
   bool isLoading = false;
   bool _passwordVisible = true;
 
@@ -139,8 +135,7 @@ class _LoginChikenScreenState extends BaseState<LoginChikenScreen> {
                         child: GestureDetector(
                           behavior: HitTestBehavior.opaque,
                           onTap: (){
-                            // Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPasswordScreen()));
-                            startActivity(context, const OrderDetailScreen());
+                            startActivity(context, const ForgotPasswordScreen());
                           },
                           child: Text('Forgot Password ?',
                               style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500),textAlign: TextAlign.right
@@ -180,52 +175,60 @@ class _LoginChikenScreenState extends BaseState<LoginChikenScreen> {
 
   @override
   void castStatefulWidget() {
-    widget is LoginChikenScreen;
+    widget is LoginScreen;
   }
 
   loginApi() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.BODY),
-    ]);
-
-    final url = Uri.parse(MAIN_URL + login);
-
-    Map<String, String> jsonBody = {
-      'email':emailController.value.text,
-      'password':passwordController.value.text,
-    };
-
-
-    final response = await http.post(url, body: jsonBody);
-
-    final statusCode = response.statusCode;
-
-    final body = response.body;
-    Map<String, dynamic> user = jsonDecode(body);
-    var loginResponse = LoginResponseModel.fromJson(user);
-
-    if (statusCode == 200 && loginResponse.success == 1) {
+    if (isOnline)
+    {
       setState(() {
-        isLoading = false;
+        isLoading = true;
       });
-      await sessionManager.createLoginSession(
-        loginResponse.records?.id  ?? "",
-        loginResponse.records?.name  ?? "",
-        loginResponse.records?.profilePicture  ?? "",
-        loginResponse.records?.token  ?? "",
-      );
-      startActivity(context, const OrderDetailScreen());
 
-    } else {
-      setState(() {
-        isLoading = false;
-      });
-      showSnackBar(loginResponse.message, context);
+      HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+        HttpLogger(logLevel: LogLevel.BODY),
+      ]);
+
+      final url = Uri.parse(MAIN_URL + login);
+
+      Map<String, String> jsonBody = {
+        'email':emailController.value.text,
+        'password':passwordController.value.text,
+      };
+
+      final response = await http.post(url, body: jsonBody);
+
+      final statusCode = response.statusCode;
+
+      final body = response.body;
+      Map<String, dynamic> user = jsonDecode(body);
+      var loginResponse = LoginResponseModel.fromJson(user);
+
+      if (statusCode == 200 && loginResponse.success == 1) {
+        setState(() {
+          isLoading = false;
+        });
+        await sessionManager.createLoginSession(
+          loginResponse.records?.id  ?? "",
+          loginResponse.records?.name  ?? "",
+          loginResponse.records?.profilePicture  ?? "",
+          loginResponse.records?.token  ?? "",
+        );
+        startActivity(context, const TabNavigation(0));
+        showSnackBar(loginResponse.message, context);
+
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        showSnackBar(loginResponse.message, context);
+      }
     }
+    else
+    {
+      noInternetSnackBar(context);
+    }
+
   }
 
 

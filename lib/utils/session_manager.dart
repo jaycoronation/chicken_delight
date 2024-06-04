@@ -75,5 +75,4 @@ class SessionManager {
     return SessionManagerMethods.getString(profile_pic);
   }
 
-
 }

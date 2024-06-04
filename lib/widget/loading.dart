@@ -15,9 +15,7 @@ class LoadingWidget extends StatelessWidget {
             children: [
               Expanded(child: Stack(
                 children: [
-                  Center(
-                    child: Image.asset('assets/images/ic_tab_logo_blue.png', height: 32, width: 32,fit : BoxFit.fitWidth,alignment: Alignment.center,),
-                  ),
+                  Center(child: Image.asset('assets/images/ic_chicken_logo.jpg', height: 32, width: 32,fit : BoxFit.fitWidth,alignment: Alignment.center)),
                   const Center(
                     child: SizedBox(
                         width: 50,
@@ -27,13 +25,8 @@ class LoadingWidget extends StatelessWidget {
                 ],
               )),
               const Center(
-                  child: Text(
-                      "Please wait a moment...",
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400,
-                      color: primaryColor)
-                  )
+                  child: Text("Please wait a moment...",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: primaryColor))
               )
             ],
           ),
