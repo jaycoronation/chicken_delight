@@ -41,9 +41,9 @@ class SessionManagerMethods {
   //deletes..
   static Future<bool?> remove(String key) async => await _prefs?.remove(key);
 
-  static Future<bool?> clear() async{
-    SessionManager().setIsDeviceRegistered(SessionManager().getIsDeviceRegistered() ?? false);
-    await _prefs?.clear();
-  }
+  // static Future<bool?> clear() async{
+  //   SessionManager().setIsDeviceRegistered(SessionManager().getIsDeviceRegistered() ?? false);
+  //   await _prefs?.clear();
+  // }
 
 }

@@ -16,6 +16,11 @@ const Color text_disabled = Color(0xffBDBDBD);
 const Color bg_gray = Color(0xff10666666);
 const Color grayNew = Color(0xffECECEC);
 const Color lableHint= Color(0xff3A3A3A);
+const Color chicken_bg= Color(0xffF2F7FB);
+const Color grayDividerDetail = Color(0xffb9b7bb);
+const Color gray_dark = Color(0xff797c79);
+
+
 
 
 const Color bg_sunday= Color(0xffb0e1df);
@@ -37,16 +42,6 @@ double largeTextSize = 26.0;
 double kSearchBarCornerRadius = 8.0;
 
 
-double largeFont = 28;
-double title = 24;
-double titleFont = 22;
-double subTitleFont = 20;
-double medium = 18;
-double subTitle = 17;
-double description = 14;
-double discription = 16;
-double small = 12;
-double kTextFieldCornerRadius = 6;
 
 
 getAppBarTitleStyle() {

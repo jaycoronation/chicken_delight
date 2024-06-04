@@ -1,12 +1,17 @@
 import 'dart:async';
 
+import 'package:chicken_delight/screens/LoginChikenScreen.dart';
+import 'package:chicken_delight/screens/OrderDetailScreen.dart';
 import 'package:chicken_delight/utils/app_utils.dart';
 import 'package:chicken_delight/utils/base_class.dart';
+import 'package:chicken_delight/utils/session_manager_methods.dart';
 import 'package:flutter/material.dart';
 
 import 'constant/colors.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SessionManagerMethods.init();
   runApp(const MyApp());
 }
 
@@ -66,18 +71,12 @@ class _MyHomePageState extends BaseState<MyHomePage> {
     Timer(const Duration(seconds: 3), () {
       if (sessionManager.checkIsLoggedIn() ?? false)
       {
-       // startActivityAnimationRemove(context, const DashboardNewScreen());
+       // startActivityAnimationRemove(context, const BottomNavigationBarScreen());
+        startAndRemoveActivity(context, const OrderDetailScreen());
       }
       else
       {
-        if (sessionManager.getIsDeviceRegistered() ?? false)
-        {
-          //startAndRemoveActivity(context, const LoginWithEmpCodeScreen());
-        }
-        else
-        {
-         // startAndRemoveActivity(context, const LoginWithOtpScreen());
-        }
+        startAndRemoveActivity(context, const LoginChikenScreen());
       }
     });
   }
@@ -94,8 +93,8 @@ class _MyHomePageState extends BaseState<MyHomePage> {
           ),
         ),*/
         child: Image.asset('assets/images/ic_chicken_logo.jpg',
-          height: 100,
-          width: 100,
+          height: 160,
+          width: 160,
         ),
       ),
     );

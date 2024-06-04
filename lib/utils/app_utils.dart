@@ -47,7 +47,7 @@ String greetUser() {
 
 void invalidTokenRedirection(BuildContext? context){
   // showSnackBar('Access Token is expired please login again', context);
-  SessionManagerMethods.clear();
+  // SessionManagerMethods.clear();
  // Navigator.of(context!).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const LoginWithEmpCodeScreen()), (Route<dynamic> route) => false);
 }
 
@@ -604,10 +604,10 @@ void logoutFromApp(BuildContext context) {
                                 backgroundColor: MaterialStateProperty.all<Color>(white)),
                             onPressed: () async {
                               Navigator.pop(context);
-                              SessionManagerMethods.clear();
+                              // SessionManagerMethods.clear();
                               await SessionManagerMethods.init();
                               var sessionManager = SessionManager();
-                              sessionManager.setIsDeviceRegistered(true);
+                              // sessionManager.setIsDeviceRegistered(true);
                            //   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginWithEmpCodeScreen()), (Route<dynamic> route) => false);
                             },
                             child: const Text("Logout", style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16, color: primaryColor)),

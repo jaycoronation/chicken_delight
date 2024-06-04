@@ -8,7 +8,7 @@ Widget getBackArrow() {
     margin: const EdgeInsets.only(top: 4,bottom: 4),
     child: Padding(
       padding: const EdgeInsets.only(left: 18.0),
-      child: Image.asset('assets/images/ic_back_white.png', width: 22, height: 22,color: black,),
+      child: Image.asset('assets/images/ic_Left_Arrow.png', width: 22, height: 22,color: black,),
     ),
   );
 }
@@ -16,7 +16,7 @@ Widget getBackArrow() {
 Widget getBackArrowWhite() {
   return Container(
     alignment: Alignment.center,
-    child: Image.asset('assets/images/ic_back_white.png', color: white, height: 28, width: 28),
+    child: Image.asset('assets/images/ic_Left_Arrow.png', color: white, height: 28, width: 28),
   );
 }
 
@@ -24,7 +24,7 @@ Widget getTitle(String title) {
   return Text(
     title,
     textAlign: TextAlign.center,
-    style: getAppBarTitleStyle(),
+    style: getAppBarBlackTitleStyle(),
   );
 }
 
@@ -164,3 +164,28 @@ double medium = 18;
 double subTitle = 16;
 double description = 14;
 double small = 12;
+
+
+Widget getCommonButtonLoad(String title, bool _isLoading, void Function() onPressed){
+  return TextButton(
+    onPressed: onPressed,
+    style: ButtonStyle(
+      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0)),
+      ),
+      backgroundColor: MaterialStateProperty.all<Color>(black),
+    ),
+    child: _isLoading
+        ? const Padding(
+      padding: EdgeInsets.only(top: 8,bottom: 8),
+      child: SizedBox(width: 16,height: 16,child: CircularProgressIndicator(color: white,strokeWidth: 2)),
+    )
+        : Padding(
+      padding: const EdgeInsets.only(top: 5,bottom: 5),
+      child: Text(
+        title,
+        style: TextStyle(fontSize: subTitle, fontWeight: FontWeight.w500, color: white,),
+      ),
+    ),
+  );
+}
