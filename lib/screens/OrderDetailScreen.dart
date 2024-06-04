@@ -52,22 +52,20 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
     return WillPopScope(
         child: Scaffold(
           backgroundColor: chicken_bg,
-          appBar: AppBar(
-            backgroundColor: chicken_bg,
+          appBar:AppBar(
+            toolbarHeight: kToolbarHeight,
             automaticallyImplyLeading: false,
-            centerTitle: false,
+            title: getTitle("Notifications"),
             leading: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.pop(context,null);
                 },
-                child: getBackArrow()
+                // child:getBackArrowBlack()
             ),
-            titleSpacing: 10,
-            title: getTitle(
-             "Order Detail",
-            ),
+            centerTitle: true,
             elevation: 0,
+            backgroundColor: chicken_bg,
           ),
           body: Padding(
             padding: const EdgeInsets.only(left: 16.0, right: 16),
@@ -645,7 +643,9 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                         textInputAction: TextInputAction.next,
                         textCapitalization: TextCapitalization.words,
                         cursorColor: black,
-                        maxLines: 4,
+                        // maxLines: 4,
+                        maxLength: 10, //Any specific length
+                        maxLines: 2,
                         controller: remarksController,
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
@@ -799,7 +799,8 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                         textInputAction: TextInputAction.next,
                         textCapitalization: TextCapitalization.words,
                         cursorColor: black,
-                        maxLines: 4,
+                        maxLength: 10, //Any specific length
+                        maxLines: 2,
                         controller: cancelRemarksController,
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
