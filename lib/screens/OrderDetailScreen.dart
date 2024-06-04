@@ -459,7 +459,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
 
     Map<String, String> jsonBody = {
       'id': "14",
-      'remarks': "",
+      'remarks': cancelRemarksController.value.text,
     };
 
     final response = await http.post(url, body: jsonBody);
