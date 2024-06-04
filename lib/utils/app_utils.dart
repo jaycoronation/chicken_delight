@@ -249,6 +249,9 @@ String universalDateConverter(String inputDateFormat,String outputDateFormat, St
 }
 
 String getPrice(String str) {
+  return "CA\$ $str";
+}
+String getPriceIn(String str) {
   return "₹ $str";
 }
 

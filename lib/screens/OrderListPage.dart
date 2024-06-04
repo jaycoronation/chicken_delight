@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 
 import 'package:lottie/lottie.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
@@ -46,7 +47,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
 
   bool _isLoadingMore = false;
   int _pageIndex = 0;
-  final int _pageResult = 8;
+  final int _pageResult = 10;
   bool _isLastPage = false;
 
 
@@ -60,6 +61,16 @@ class _OrderListPageState extends BaseState<OrderListPage> {
     "Ship Order",
     "Print Bill"
   ];
+
+  String selectedDateFilter = "All";
+  List<String> dateFilterList = ['All',"Today","Yesterday", "Last 7 Days", "Last 30 Days", "This Month", "Last Month", "Custom Range"];
+
+  String dateStartSelectionChanged = "";
+  String dateEndSelectionChanged = "";
+
+  var strCustomToDate;
+  var strCustomFromDate;
+
 
 
   @override
@@ -94,11 +105,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
       pagination();
 
     });
-    if (isOnline) {
-      getOrderListData(true);
-    } else {
-      noInternetSnackBar(context);
-    }
+    getOrderListData(true);
 
     isOrderListLoad = false;
 
@@ -115,11 +122,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
 
     if(textRefresh == "refreshOrderListData")
     {
-      if (isOnline) {
-        getOrderListData(true);
-      } else {
-        noInternetSnackBar(context);
-      }
+      getOrderListData(true);
 
     }
 
@@ -137,11 +140,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
   }
 
   Future<bool> _refresh() {
-    if (isOnline) {
-      getOrderListData(true);
-    } else {
-      noInternetSnackBar(context);
-    }
+    getOrderListData(true);
     return Future.value(true);
   }
 
@@ -155,6 +154,23 @@ class _OrderListPageState extends BaseState<OrderListPage> {
           automaticallyImplyLeading: false,
           title: getTitle("Order History"),
           actions: [
+            Container(
+              margin: const EdgeInsets.only(top: 11, bottom: 11, right: 22),
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  if (isOnline)
+                  {
+                    showFilterDialog();
+                  }
+                  else
+                  {
+                    noInternetSnackBar(context);
+                  }
+                },
+                child: const Icon(Icons.calendar_today_outlined, color: black, size: 26,),
+              ),
+            ),
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () {
@@ -229,11 +245,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                     orderStatus = checkValidString(orderFilterOption[index].message);
                                   }
 
-                                  if (isOnline) {
-                                    getOrderListData(true);
-                                  } else {
-                                    noInternetSnackBar(context);
-                                  }
+                                  getOrderListData(true);
                                 },
                                 child: Text(orderFilterOption[index].message.toString(),
                                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: orderFilterOption[index].isSelected ?? false
@@ -256,7 +268,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                           ),
                         ),
                         elevation: 0,
-                        child: Container(
+                        child: SizedBox(
                           height: 45,
                           width: double.infinity,
                           child: TextField(
@@ -265,11 +277,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                             textAlign: TextAlign.start,
                             controller: searchController,
                             cursorColor: black,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 16,
-                              color: black,
-                            ),
+                            style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: black),
                             decoration: InputDecoration(
                                 hintText: "Search by order id...",
                                 focusedBorder: OutlineInputBorder(
@@ -277,21 +285,13 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                   borderRadius: BorderRadius.circular(kTextFieldCornerRadius),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                  const BorderSide(color: Colors.transparent, width: 0),
+                                  borderSide: const BorderSide(color: Colors.transparent, width: 0),
                                   borderRadius: BorderRadius.circular(kTextFieldCornerRadius),
                                 ),
-                                hintStyle: const TextStyle(
-                                  fontWeight: FontWeight.w300,
-                                  color: black,
-                                ),
+                                hintStyle: const TextStyle(fontWeight: FontWeight.w300, color: black),
                                 suffixIcon: GestureDetector(
                                   behavior: HitTestBehavior.opaque,
-                                  child: const Icon(
-                                    Icons.close,
-                                    size: 26,
-                                    color: black,
-                                  ),
+                                  child: const Icon(Icons.close, size: 26, color: black),
                                   onTap: () {
                                     setState(() {
                                       isOrderListSearch = false;
@@ -306,7 +306,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                             onChanged: (text) {
                               searchController.text = text;
                               searchController.selection = TextSelection.fromPosition(TextPosition(offset: searchController.text.length));
-                          /*    setState(() {
+                              /*    setState(() {
                                 if (text.isNotEmpty) {
                                   listOrders = [];
                                   for (int i = 0; i < listOrdersMain.length; i++) {
@@ -323,14 +323,13 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                 setState(() {
                                   searchText = "";
                                 });
-
                                 getOrderListData(true);
                               }
-                              else if (text.length > 1) {
+                              else if (text.length > 2) {
                                 setState(() {
                                   searchText = searchController.text.toString().trim();
                                 });
-                                getOrderListData(true);
+                                getOrderListData(true, true);
                               }
                             },
                           ),
@@ -351,7 +350,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
             ? MyNoDataWidget(
           msg: 'No order yet!',
           imageName: "ic-no-order.png",
-          colorCode: Color(0xFF6a89ba),
+          colorCode: const Color(0xFF6a89ba),
           subMsg:"You have currently no orders.\nWe'll notify you when something\nnew arrives!",
           onTap: () {}, btnTitle: '',
         )
@@ -384,11 +383,8 @@ class _OrderListPageState extends BaseState<OrderListPage> {
           orderStatus = checkValidString(orderFilterOption[index].message);
         }
 
-        if (isOnline) {
-          getOrderListData(true);
-        } else {
-          noInternetSnackBar(context);
-        }
+        getOrderListData(true);
+
       },
       itemBuilder: (context, index) {
         return RefreshIndicator(
@@ -417,7 +413,6 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                   child: GestureDetector(
                                     behavior: HitTestBehavior.opaque,
                                     onTap: () async {
-                                      print( checkValidString(listOrders[index].id));
                                       showOrderSummery(context, checkValidString(listOrders[index].id), false);
                                       setState(() {
                                         isOrderListSearch = false;
@@ -436,9 +431,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Visibility(
-                                                  visible: listOrders[index].status == "Payment Pending",
-                                                  child: const Gap(8)),
+                                              const Gap(5),
                                               Row(
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: [
@@ -446,6 +439,17 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                                     mainAxisAlignment: MainAxisAlignment.start,
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
+                                                      Row(
+                                                        children: [
+                                                          const Text("Franchise", textAlign: TextAlign.start,
+                                                            style: TextStyle(fontSize: 12, color: kGray, fontWeight: FontWeight.w600),
+                                                          ),
+                                                          const Gap(8),
+                                                          Text(checkValidString(listOrders[index].createdFor), textAlign: TextAlign.start,
+                                                            style: const TextStyle(fontSize: 13, color: black, fontWeight: FontWeight.w600),
+                                                          ),
+                                                        ],
+                                                      ),
                                                       Row(
                                                         children: [
                                                           const Text("Order Number", textAlign: TextAlign.start,
@@ -474,7 +478,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                                       child: Padding(
                                                         padding: const EdgeInsets.only(top: 6.0, bottom: 6, left: 8, right: 7),
                                                         child: Text(listOrders[index].status.toString(),
-                                                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),),
+                                                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: listOrders[index].status.toString() == "Cancelled" ? Colors.red : Colors.green),),
                                                       ),
                                                     ),
                                                   ),
@@ -482,7 +486,11 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                               ),
                                               const DottedLine(dashLength: 1, dashGapLength: 6, lineThickness: 1, dashRadius: 3, dashColor: kTextDarkGray),
                                               const Gap(5),
-                                              ListView.builder(
+                                              Text(listOrders[index].remarks?.toString() ?? "",
+                                                textAlign: TextAlign.start,
+                                                style: const TextStyle(fontSize: 13, color: black, fontWeight: FontWeight.bold),
+                                              ),
+                                              /*ListView.builder(
                                                   scrollDirection: Axis.vertical,
                                                   shrinkWrap: true,
                                                   primary: false,
@@ -494,7 +502,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                                     crossAxisAlignment: CrossAxisAlignment.center,
                                                     mainAxisAlignment: MainAxisAlignment.center,
                                                     children: [
-                                                     /* Container(
+                                                     *//* Container(
                                                         margin: const EdgeInsets.only(left: 3, top: 8, bottom: 10, right: 10),
                                                         height: 60,
                                                         width: 60,
@@ -513,7 +521,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                                             width: 60,
                                                           ),
                                                         ),
-                                                      ),*/
+                                                      ),*//*
                                                       Expanded(
                                                           child: Column(
                                                         mainAxisAlignment: MainAxisAlignment.center,
@@ -528,19 +536,13 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                                             textAlign: TextAlign.start,
                                                             style: const TextStyle(fontSize: 13, color: kTextDarkGray, fontWeight: FontWeight.w600),
                                                           ),
-                                                          /*Text(
-                                                                "${checkValidString(toDisplayCase(listOrders[index].city.toString()))} ${(
-                                                                    checkValidString(toDisplayCase(listOrders[index].state.toString())))}",
-                                                                textAlign: TextAlign.start,
-                                                                overflow: TextOverflow.clip,
-                                                                style: const TextStyle(fontSize: 13, color: kTextDarkGray, fontWeight: FontWeight.w600),
-                                                              ),*/
+
                                                         ],
                                                       )
                                                       ),
                                                     ],
                                                   )
-                                              ),
+                                              ),*/
                                               Card(
                                                 clipBehavior: Clip.antiAliasWithSaveLayer,
                                                 elevation: 0,
@@ -557,7 +559,6 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                                       Expanded(child: Container(
                                                         margin: const EdgeInsets.only(right: 12),
                                                         child: Text(checkValidString(listOrders[index].timestamp),
-                                                          //(universalDateConverter('MMM d,yyyy h:mm:a', 'dd MMM yyyy', checkValidString(listOrders[index].orderDate)))
                                                           textAlign: TextAlign.start,
                                                           style: const TextStyle(fontSize: 12, color: hintDark, fontWeight: FontWeight.w300),
                                                         ),
@@ -613,6 +614,266 @@ class _OrderListPageState extends BaseState<OrderListPage> {
     );
   }
 
+  void showFilterDialog() {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        backgroundColor: white,
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 12,right: 12,top: 12),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Gap(60),
+                            Column(
+                              children: [
+                                const SizedBox(
+                                    width: 60,
+                                    child: Divider(height: 1.5, thickness: 1.5, color: primaryColor)
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.fromLTRB(14, 10, 14, 12),
+                                  child: const Text("Select Option", style: TextStyle(color: black, fontWeight: FontWeight.bold, fontSize: 15)),
+                                ),
+                              ],
+                            ),
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                Navigator.pop(context);
+
+                                setState(() {
+                                  // selectedFilter = "";
+
+                                  dateStartSelectionChanged = "";
+                                  dateEndSelectionChanged = "";
+
+                                  selectedDateFilter = "All";
+                                  /* listFilter = [];
+                                  getMonthToDate();
+                                  getYearDate();
+
+                                  listFilter.add("Month to date " + "(" + strMonthFromDate + " - " + strMonthToDate +")");
+                                  listFilter.add("Year to date "+ "(" + strYearFromDate + " - " + strYearToDate +")");
+                                  listFilter.add("Custom Range");*/
+                                });
+                                getOrderListData(true);
+
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: lightPrimaryColor,
+                                    border: Border.all(width: 1, color: kLightPurple),
+                                    borderRadius: const BorderRadius.all(Radius.circular(6.0)),
+                                    shape: BoxShape.rectangle
+                                ),
+                                alignment: Alignment.centerRight,
+                                margin: const EdgeInsets.only(top:10, bottom: 5, left: 10, right: 10),
+                                child: const Padding(
+                                  padding: EdgeInsets.all(6.0),
+                                  child: Text("Clear Filter", style: TextStyle(fontWeight: FontWeight.w400, color: primaryColor, fontSize: 14)
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Expanded(child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              ListView.builder(
+                                  itemCount: dateFilterList.length,
+                                  shrinkWrap: true,
+                                  physics: const AlwaysScrollableScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  itemBuilder: (context, index) {
+                                    return Column(
+                                      children: [
+                                        GestureDetector(
+                                          behavior: HitTestBehavior.opaque,
+                                          onTap: () async {
+                                            setState(() {
+                                              // _transactionModeController.text = checkValidString(listFilter[index]);
+                                            });
+
+                                            selectedDateFilter = dateFilterList[index];
+
+                                            if (selectedDateFilter == "All")
+                                            {
+                                              dateStartSelectionChanged = '';
+                                              dateEndSelectionChanged = '';
+                                              getOrderListData(true);
+                                              Navigator.pop(context);
+                                            }
+                                            else if (selectedDateFilter == "Today")
+                                            {
+                                              var now = DateTime.now();
+                                              var formatter = DateFormat('yyyy-MM-dd');
+                                              String formattedDate = formatter.format(now);
+
+                                              dateStartSelectionChanged = formattedDate;
+                                              dateEndSelectionChanged = formattedDate;
+
+                                              getOrderListData(true);
+
+                                              Navigator.pop(context);
+
+                                            }
+                                            else if (selectedDateFilter == "Tomorrow")
+                                            {
+                                              var now = DateTime.now().add(const Duration(days: 1));
+                                              var formatter = DateFormat('yyyy-MM-dd');
+                                              String formattedDate = formatter.format(now);
+
+                                              dateStartSelectionChanged = formattedDate;
+                                              dateEndSelectionChanged = formattedDate;
+
+                                              getOrderListData(true);
+                                              Navigator.pop(context);
+                                            }
+                                            else if (selectedDateFilter == "Yesterday")
+                                            {
+                                              var now = DateTime.now().subtract(const Duration(days: 1));
+                                              var formatter = DateFormat('yyyy-MM-dd');
+                                              String formattedDate = formatter.format(now);
+                                              dateStartSelectionChanged = formattedDate;
+                                              dateEndSelectionChanged = formattedDate;
+
+                                              getOrderListData(true);
+                                              Navigator.pop(context);
+                                            }
+                                            else if (selectedDateFilter == "Last 7 Days")
+                                            {
+                                              var now = DateTime.now().subtract(const Duration(days: 6));
+                                              var formatter = DateFormat('yyyy-MM-dd');
+                                              String formattedDate = formatter.format(now);
+                                              var todayDate = DateTime.now();
+                                              var formatterToday = DateFormat('yyyy-MM-dd');
+                                              String formattedDateToday = formatterToday.format(todayDate);
+                                              dateStartSelectionChanged = formattedDate;
+                                              dateEndSelectionChanged = formattedDateToday;
+
+                                              getOrderListData(true);
+                                              Navigator.pop(context);
+
+                                            }
+                                            else if (selectedDateFilter == "Last 30 Days")
+                                            {
+                                              var now = DateTime.now().subtract(const Duration(days: 30));
+                                              var formatter = DateFormat('yyyy-MM-dd');
+                                              String formattedDate = formatter.format(now);
+                                              var todayDate = DateTime.now();
+                                              var formatterToday = DateFormat('yyyy-MM-dd');
+                                              String formattedDateToday = formatterToday.format(todayDate);
+                                              dateStartSelectionChanged = formattedDate;
+                                              dateEndSelectionChanged = formattedDateToday;
+
+                                              getOrderListData(true);
+                                              Navigator.pop(context);
+
+                                            }
+                                            else if (selectedDateFilter == "This Month")
+                                            {
+                                              var now = DateTime.now();
+                                              var formatter = DateFormat('MMM yyyy');
+                                              String formattedDate = "01 ${formatter.format(now)}";
+                                              var todayDate = DateTime.now();
+                                              var formatterToday = DateFormat('yyyy-MM-dd');
+                                              String formattedDateToday = formatterToday.format(todayDate);
+                                              dateStartSelectionChanged = formattedDate;
+                                              dateEndSelectionChanged = formattedDateToday;
+                                              getOrderListData(true);
+
+                                              Navigator.pop(context);
+                                            }
+                                            else if (selectedDateFilter == "Last Month")
+                                            {
+                                              var formatterToday = DateFormat('yyyy-MM-dd');
+                                              final now = DateTime.now();
+                                              var firstDayOfMonth = DateTime(now.year, now.month, 1);
+                                              var lastDayOfMonth = DateTime(now.year, now.month, 0);
+                                              final nowFinalStart = DateTime.now();
+                                              String formattedDateStart = formatterToday.format(DateTime(nowFinalStart.year, nowFinalStart.month - 1, firstDayOfMonth.day));
+                                              final nowFinalStartEnd = DateTime.now();
+                                              String formattedDateEnd = formatterToday.format(DateTime(nowFinalStartEnd.year, nowFinalStartEnd.month - 1, lastDayOfMonth.day));
+                                              dateStartSelectionChanged = formattedDateStart;
+                                              dateEndSelectionChanged = formattedDateEnd;
+
+                                              getOrderListData(true);
+                                              Navigator.pop(context);
+                                            }
+                                            else if (selectedDateFilter == "Custom Range")
+                                            {
+                                              Navigator.pop(context);
+                                              DateTimeRange? result = await showDateRangePicker(
+                                                  context: context,
+                                                  firstDate: DateTime(1980, 1, 1), // the earliest allowable
+                                                  lastDate: DateTime.now(), // the latest allowable
+                                                  currentDate: DateTime.now(),
+                                                  saveText: 'Done',
+                                                  builder: (context, Widget? child) => Theme(
+                                                    data: ThemeData(
+                                                      colorScheme: const ColorScheme.light(primary: lightPrimaryColor),
+                                                      datePickerTheme: const DatePickerThemeData(
+                                                          rangeSelectionBackgroundColor: lightPrimaryColor),
+                                                      useMaterial3: true,
+                                                    ),
+                                                    child: child!,
+                                                  ));
+
+                                              if (result != null) {
+                                                DateTime? startDate = result.start;
+                                                DateTime? endDate = result.end;
+
+                                                String startDateFormat = DateFormat('yyyy-MM-dd').format(startDate);
+                                                String endDateFormat = DateFormat('yyyy-MM-dd').format(endDate);
+
+                                                dateStartSelectionChanged = startDateFormat;
+                                                dateEndSelectionChanged = endDateFormat;
+
+                                                strCustomFromDate = dateStartSelectionChanged;
+                                                strCustomToDate = dateEndSelectionChanged;
+                                                getOrderListData(true);
+                                              }
+
+                                            }
+
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.only(left: 20, right: 20, top: 8, bottom: 8),
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(checkValidString(dateFilterList[index]),
+                                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: dateFilterList[index] == selectedDateFilter ? primaryColor : black),
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                            margin: const EdgeInsets.only(top: 8, bottom: 8, left: 10, right: 10),
+                                            height: index == dateFilterList.length-1 ? 0 : 0.5, color: kTextLightGray),
+                                      ],
+                                    );
+                                  })
+                            ],
+                          ),
+                        ))
+                      ],
+                    ),
+                  ),
+                );
+              });
+        });
+  }
+
   @override
   void castStatefulWidget() {
     widget is OrderListPage;
@@ -632,74 +893,92 @@ class _OrderListPageState extends BaseState<OrderListPage> {
 
 
   //API call function...
-  void getOrderListData(bool isFirstTime) async {
-    if (isFirstTime) {
-      setState(() {
-        _isLoading = true;
-        _isLoadingMore = false;
-        _pageIndex = 0;
-        _isLastPage = false;
-      });
-    }
-
-    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.BODY),
-    ]);
-
-    final url = Uri.parse(MAIN_URL + orderListUrl);
-    Map<String, String> jsonBody = {
-      'limit': _pageResult.toString(),
-      'page': _pageIndex.toString(),
-      'status': orderStatus,
-      'search': searchText,
-      "total": "2"
-    };
-
-    final response = await http.post(url, body: jsonBody, headers: {
-    "Authorization": sessionManager.getToken().toString(),
-    });
-    final statusCode = response.statusCode;
-
-    final body = response.body;
-    Map<String, dynamic> order = jsonDecode(body);
-    var dataResponse = OrderListResponseModel.fromJson(order);
-
-    if (isFirstTime) {
-      if (listOrders.isNotEmpty) {
-        listOrders = [];
+  void getOrderListData(bool isFirstTime, [bool isFromSearch = false]) async {
+    if (isOnline) {
+      if (isFirstTime) {
+        setState(() {
+          if (isFromSearch)
+            {
+              _isLoadingMore = false;
+              _pageIndex = 0;
+              _isLastPage = false;
+            }
+          else
+            {
+              _isLoading = true;
+              _isLoadingMore = false;
+              _pageIndex = 0;
+              _isLastPage = false;
+            }
+        });
       }
-    }
 
-    if (statusCode == 200 && dataResponse.success == 1) {
-      if (dataResponse.orderList != null) {
-        if (isFirstTime) {
-          if (listOrders.isNotEmpty) {
-            listOrders = [];
-          }
-        }
 
-        List<OrderList>? _tempList = [];
-        _tempList = dataResponse.orderList;
-        listOrders.addAll(_tempList!);
+      HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+        HttpLogger(logLevel: LogLevel.BODY),
+      ]);
 
-        if (_tempList.isNotEmpty) {
-          _pageIndex += 1;
-          if (_tempList.isEmpty || _tempList.length % _pageResult != 0) {
-            _isLastPage = true;
-          }
+      final url = Uri.parse(MAIN_URL + orderListUrl);
+      Map<String, String> jsonBody = {
+        'limit': _pageResult.toString(),
+        'page': _pageIndex.toString(),
+        'status': orderStatus,
+        'search': searchText,
+        "franchise_id": sessionManager.getUserId().toString(),
+        "fromDate": dateStartSelectionChanged, //"2024-06-03"
+        "toDate": dateEndSelectionChanged, //"2024-06-03"
+      };
+
+      final response = await http.post(url, body: jsonBody, headers: {
+        "Authorization": sessionManager.getToken().toString(),
+      });
+      final statusCode = response.statusCode;
+
+      final body = response.body;
+      Map<String, dynamic> order = jsonDecode(body);
+      var dataResponse = OrderListResponseModel.fromJson(order);
+
+      if (isFirstTime) {
+        if (listOrders.isNotEmpty) {
+          listOrders = [];
         }
       }
 
-      setState(() {
-        _isLoading = false;
-        _isLoadingMore = false;
-      });
+      if (statusCode == 200 && dataResponse.success == 1) {
+        if (dataResponse.orderList != null) {
+          if (isFirstTime) {
+            if (listOrders.isNotEmpty) {
+              listOrders = [];
+            }
+          }
+
+          List<OrderList>? _tempList = [];
+          _tempList = dataResponse.orderList;
+          listOrders.addAll(_tempList!);
+
+          if (_tempList.isNotEmpty) {
+            _pageIndex += 1;
+            if (_tempList.isEmpty || _tempList.length % _pageResult != 0) {
+              _isLastPage = true;
+            }
+          }
+        }
+
+        setState(() {
+          _isLoading = false;
+          _isLoadingMore = false;
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+          _isLoadingMore = false;
+        });
+      }
+
     } else {
-      setState(() {
-        _isLoading = false;
-        _isLoadingMore = false;
-      });
+      noInternetSnackBar(context);
     }
+
   }
 
 }

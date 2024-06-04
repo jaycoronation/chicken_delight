@@ -6,6 +6,7 @@ import 'package:chicken_delight/model/DashboardResponseModel.dart';
 import 'package:chicken_delight/screens/LoginScreen.dart';
 import 'package:chicken_delight/screens/OrderDetailScreen.dart';
 import 'package:chicken_delight/utils/app_utils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -65,7 +66,15 @@ class _DashboardPageState extends BaseState<DashboardPage> {
               behavior: HitTestBehavior.opaque,
               onTap: () {
                 logoutFromApp(context);
-               // Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationListPage(true)));
+              },
+              child:const Icon(Icons.logout, color: black, size: 32,),
+
+            ),
+            const Gap(10),
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                startActivity(context,  const NotificationListPage(true));
               },
               child:
               Stack(
@@ -95,9 +104,9 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                         width: 22,
                         alignment: Alignment.centerRight,
                         margin: const EdgeInsets.only(left: 20),
-                        child: Center(
+                        child: const Center(
                           child: Text("0",
-                              style: const TextStyle(fontWeight: FontWeight.w400, color: white, fontSize: 11)),
+                              style: TextStyle(fontWeight: FontWeight.w400, color: white, fontSize: 11)),
                         ),
                       ),
                     ),
@@ -106,7 +115,6 @@ class _DashboardPageState extends BaseState<DashboardPage> {
               ),
             ),
             const Gap(20),
-
           ],
           centerTitle: false,
           elevation: 0,
@@ -154,7 +162,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                                 children: [
                                   Container(
                                     margin: const EdgeInsets.only(left: 22),
-                                    child: const Text("Activity",
+                                    child: const Text("Orders",
                                         style: TextStyle(fontWeight: FontWeight.w800, color: black,fontSize: 20)),
                                   ),
                                   const Gap(12),
@@ -173,11 +181,11 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                                 Container(
                                   alignment: Alignment.topLeft,
                                   margin: const EdgeInsets.only(top:10, bottom: 10, left: 10),
-                                  child: const Text("Analysis", style: TextStyle(fontWeight: FontWeight.w800, color: black,fontSize: 20)),
+                                  child: const Text("Activity", style: TextStyle(fontWeight: FontWeight.w800, color: black,fontSize: 20)),
                                 ),
                                 SizedBox(
                                   width: double.infinity,
-                                  height: 150,
+                                  height: 278,
                                   child: Card(
                                       color: white,
                                       shape: RoundedRectangleBorder(
@@ -203,7 +211,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
   GridView _topCountList() {
     return GridView.builder(
       gridDelegate:
-          const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, mainAxisExtent: 120, crossAxisSpacing: 6, mainAxisSpacing: 6),
+          const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisExtent: 120, crossAxisSpacing: 6, mainAxisSpacing: 10),
       controller: _scrollController,
       itemCount: analysisList.length,
       itemBuilder: (BuildContext context, int index) {
@@ -213,18 +221,10 @@ class _DashboardPageState extends BaseState<DashboardPage> {
             if (analysisList[index].name.toString() == "Products") {
               final BottomNavigationBar bar = bottomWidgetKey.currentWidget as BottomNavigationBar;
               bar.onTap!(1);
-            } else if (analysisList[index].name.toString() == "Categories") {
-              //_categoryList(context);
-            } else if (analysisList[index].name.toString() == "Visits") {
-              //_visitList(context);
             } else if (analysisList[index].name.toString() == "Orders") {
              // _orderList(context);
               final BottomNavigationBar bar = bottomWidgetKey.currentWidget as BottomNavigationBar;
               bar.onTap!(3);
-            } else if (analysisList[index].name.toString() == "Inquiry") {
-              //_inquiryList(context);
-            } else if (analysisList[index].name.toString() == "Customers") {
-              //Navigator.push(context, MaterialPageRoute(builder: (context) => const CustomersListPage()));
             }
           },
           child: Container(
@@ -232,7 +232,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                 color: Color(int.parse(analysisList[index].bgColor.replaceAll('#', '0x'))),
                 borderRadius: const BorderRadius.all(Radius.circular(22))),
             padding: const EdgeInsets.only(left: 10, right: 6, bottom: 10,top: 10),
-            width: double.infinity,
+            width: MediaQuery.of(context).size.width,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -240,19 +240,9 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                 Image.asset(analysisList[index].itemIcon, height: 32, width: 32,),
                 const Gap(12),
                 analysisList[index].name == "Total Amount"
-                ? RichText(
-                  text: TextSpan(
-                    style: Theme.of(context).textTheme.bodyLarge,
-                    children: [
-                      const TextSpan(text: '₹',
-                          style: TextStyle(color: black, fontWeight: FontWeight.w500, fontSize: 12)),
-                      TextSpan(
-                        text: analysisList[index].count.toString(),
-                        style: const TextStyle(color: black, fontWeight: FontWeight.w600, fontSize: 19),
-                      ),
-                    ],
-                  ),
-                )
+                ? Text(getPrice(analysisList[index].count.toString()),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: black, fontWeight: FontWeight.w600, fontSize: 19))
                 : Text(analysisList[index].count.toString(),
                     textAlign: TextAlign.center,
                     style: const TextStyle(color: black, fontWeight: FontWeight.w600, fontSize: 19)),
@@ -263,7 +253,9 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                         child: Text(analysisList[index].name.toString(), textAlign: TextAlign.start,
                         style: const TextStyle(color: black, fontWeight: FontWeight.w500, fontSize: 13))
                     ),
-                    Image.asset('assets/images/ic_right_arrow_new.png', height: 14, width: 14, color: black)
+                    Visibility(
+                        visible: analysisList[index].name != "Total Amount",
+                        child: Image.asset('assets/images/ic_right_arrow_new.png', height: 14, width: 14, color: black))
                   ],
                 )
               ],
@@ -298,7 +290,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Gap(4),
+                    const Gap(6),
                     Container(
                       margin: const EdgeInsets.only(left: 2),
                       alignment: Alignment.center,
@@ -365,7 +357,8 @@ class _DashboardPageState extends BaseState<DashboardPage> {
 
                         ],
                       ),
-                    ))
+                    )),
+                    const Gap(6),
                   ],
                 )),
           );
@@ -477,10 +470,10 @@ class _DashboardPageState extends BaseState<DashboardPage> {
     );
   }
 
-
   // API call function...
   void getDashboardData() async {
-    if (isOnline) {
+    if (isOnline)
+    {
 
       setState(() {
         _isLoading = true;
@@ -492,7 +485,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
 
       final url = Uri.parse(MAIN_URL + dashboardUrl);
       Map<String, String> jsonBody = {
-        'type': "2",
+        'type': sessionManager.getType().toString(),
       };
 
       final response = await http.post(url, body: jsonBody, headers: {
@@ -546,7 +539,9 @@ class _DashboardPageState extends BaseState<DashboardPage> {
         });
       }
 
-    } else {
+    }
+    else
+    {
       setState(() {
         _isLoading = false;
       });

@@ -163,10 +163,10 @@ double titleFont = 22;
 double medium = 18;
 double subTitle = 16;
 double description = 14;
-double small = 12;
+double small = 13;
 
 
-Widget getCommonButtonLoad(String title, bool _isLoading, void Function() onPressed){
+Widget getCommonButtonLoad(String title, bool isLoading, void Function() onPressed){
   return TextButton(
     onPressed: onPressed,
     style: ButtonStyle(
@@ -175,7 +175,7 @@ Widget getCommonButtonLoad(String title, bool _isLoading, void Function() onPres
       ),
       backgroundColor: MaterialStateProperty.all<Color>(black),
     ),
-    child: _isLoading
+    child: isLoading
         ? const Padding(
       padding: EdgeInsets.only(top: 8,bottom: 8),
       child: SizedBox(width: 16,height: 16,child: CircularProgressIndicator(color: white,strokeWidth: 2)),

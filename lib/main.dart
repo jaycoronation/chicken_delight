@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
                 borderSide: const BorderSide(width: 1, style: BorderStyle.solid, color: grayNew)),
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(kEditTextCornerRadius),
-                borderSide: const BorderSide(width: 1, style: BorderStyle.solid, color: lightBrandColor)),
+                borderSide: const BorderSide(width: 1, style: BorderStyle.solid, color: lightPrimaryColor)),
             errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(kEditTextCornerRadius), borderSide: const BorderSide(width: 1, color: grayNew)),
             focusedErrorBorder: OutlineInputBorder(
@@ -46,8 +46,8 @@ class MyApp extends StatelessWidget {
             enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(kEditTextCornerRadius),
                 borderSide: const BorderSide(width: 1, style: BorderStyle.solid, color: grayNew)),
-            labelStyle: const TextStyle(color: lightBrandColor, fontSize: 14, fontWeight: FontWeight.w400),
-            hintStyle: const TextStyle(color: lightBrandColor, fontSize: 14, fontWeight: FontWeight.w400),
+            labelStyle: const TextStyle(color: lightPrimaryColor, fontSize: 14, fontWeight: FontWeight.w400),
+            hintStyle: const TextStyle(color: lightPrimaryColor, fontSize: 14, fontWeight: FontWeight.w400),
           ),
           fontFamily: 'Inter',
           textSelectionTheme: TextSelectionThemeData(selectionColor: primaryColor.withOpacity(0.3)),

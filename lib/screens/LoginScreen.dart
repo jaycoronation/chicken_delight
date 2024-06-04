@@ -208,11 +208,14 @@ class _LoginScreenState extends BaseState<LoginScreen> {
         setState(() {
           isLoading = false;
         });
+
         await sessionManager.createLoginSession(
           loginResponse.records?.id  ?? "",
+          loginResponse.records?.token  ?? "",
+          loginResponse.records?.type  ?? "",
           loginResponse.records?.name  ?? "",
           loginResponse.records?.profilePicture  ?? "",
-          loginResponse.records?.token  ?? "",
+
         );
         startActivity(context, const TabNavigation(0));
         showSnackBar(loginResponse.message, context);

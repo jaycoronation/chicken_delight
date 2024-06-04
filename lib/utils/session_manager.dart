@@ -4,20 +4,18 @@ import 'session_manager_methods.dart';
 
 class SessionManager {
   /*
-  "user_id": "18",
-  "name": "Jay Mistry",
-  "email": "jay.m@coronation.in",
-  "phone": "7433036724",
-  "dob": "04 Jun 2018",
-  "referral_code": "YQB427",
-  "has_login_pin": true,
-  "image": "https://apis.roboadviso.com/assets/uploads/profiles/profile_1626788768_98.jpg"
+  "id": "12",
+        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjEyIiwiQVBJX1RJTUUiOjE3MTc0ODY0ODN9.GHA_QmyuE9K-s2LI8oMMIUWeZ7cMpafzZtHPteps_T0",
+        "type": "2",
+        "name": "John Doe",
+        "profile_picture": "http://192.168.1.91/chicken_delight/api/assets/upload/admin/1717427821_100_3685.JPG"
 */
   final String isLoggedIn = "isLoggedIn";
   final String userId = "id";
-  final String firstName = "name";
-  final String profile_pic = "profile";
   final String token = "token";
+  final String type = "type";
+  final String name = "name";
+  final String profilePicture = "profile_picture";
 
 
   bool? checkIsLoggedIn() {
@@ -29,24 +27,14 @@ class SessionManager {
   }
 
   //set data into shared preferences...
-  Future createLoginSession(String apiUserId,String apiFirstName , String apiProfile_pic, String apiToken, ) async {
+  Future createLoginSession(String apiUserId, String apiToken, String apiType, String apiName, String apiProfilePicture) async {
     await SessionManagerMethods.setBool(isLoggedIn, true);
     await SessionManagerMethods.setString(userId,apiUserId);
-    await SessionManagerMethods.setString(firstName,apiFirstName);
-    await SessionManagerMethods.setString(profile_pic, apiProfile_pic);
-    await SessionManagerMethods.setString(token, apiToken);
+    await SessionManagerMethods.setString(token,apiToken);
+    await SessionManagerMethods.setString(type,apiType);
+    await SessionManagerMethods.setString(name, apiName);
+    await SessionManagerMethods.setString(profilePicture, apiProfilePicture);
   }
-
-
-  Future<void> setToken(String apiToken)
-  async {
-    await SessionManagerMethods.setString(token, apiToken);
-  }
-
-  String? getToken() {
-    return SessionManagerMethods.getString(token);
-  }
-
 
   Future<void> setUserId(String apiUserId)
   async {
@@ -57,22 +45,40 @@ class SessionManager {
     return SessionManagerMethods.getString(userId);
   }
 
-  Future<void> setName(String apiFirstName)
+  Future<void> setToken(String apiToken)
   async {
-    await SessionManagerMethods.setString(firstName, apiFirstName);
+    await SessionManagerMethods.setString(token, apiToken);
+  }
+
+  String? getToken() {
+    return SessionManagerMethods.getString(token);
+  }
+
+  Future<void> setType(String apiType)
+  async {
+    await SessionManagerMethods.setString(type, apiType);
+  }
+
+  String? getType() {
+    return SessionManagerMethods.getString(type);
+  }
+
+  Future<void> setName(String apiName)
+  async {
+    await SessionManagerMethods.setString(name, apiName);
   }
 
   String? getName() {
-    return SessionManagerMethods.getString(firstName);
+    return SessionManagerMethods.getString(name);
   }
 
-  Future<void> setImage(String apiImage)
+  Future<void> setProfilePicture(String apiProfilePicture)
   async {
-    await SessionManagerMethods.setString(profile_pic, apiImage);
+    await SessionManagerMethods.setString(profilePicture, apiProfilePicture);
   }
 
   String? getImagePic() {
-    return SessionManagerMethods.getString(profile_pic);
+    return SessionManagerMethods.getString(profilePicture);
   }
 
 }

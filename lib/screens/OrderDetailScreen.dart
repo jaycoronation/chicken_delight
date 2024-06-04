@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:chicken_delight/model/common/CommonResponseModel.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
@@ -84,7 +85,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Order#${orderNumber}",
+                      Text("Order #$orderNumber",
                           style: TextStyle(fontSize: medium, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
                       ),
                       Text(status,
@@ -104,15 +105,16 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                             },
                             child: Container(
                               alignment: Alignment.center,
-                              margin: const EdgeInsets.only(top: 30, bottom: 10),
+                              margin: const EdgeInsets.only(top: 20, bottom: 10),
                               padding: const EdgeInsets.all(10),
                               width: MediaQuery.of(context).size.width,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.0),
                                 color: black,
                               ),
-                             child: Text("Mark as Processed",
-                                 style: TextStyle(fontSize: small, color: white,fontWeight: FontWeight.w500),textAlign: TextAlign.center
+                             child: Text("Mark as\nProcessed",
+                                 style: TextStyle(fontSize: small, color: white, fontWeight: FontWeight.w600),
+                                 textAlign: TextAlign.center
                              ),
                             ),
                           ),
@@ -129,15 +131,16 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                             },
                             child: Container(
                               alignment: Alignment.center,
-                              margin: const EdgeInsets.only(top: 30, bottom: 10),
+                              margin: const EdgeInsets.only(top: 20, bottom: 10),
                               padding: const EdgeInsets.all(10),
                               width: MediaQuery.of(context).size.width,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.0),
                                 color: black,
                               ),
-                              child: Text("Cancel \n Order",
-                                  style: TextStyle(fontSize: small, color: white,fontWeight: FontWeight.w500),textAlign: TextAlign.center
+                              child: Text("Cancel\n Order",
+                                  style: TextStyle(fontSize: small, color: white,fontWeight: FontWeight.w600),
+                                  textAlign: TextAlign.center
                               ),
                             ),
                           ),
@@ -154,15 +157,16 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                             },
                             child: Container(
                               alignment: Alignment.center,
-                              margin: const EdgeInsets.only(top: 30, bottom: 10),
+                              margin: const EdgeInsets.only(top: 20, bottom: 10),
                               padding: const EdgeInsets.all(10),
                               width: MediaQuery.of(context).size.width,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.0),
                                 color: black,
                               ),
-                              child: Text("Mark Payment Done",
-                                  style: TextStyle(fontSize: small, color: white,fontWeight: FontWeight.w500),textAlign: TextAlign.center
+                              child: Text("Mark Payment\nDone",
+                                  style: TextStyle(fontSize: small, color: white,fontWeight: FontWeight.w600),
+                                  textAlign: TextAlign.center
                               ),
                             ),
                           ),
@@ -171,80 +175,94 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                     ],
                   ),
                   Gap(8),
-                  ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: listItems.length,
-                    physics: const ScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return Container(
-                        margin: const EdgeInsets.only(top: 10,bottom: 10),
-                        padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(18),
-                            color: white,
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(listItems[index].category ?? "",
-                                style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
-                            ),
-                            Gap(12),
-                            ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                itemCount: listItems[index].items?.length,
-                                physics: const ScrollPhysics(),
-                                itemBuilder: (context, indexInner) {
-                                  var getSetInner = listItems[index].items?[indexInner] ?? Items();
-                                  return Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.circular(12),
-                                            child: Image.network(
-                                              getSetInner.image ?? "",
-                                              fit: BoxFit.cover,
-                                              height: 70,
-                                              width:70,
+                  MediaQuery.removePadding(
+                    context: context,
+                    removeBottom: true,
+                    removeTop: true,
+                    child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: listItems.length,
+                      physics: const ScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return Container(
+                          margin: const EdgeInsets.only(top: 10,bottom: 10),
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(18),
+                              color: white,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(listItems[index].category ?? "",
+                                  style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
+                              ),
+                              Gap(12),
+                              ListView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  itemCount: listItems[index].items?.length,
+                                  physics: const ScrollPhysics(),
+                                  itemBuilder: (context, indexInner) {
+                                    var getSetInner = listItems[index].items?[indexInner] ?? Items();
+                                    return Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius: BorderRadius.circular(12),
+                                              child: Image.network(
+                                                getSetInner.image ?? "",
+                                                fit: BoxFit.cover,
+                                                height: 70,
+                                                width:70,
+                                              ),
                                             ),
-                                          ),
-                                          Gap(12),
-                                          Flexible(
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(getSetInner.item ?? "",
-                                                    style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
-                                                    overflow: TextOverflow.clip
-                                                ),
-                                                Gap(4),
-                                                Text(("${getSetInner.quantity ?? " "}" + "/" + "${getSetInner.unit ?? " "}") + "  *  "+ ("CA\$${getSetInner.quantity ?? " "}"),
-                                                    style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500),textAlign: TextAlign.left
-                                                ),
-                                              ],
+                                            Gap(12),
+                                            Flexible(
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(getSetInner.item ?? "",
+                                                      style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
+                                                      overflow: TextOverflow.clip
+                                                  ),
+                                                  Gap(4),
+                                                  Row(
+                                                    children: [
+                                                      Text("${getSetInner.quantity ?? " "}/${getSetInner.unit ?? " "}  x  CA\$${getSetInner.basePrice ?? " "}",
+                                                          style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500),textAlign: TextAlign.left
+                                                      ),
+                                                      Spacer(),
+                                                      Text(getPrice(getSetInner.amount.toString()) ?? "",
+                                                          style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
+                                                          overflow: TextOverflow.clip
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      Gap(12),
-                                    ],
-                                  );
-                                }
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                                          ],
+                                        ),
+                                        Gap(10),
+                                      ],
+                                    );
+                                  }
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   ),
                   Container(
-                    margin: const EdgeInsets.only(top: 10,bottom: 10),
+                    margin: const EdgeInsets.only(top:10,bottom: 10),
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(18),
@@ -261,7 +279,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                                 Text("Subtotal:",
                                     style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
                                 ),
-                                Text("CA\$${subTotal}",
+                                Text(getPrice(subTotal),
                                     style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
                                 ),
                               ],
@@ -281,7 +299,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                                 Text("Shipping:",
                                     style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
                                 ),
-                                Text("CA\$${subTotal}",
+                                Text(getPrice(subTotal),
                                     style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
                                 ),
                               ],
@@ -301,7 +319,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                                 Text("Total Price:",
                                     style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
                                 ),
-                                Text("CA\$${subTotal}",
+                                Text(getPrice(subTotal),
                                     style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
                                 ),
                               ],
@@ -326,7 +344,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                         Text("Shipping From",
                             style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
                         ),
-                        Gap(12),
+                        Gap(10),
                         Text(warehouseName,
                             style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
                         ),
@@ -351,11 +369,11 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                         Text("Shipping To",
                             style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
                         ),
-                        Gap(12),
+                        Gap(10),
                         Text(franchiseName,
                             style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
                         ),
-                        Text(addressLine1 + "," + addressLine2,
+                        Text("$addressLine1,$addressLine2",
                             style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
                         ),
                       ],
@@ -363,7 +381,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.only(top: 10,bottom: 18),
+                    margin: const EdgeInsets.only(top: 10,bottom: 20),
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(18),
@@ -376,7 +394,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                         Text("Payment Status",
                             style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
                         ),
-                        Gap(12),
+                        Gap(10),
                         Text(paymentStatus,
                             style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
                         ),
