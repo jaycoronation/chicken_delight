@@ -9,6 +9,7 @@ import '../common_widget/common_widget.dart';
 import '../constant/api_end_point.dart';
 import '../constant/colors.dart';
 import '../model/ItemResponseModel.dart';
+import '../model/common/CommonResponseModel.dart';
 import '../utils/app_utils.dart';
 import '../utils/base_class.dart';
 import 'SelectItemPage.dart';
@@ -24,9 +25,11 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
 
   bool isLoading = false;
 
-  var listItemsAPI = List<Records>.empty(growable: true);
-  var listItems = List<Records>.empty(growable: true);
-  String grandTotal = "";
+  List<Records> listItemsAPI = [];
+  List<Records> listItems = [];
+
+  var subTotal = 0.0;
+  var grandTotal = 0.0;
 
   @override
   void initState() {
@@ -69,48 +72,59 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                     width: MediaQuery.of(context).size.width,
                     child: TextButton(
                       onPressed: () async {
-                        final result = await Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => SelectItemPage(listItemsAPI)),
-                        );
-                        print("result ===== $result");
-                        listItems = [];
-                        if (result != null)
-                        {
-                          var listItemsTmp = List<Records>.empty(growable: true);
-                          listItemsTmp = result;
 
-                          setState(() {
-                            for (int i = 0; i < listItemsTmp.length; i++)
-                            {
-                              if (listItemsTmp[i].isSelected == true)
+                        if (listItemsAPI.isNotEmpty) {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => SelectItemPage(listItemsAPI)),
+                          );
+                          print("result ===== $result");
+                          listItems = [];
+                          if (result != null)
+                          {
+                            List<Records> listItemsTmp = [];
+                            listItemsTmp = result;
+
+                            setState(() {
+                              for (int i = 0; i < listItemsTmp.length; i++)
                               {
-                                Records getSet = Records();
+                                if (listItemsTmp[i].isSelected == true)
+                                {
+                                  Records getSet = Records();
 
-                                getSet = Records(
-                                  id: listItemsTmp[i].id,
-                                  description: listItemsTmp[i].description,
-                                  name: listItemsTmp[i].name,
-                                  icon: listItemsTmp[i].icon,
-                                  productCode: listItemsTmp[i].productCode,
-                                  unit: listItemsTmp[i].unit,
-                                  variationName: listItemsTmp[i].variationName,
-                                  skuCode: listItemsTmp[i].skuCode,
-                                  salePrice: listItemsTmp[i].salePrice,
-                                  mrpPrice: listItemsTmp[i].mrpPrice,
-                                  dpPrice: listItemsTmp[i].dpPrice,
-                                  category: listItemsTmp[i].category,
-                                  variationId: listItemsTmp[i].variationId,
-                                  categoryId: listItemsTmp[i].categoryId,
-                                  isSelected : listItemsTmp[i].isSelected,
-                                  quantity: "1",
-                                );
+                                  getSet = Records(
+                                      id: listItemsTmp[i].id,
+                                      description: listItemsTmp[i].description,
+                                      name: listItemsTmp[i].name,
+                                      icon: listItemsTmp[i].icon,
+                                      productCode: listItemsTmp[i].productCode,
+                                      unit: listItemsTmp[i].unit,
+                                      variationName: listItemsTmp[i].variationName,
+                                      skuCode: listItemsTmp[i].skuCode,
+                                      salePrice: listItemsTmp[i].salePrice,
+                                      mrpPrice: listItemsTmp[i].mrpPrice,
+                                      dpPrice: listItemsTmp[i].dpPrice,
+                                      category: listItemsTmp[i].category,
+                                      variationId: listItemsTmp[i].variationId,
+                                      categoryId: listItemsTmp[i].categoryId,
+                                      isSelected : listItemsTmp[i].isSelected,
+                                      quantity: 1,
+                                      amount: num.parse(listItemsTmp[i].salePrice.toString())
+                                  );
 
-                                listItems.add(getSet);
+                                  listItems.add(getSet);
+                                }
                               }
-                            }
-                          });
+                              getPriceCalculated();
+
+                            });
+                          }
                         }
+                        else
+                          {
+                            showSnackBar("No items found", context);
+                          }
+
                       },
                       style: ButtonStyle(
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -125,7 +139,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                             Text("Add Item",
                               style: TextStyle(fontSize: subTitle, fontWeight: FontWeight.w500, color: primaryColor,),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             const Icon(Icons.add, color: black, size: 26,)
                           ],
                         ),
@@ -168,65 +182,152 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                   width:70,
                                 ),
                               ),
-                              Gap(12),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(listItems[index].name ?? "",
-                                      style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
-                                      overflow: TextOverflow.clip,
-                                  ),
-                                  Row(
-                                    //crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Text("${listItems[index].salePrice ?? " "}  x ",
-                                          style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500),textAlign: TextAlign.left
-                                      ),
-                                      SizedBox(
-                                          width: 100,
+                              const Gap(12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(listItems[index].name ?? "",
+                                        style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
+                                        overflow: TextOverflow.clip,
+                                      maxLines: 3,
+                                    ),
+                                    const Gap(5),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.only(left: 10, right: 10),
+                                          alignment: Alignment.center,
                                           height: 40,
-                                          child: BottomLineDigitOnlyTextField(controller: listItems[index].quantityController,
-                                            hintText: "Qty",
-                                          onChanged: (text) {
-                                            var total = double.parse(listItems[index].salePrice.toString()) * int.parse(listItems[index].quantityController.text);
-
-                                            setState(() {
-                                              listItems[index].mrpPrice = total.toString();
-                                            });
-
-                                            getSubTotal();
-                                          },
-                                          )),
-                                      Text("/${listItems[index].unit ?? " "}",
-                                          style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500),textAlign: TextAlign.left
-                                      ),
-                                      Gap(20),
-
-                                    ],
-                                  ),
-                                  Text(getPrice(listItems[index].mrpPrice.toString()) ?? "",
-                                    style: TextStyle(fontSize: description, color: black,
-                                      fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),
-                                    textAlign: TextAlign.right,
-                                  ),
-                                ],
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(18),
+                                            border: Border.all(
+                                              color: grayDividerDetail,
+                                              width: 0.8,
+                                            ),
+                                          ),
+                                          child: Text(listItems[index].salePrice ?? " ",
+                                              style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500),
+                                              textAlign: TextAlign.center
+                                          ),
+                                        ),
+                                        Text("*  ",
+                                            style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500),
+                                            textAlign: TextAlign.center
+                                        ),
+                                        Container(
+                                          height: 40,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(18),
+                                            border: Border.all(color: grayDividerDetail, width: 0.8),
+                                          ),
+                                          alignment: Alignment.center,
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                onPressed: () {
+                                                  setState(() {
+                                                    if (isOnline)
+                                                    {
+                                                      if (listItems[index].quantity == 1) {
+                                                        removeItem(index);
+                                                      } else {
+                                                        listItems[index].quantity = listItems[index].quantity! - 1;
+                                                      }
+                                
+                                                      var total = num.parse(listItems[index].salePrice.toString()) * num.parse(listItems[index].quantity.toString());
+                                                      listItems[index].amount = total;
+                                                      getPriceCalculated();
+                                                    }
+                                                    else
+                                                    {
+                                                      noInternetSnackBar(context);
+                                                    }
+                                                  });
+                                
+                                                },
+                                                icon:const Icon(Icons.remove)//Image.asset('assets/images/ic_blue_minus.png', height: 24, width: 24),
+                                              ),
+                                              Text(listItems[index].quantity.toString(),
+                                                  style: const TextStyle(fontWeight: FontWeight.w400, color: black, fontSize: 13)),
+                                              IconButton(
+                                                onPressed: () {
+                                                  setState(() {
+                                                    if (isOnline)
+                                                    {
+                                                      listItems[index].quantity = (listItems[index].quantity! + 1)!;
+                                                      var total = num.parse(listItems[index].salePrice.toString()) * num.parse(listItems[index].quantity.toString());
+                                                      listItems[index].amount = total;
+                                
+                                                      getPriceCalculated();
+                                                    }
+                                                    else
+                                                    {
+                                                      noInternetSnackBar(context);
+                                                    }
+                                                  });
+                                
+                                                },
+                                                icon: const Icon(Icons.add)//Image.asset('assets/images/ic_blue_add.png', height: 24, width: 24),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        /*SizedBox(
+                                            width: 100,
+                                            height: 40,
+                                            child: BottomLineDigitOnlyTextField(controller: listItems[index].quantityController,
+                                              hintText: "Qty",
+                                              onChanged: (text) {
+                                              setState(() {
+                                                if (text.isNotEmpty) {
+                                                  var total = num.parse(listItems[index].salePrice.toString()) * num.parse(listItems[index].quantityController.text);
+                                                  listItems[index].mrpPrice = total.toString();
+                                                  print(getSubTotal());
+                                                  //  print(getGrandTotal());
+                                                }
+                                                else
+                                                {
+                                                  var total = num.parse(listItems[index].salePrice.toString()) * 1;
+                                                  listItems[index].mrpPrice = total.toString();
+                                                  print(getSubTotal());
+                                                }
+                                
+                                              });
+                                            },
+                                            )
+                                        ),*/
+                                        Text("/${listItems[index].unit ?? " "}",
+                                            style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500),textAlign: TextAlign.left
+                                        ),
+                                        Gap(20),
+                                      ],
+                                    ),
+                                    Gap(5),
+                                    Text(getPrice(listItems[index].amount.toString()) ,
+                                      style: TextStyle(fontSize: description, color: black,
+                                        fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),
+                                      textAlign: TextAlign.right,
+                                    ),
+                                  ],
+                                ),
                               ),
-                              const Spacer(),
+                              Gap(10),
                               GestureDetector(
                                 behavior: HitTestBehavior.opaque,
                                 onTap: () {
                                   if (isOnline)
                                   {
                                     setState(() {
-                                      for (int i = 0; i < listItemsAPI.length; i++)
+                                      /*for (int i = 0; i < listItemsAPI.length; i++)
+                                      {
+                                        if (listItemsAPI[i].id == listItems[index].id)
                                         {
-                                          if (listItemsAPI[i].id == listItems[index].id)
-                                            {
-                                              listItemsAPI[i].isSelected = false;
-                                            }
+                                          listItemsAPI[i].isSelected = false;
                                         }
-                                      listItems.removeAt(index);
-
+                                      }
+                                      listItems.removeAt(index);*/
+                                      removeItem(index);
                                     });
                                   }
                                   else
@@ -311,16 +412,15 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      Text(listItems.length.toString(), textAlign: TextAlign.start, maxLines: 1,
+                                      Text(listItems.length.toString(), textAlign: TextAlign.start,
                                           style: const TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 13)),
                                       const Gap(6),
-                                      Text(getSubTotal().isNotEmpty ? getPrice(getSubTotal()) : "",
-                                          textAlign: TextAlign.start,maxLines: 1,
+                                      Text(subTotal.toStringAsFixed(2),
+                                          textAlign: TextAlign.start,
                                           style: const TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 13)),
                                       const Gap(6),
-                                      Text(getPrice("75"), textAlign: TextAlign.start, maxLines: 1,
+                                      Text(getPrice("75"), textAlign: TextAlign.start,
                                           style:const TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 13)),
-
                                     ],
                                   ),
                                 ],
@@ -340,21 +440,20 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                         style: TextStyle(fontWeight: FontWeight.w600, color: black,fontSize: 18)),
                                   ),
                                   const Spacer(),
-                                  Text(grandTotal.isNotEmpty ? getPrice(getGrandTotal()) : "", textAlign: TextAlign.start, maxLines: 1,
+                                  Text(grandTotal.toStringAsFixed(2), textAlign: TextAlign.start,
                                       style:const TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 16)),
-
                                 ],
                               ),
                             ],
                           ),
                         ),
-
                       ],
                     ),
                   ),
                 ),
                 const Gap(20),
                 Container(
+                  margin: const EdgeInsets.only(bottom: 20),
                   alignment: Alignment.center,
                   child: getCommonButtonWithoutFill("Proceed", isLoading, () {
                     if (listItems.isEmpty)
@@ -362,9 +461,10 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                       showSnackBar("Please select item.", context);
                     }
                     else
-                      {
-
-                      }
+                    {
+                      _makeJsonData();
+                      saveItem();
+                    }
 
                   }),
                 )
@@ -381,19 +481,132 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
     widget is AddOrderScreen;
   }
 
-  getSubTotal() {
+  void getPriceCalculated() {
+    setState(() {
+      subTotal = 0.0;
 
-    var total = "";
-    for (int i = 0; i < listItems.length; i++) {
-      total = total + listItems[i].mrpPrice.toString();
-    }
-    //getGrandTotal();
-    return total;
+      for (var i = 0; i < listItems.length; i++) {
+        if (listItems[i].quantity == 1) {
+          subTotal = subTotal + checkValidDouble(listItems[i].amount.toString());
+        } else {
+          var total = checkValidDouble(listItems[i].amount.toString()) * listItems[i].quantity;
+          subTotal = subTotal + total;
+        }
+      }
+
+      print("subTotal ==== " + subTotal.toString());
+      grandTotal = subTotal + 75;
+
+    });
   }
 
-  getGrandTotal() {
-    var mainTotal = int.parse(getSubTotal()) + 75;
-    return mainTotal;
+  void removeItem(int index) {
+    showModalBottomSheet<void>(
+      context: context,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
+      builder: (BuildContext context) {
+        return Wrap(
+          children: [
+            Container(
+              decoration: const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)), color: white),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    height: 2,
+                    width: 40,
+                    alignment: Alignment.center,
+                    color: primaryColor,
+                    margin: const EdgeInsets.only(top: 10, bottom: 10),
+                  ),
+                  Container(margin: const EdgeInsets.only(top: 10, bottom: 10), child: const Text('Remove Product', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: black))),
+                  Container(
+                    margin: const EdgeInsets.only(top: 10, bottom: 15),
+                    child: const Text('Are you sure want to remove this product?', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: black)),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 20, right: 20, bottom: 30),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(width: 0.4, color: primaryColor),
+                              borderRadius: BorderRadius.all(Radius.circular(kButtonCornerRadius)),
+                            ),
+                            margin: const EdgeInsets.only(right: 10),
+                            child: TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('No',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                      color: primaryColor,
+                                    ))),
+                          ),
+                        ),
+                        Expanded(
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(kButtonCornerRadius),
+                              color: primaryColor,
+                            ),
+                            child: TextButton(
+                              onPressed: () async {
+                                setState(() {
+                                  for (int i = 0; i < listItemsAPI.length; i++)
+                                  {
+                                    if (listItemsAPI[i].id == listItems[index].id)
+                                    {
+                                      listItemsAPI[i].isSelected = false;
+                                    }
+                                  }
+                                  listItems.removeAt(index);
+                                  getPriceCalculated();
+
+                                  if (listItems.isEmpty) {
+                                  //  isValidProduct = false;
+                                  }
+                                  Navigator.pop(context);
+
+                                });
+                              },
+                              child: const Text('Yes', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: white)),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _makeJsonData() async {
+    List<Records> listItemsTemp = [];
+
+    for (int i = 0; i < listItems.length; i++)
+    {
+      listItemsTemp.add(listItems[i]);
+      // print("stockPrice---->" +checkValidString(listProductsTemp[i].stockPrice.toString()));
+      print("quantity--->" + checkValidString(listItemsTemp[i].quantity.toString()));
+    }
+
+    if (listItemsTemp.isNotEmpty)
+    {
+      listItems.clear();
+      listItems.addAll(listItemsTemp);
+    }
+    print("<><> Json Product ${jsonEncode(listItems).toString().trim()} END<><>");
+
   }
 
 
@@ -402,10 +615,6 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
 
     if (isOnline)
     {
-      setState(() {
-        isLoading = true;
-      });
-
       HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
         HttpLogger(logLevel: LogLevel.BODY),
       ]);
@@ -441,6 +650,62 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
           isLoading = false;
         });
         showSnackBar(dataResponse.message, context);
+      }
+    }
+    else
+    {
+      noInternetSnackBar(context);
+    }
+
+  }
+
+  saveItem() async {
+    if (isOnline)
+    {
+      setState(() {
+        isLoading = true;
+      });
+
+      HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+        HttpLogger(logLevel: LogLevel.BODY),
+      ]);
+
+      final url = Uri.parse(MAIN_URL + itemSave);
+      Map<String, String> jsonBody = {
+        'couponCode': "",
+        'created_for': sessionManager.getUserId().toString(),
+        'grand_total': grandTotal.toString(),
+        'items': listItems.isNotEmpty ? jsonEncode(listItems).toString().trim()  :"",
+        'paymentMethod': "[]",
+        'remarks': remarksController.value.text.toString().isNotEmpty ? remarksController.value.text.toString() : "",
+        'shipping_charges': '75',
+        'sub_total': subTotal.toString(),
+        'warehouse': ""
+      };
+
+      final response = await http.post(url, body: jsonBody, headers: {
+        "Authorization": sessionManager.getToken().toString(),
+      });
+      final statusCode = response.statusCode;
+      print(response);
+      final body = response.body;
+      Map<String, dynamic> user = jsonDecode(body);
+      var dataResponse = CommonResponseModel.fromJson(user);
+
+      if (statusCode == 200 && dataResponse.success == 1) {
+        setState(() {
+          isLoading = false;
+          listItems.clear();
+          remarksController.clear();
+          isOrderListLoad = true;
+
+        });
+        showSnackBar(dataResponse.message, context);
+       // Navigator.pop(context,"success");
+      } else {
+        setState(() {
+          isLoading = false;
+        });
       }
     }
     else

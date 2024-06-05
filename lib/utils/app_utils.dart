@@ -92,6 +92,34 @@ checkValidString (String? value) {
   return value.trim();
 }
 
+checkValidDouble (String? value) {
+  if (value == null || value == "null" || value == "<null>" || value == "")
+  {
+    value = "";
+  }
+  if (value.isNotEmpty)
+  {
+    return double.parse(value);
+  }else {
+    return 0.0;
+  }
+
+}
+
+checkValidNum(String? value) {
+  if (value == null || value == "null" || value == "<null>" || value == "")
+  {
+    value = "";
+  }
+  if (value.isNotEmpty)
+  {
+    return num.parse(value);
+  }else {
+    return 0;
+  }
+
+}
+
 /*check email validation*/
 bool isValidEmail(String? input) {
   try {

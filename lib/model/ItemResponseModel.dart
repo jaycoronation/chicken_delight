@@ -96,8 +96,8 @@ class Records {
       String? variationId, 
       String? categoryId,
     bool? isSelected,
-    String? quantity,
-
+    num? quantity,
+    num? amount,
   }){
     _id = id;
     _description = description;
@@ -115,11 +115,8 @@ class Records {
     _categoryId = categoryId;
     _isSelected = isSelected;
     _quantity = quantity;
+    _amount = amount;
 }
-
-  set mrpPrice(String? value) {
-    _mrpPrice = value;
-  }
 
   Records.fromJson(dynamic json) {
     _id = json['id'];
@@ -138,6 +135,7 @@ class Records {
     _categoryId = json['category_id'];
     _isSelected = json['isSelected'] ?? false;
     _quantity = json['quantity'];
+    _amount = json['amount'];
   }
   String? _id;
   String? _description;
@@ -154,7 +152,8 @@ class Records {
   String? _variationId;
   String? _categoryId;
   bool? _isSelected;
-  String? _quantity;
+  num? _quantity;
+  num? _amount;
 
 
 Records copyWith({  String? id,
@@ -172,7 +171,8 @@ Records copyWith({  String? id,
   String? variationId,
   String? categoryId,
   bool? isSelected,
-  String? quantity,
+  num? quantity,
+  num? amount,
 
 }) => Records(  id: id ?? _id,
   description: description ?? _description,
@@ -190,6 +190,7 @@ Records copyWith({  String? id,
   categoryId: categoryId ?? _categoryId,
   isSelected: isSelected ?? _isSelected,
   quantity: quantity ?? _quantity,
+  amount: amount ?? _amount,
 );
   String? get id => _id;
   String? get description => _description;
@@ -206,7 +207,8 @@ Records copyWith({  String? id,
   String? get variationId => _variationId;
   String? get categoryId => _categoryId;
   bool? get isSelected => _isSelected;
-  String? get quantity => _quantity;
+  num? get quantity => _quantity;
+  num? get amount => _amount;
 
   TextEditingController quantityController = TextEditingController();
 
@@ -227,6 +229,8 @@ Records copyWith({  String? id,
     map['variation_id'] = _variationId;
     map['category_id'] = _categoryId;
     map['isSelected'] = _isSelected;
+    map['quantity'] = _quantity;
+    map['amount'] = _amount;
     return map;
   }
 
@@ -234,8 +238,12 @@ Records copyWith({  String? id,
     _isSelected = value;
   }
 
-  set quantity(String? value) {
+  set quantity(num? value) {
     _quantity = value;
+  }
+
+  set amount(num? value) {
+    _amount = value;
   }
 
 }

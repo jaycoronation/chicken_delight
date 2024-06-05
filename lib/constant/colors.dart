@@ -156,6 +156,3 @@ getBlueTextStyle() {
 getTableTitleTextStyle() {
   return TextStyle(fontWeight: FontWeight.w800, color: white, fontSize: textSize);
 }
-
-
-

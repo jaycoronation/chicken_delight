@@ -24,10 +24,11 @@ class _SelectItemPageState extends BaseState<SelectItemPage> {
 
   late ScrollController _scrollController;
 
-  var listItems = List<Records>.empty(growable: true);
-  var listItemsMain = List<Records>.empty(growable: true);
+  List<Records> listItems = [];
+  List<Records> listItemsMain = [];
 
   final TextEditingController _searchController = TextEditingController();
+
 
   @override
   void initState() {
@@ -42,13 +43,10 @@ class _SelectItemPageState extends BaseState<SelectItemPage> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-        onPopInvoked: (didPop) {
-          FocusScopeNode currentFocus = FocusScope.of(context);
-
-          if (!currentFocus.hasPrimaryFocus) {
-            currentFocus.unfocus();
-          }
+    return WillPopScope(
+        onWillPop: () {
+          Navigator.pop(context);
+          return Future.value(true);
         },
         child: Scaffold(
           backgroundColor: appBG,

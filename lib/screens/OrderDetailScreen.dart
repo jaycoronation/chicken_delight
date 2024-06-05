@@ -299,7 +299,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                                 Text("Shipping:",
                                     style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
                                 ),
-                                Text(getPrice(subTotal),
+                                Text(getPrice("75"),
                                     style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
                                 ),
                               ],
@@ -319,7 +319,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                                 Text("Total Price:",
                                     style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
                                 ),
-                                Text(getPrice(subTotal),
+                                Text(getPrice(grandTotal),
                                     style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
                                 ),
                               ],
