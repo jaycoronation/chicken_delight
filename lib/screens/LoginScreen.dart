@@ -42,9 +42,9 @@ class _LoginScreenState extends BaseState<LoginScreen> {
                 Container(
                   width : MediaQuery.of(context).size.width,
                   padding: const EdgeInsets.all(22),
-                  decoration:  BoxDecoration(
+                  decoration:  const BoxDecoration(
                     // border: Border.all(color: appBg, width: 0.5),
-                    borderRadius:const BorderRadius.all(Radius.circular(18),) ,
+                    borderRadius:BorderRadius.all(Radius.circular(18),) ,
                     color: white,
                   ),
                   child: Column(
@@ -62,11 +62,11 @@ class _LoginScreenState extends BaseState<LoginScreen> {
                       Text('Login to account',
                           style: TextStyle(fontSize: titleFont, color: black,fontWeight: FontWeight.w600),
                       ),
-                      Gap(4),
+                      const Gap(4),
                       Text('Enter your email & password to login ',
                           style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
                       ),
-                      Gap(28),
+                      const Gap(28),
                       TextField(
                         readOnly: false,
                         keyboardType: TextInputType.text,
@@ -96,7 +96,7 @@ class _LoginScreenState extends BaseState<LoginScreen> {
                           ),
                         ),
                       ),
-                      Gap(12),
+                      const Gap(12),
                       TextField(
                         readOnly: false,
                         keyboardType: TextInputType.text,
@@ -129,7 +129,7 @@ class _LoginScreenState extends BaseState<LoginScreen> {
                           ),
                         ),
                       ),
-                      Gap(18),
+                      const Gap(18),
                       Align(
                         alignment: Alignment.centerRight,
                         child: GestureDetector(

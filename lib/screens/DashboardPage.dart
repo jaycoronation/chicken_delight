@@ -12,6 +12,7 @@ import 'package:gap/gap.dart';
 
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 
+import '../common_widget/common_widget.dart';
 import '../constant/colors.dart';
 import '../model/HomePageMenuModel.dart';
 import '../utils/base_class.dart';
@@ -35,8 +36,8 @@ class _DashboardPageState extends BaseState<DashboardPage> {
   bool _isLoading = false;
   final ScrollController _scrollController = ScrollController();
 
-  List<Order> listOrders = List<Order>.empty();
-  List<HomePageMenuGetSet> analysisList = List.empty(growable: true);
+  List<Order> listOrders = [];
+  List<HomePageMenuGetSet> analysisList = [];
 
 
   @override
@@ -104,9 +105,9 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                         width: 22,
                         alignment: Alignment.centerRight,
                         margin: const EdgeInsets.only(left: 20),
-                        child: const Center(
+                        child: Center(
                           child: Text("0",
-                              style: TextStyle(fontWeight: FontWeight.w400, color: white, fontSize: 11)),
+                              style: TextStyle(fontWeight: FontWeight.w400, color: white, fontSize: small)),
                         ),
                       ),
                     ),
@@ -162,8 +163,8 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                                 children: [
                                   Container(
                                     margin: const EdgeInsets.only(left: 22),
-                                    child: const Text("Orders",
-                                        style: TextStyle(fontWeight: FontWeight.w800, color: black,fontSize: 20)),
+                                    child: Text("Orders",
+                                        style: TextStyle(fontWeight: FontWeight.w800, color: black,fontSize: titleFont20)),
                                   ),
                                   const Gap(12),
                                   SizedBox(
@@ -181,11 +182,11 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                                 Container(
                                   alignment: Alignment.topLeft,
                                   margin: const EdgeInsets.only(top:10, bottom: 10, left: 10),
-                                  child: const Text("Activity", style: TextStyle(fontWeight: FontWeight.w800, color: black,fontSize: 20)),
+                                  child: Text("Activity", style: TextStyle(fontWeight: FontWeight.w800, color: black,fontSize: titleFont20)),
                                 ),
                                 SizedBox(
                                   width: double.infinity,
-                                  height: 278,
+                                  height: 280,
                                   child: Card(
                                       color: white,
                                       shape: RoundedRectangleBorder(
@@ -218,10 +219,10 @@ class _DashboardPageState extends BaseState<DashboardPage> {
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () async {
-            if (analysisList[index].name.toString() == "Products") {
+            if (analysisList[index].name == "Products") {
               final BottomNavigationBar bar = bottomWidgetKey.currentWidget as BottomNavigationBar;
               bar.onTap!(1);
-            } else if (analysisList[index].name.toString() == "Orders") {
+            } else if (analysisList[index].name == "Orders") {
              // _orderList(context);
               final BottomNavigationBar bar = bottomWidgetKey.currentWidget as BottomNavigationBar;
               bar.onTap!(3);
@@ -231,7 +232,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
             decoration: BoxDecoration(
                 color: Color(int.parse(analysisList[index].bgColor.replaceAll('#', '0x'))),
                 borderRadius: const BorderRadius.all(Radius.circular(22))),
-            padding: const EdgeInsets.only(left: 10, right: 6, bottom: 10,top: 10),
+            padding: const EdgeInsets.only(left: 10, right: 6, bottom: 0,top: 10),
             width: MediaQuery.of(context).size.width,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -240,18 +241,18 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                 Image.asset(analysisList[index].itemIcon, height: 32, width: 32,),
                 const Gap(12),
                 analysisList[index].name == "Total Amount"
-                ? Text(getPrice(analysisList[index].count.toString()),
+                ? Text(getPrice(analysisList[index].count ?? ""),
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: black, fontWeight: FontWeight.w600, fontSize: 19))
-                : Text(analysisList[index].count.toString(),
+                    style: TextStyle(color: black, fontWeight: FontWeight.w600, fontSize: subTitle))
+                : Text(analysisList[index].count ?? "",
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: black, fontWeight: FontWeight.w600, fontSize: 19)),
+                    style:  TextStyle(color: black, fontWeight: FontWeight.w600, fontSize: titleFont20)),
                 const Gap(8),
                 Row(
                   children: [
                     Expanded(
-                        child: Text(analysisList[index].name.toString(), textAlign: TextAlign.start,
-                        style: const TextStyle(color: black, fontWeight: FontWeight.w500, fontSize: 13))
+                        child: Text(analysisList[index].name ?? "", textAlign: TextAlign.start,
+                        style: TextStyle(color: black, fontWeight: FontWeight.w500, fontSize: small))
                     ),
                     Visibility(
                         visible: analysisList[index].name != "Total Amount",
@@ -295,69 +296,71 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                       margin: const EdgeInsets.only(left: 2),
                       alignment: Alignment.center,
                       // width: 55,
-                      child: const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("Order Number", textAlign: TextAlign.start,
-                              style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 13)),
-                          Gap(6),
-                          Text("Grand Total", textAlign: TextAlign.start,
-                              style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 13)),
-                          Gap(6),
-                          Text("Remark", textAlign: TextAlign.start,
-                              style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 13)),
-                          Gap(6),
-                          Text("Order-Date", textAlign: TextAlign.start,
-                              style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 13)),
-                          Gap(6),
-                          Text("Status", textAlign: TextAlign.start,
-                              style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 13)),
-                        ],
-                      ),
-                    ),
-                    const Gap(4),
-                    const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(":", textAlign: TextAlign.start, style: TextStyle(color: hintLight, fontWeight: FontWeight.w400, fontSize: 13)),
-                        Gap(6),
-                        Text(":", textAlign: TextAlign.start, style: TextStyle(color: hintLight, fontWeight: FontWeight.w400, fontSize: 13)),
-                        Gap(6),
-                        Text(":", textAlign: TextAlign.start, style: TextStyle(color: hintLight, fontWeight: FontWeight.w400, fontSize: 13)),
-                        Gap(6),
-                        Text(":", textAlign: TextAlign.start, style: TextStyle(color: hintLight, fontWeight: FontWeight.w400, fontSize: 13)),
-                        Gap(6),
-                        Text(":", textAlign: TextAlign.start, style: TextStyle(color: hintLight, fontWeight: FontWeight.w400, fontSize: 13)),
-                      ],
-                    ),
-                    const Gap(4),
-                    Expanded(child: Container(
-                      margin: const EdgeInsets.only(top: 2),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(checkValidString(listOrders[index].orderNumber), textAlign: TextAlign.start, maxLines: 1,
-                              style: const TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 13)),
-                          const Gap(6),
-                          Text(checkValidString(getPrice(listOrders[index].grandTotal.toString())),
-                              textAlign: TextAlign.start,maxLines: 1,
-                              style: const TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 13)),
-                          const Gap(6),
-                          Text(checkValidString(listOrders[index].remarks), textAlign: TextAlign.start, maxLines: 1,
-                              style:const TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 13)),
-                          const Gap(6),
-                          Text(getDateFromTimestamp(checkValidString(listOrders[index].timestamp)), textAlign: TextAlign.start, maxLines: 1,
-                              style: const TextStyle(color: black, fontWeight: FontWeight.w600, fontSize: 13)),
-                          const Gap(6),
-                          Text(checkValidString(listOrders[index].status), textAlign: TextAlign.start, maxLines: 1,
-                              style: const TextStyle(color: black, fontWeight: FontWeight.w600, fontSize: 13)),
-
+                          Text("Order Number", textAlign: TextAlign.start,
+                              style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: small)),
+                          Gap(6),
+                          Text("Grand Total", textAlign: TextAlign.start,
+                              style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: small)),
+                          Gap(6),
+                          Text("Remark", textAlign: TextAlign.start,
+                              style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: small)),
+                          Gap(6),
+                          Text("Order-Date", textAlign: TextAlign.start,
+                              style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: small)),
+                          Gap(6),
+                          Text("Status", textAlign: TextAlign.start,
+                              style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: small)),
                         ],
                       ),
-                    )),
+                    ),
+                    const Gap(4),
+                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(":", textAlign: TextAlign.start, style: TextStyle(color: hintLight, fontWeight: FontWeight.w400, fontSize: small)),
+                        Gap(6),
+                        Text(":", textAlign: TextAlign.start, style: TextStyle(color: hintLight, fontWeight: FontWeight.w400, fontSize: small)),
+                        Gap(6),
+                        Text(":", textAlign: TextAlign.start, style: TextStyle(color: hintLight, fontWeight: FontWeight.w400, fontSize: small)),
+                        Gap(6),
+                        Text(":", textAlign: TextAlign.start, style: TextStyle(color: hintLight, fontWeight: FontWeight.w400, fontSize: small)),
+                        Gap(6),
+                        Text(":", textAlign: TextAlign.start, style: TextStyle(color: hintLight, fontWeight: FontWeight.w400, fontSize: small)),
+                      ],
+                    ),
+                    const Gap(4),
+                    Expanded(
+                        child: Container(
+                          margin: EdgeInsets.only(top: 2),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(checkValidString(listOrders[index].orderNumber), textAlign: TextAlign.start, maxLines: 1,
+                                  style:  TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: small)),
+                               Gap(6),
+                              Text(checkValidString(getPrice(listOrders[index].grandTotal ?? "")),
+                                  textAlign: TextAlign.start,maxLines: 1,
+                                  style:  TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: small)),
+                               Gap(6),
+                              Text(checkValidString(listOrders[index].remarks), textAlign: TextAlign.start, maxLines: 1,
+                                  style: TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: small)),
+                               Gap(6),
+                              Text(getDateFromTimestamp(checkValidString(listOrders[index].timestamp)), textAlign: TextAlign.start, maxLines: 1,
+                                  style:  TextStyle(color: black, fontWeight: FontWeight.w600, fontSize: small)),
+                               Gap(6),
+                              Text(checkValidString(listOrders[index].status), textAlign: TextAlign.start, maxLines: 1,
+                                  style:  TextStyle(color: black, fontWeight: FontWeight.w600, fontSize: small)),
+    
+                            ],
+                          ),
+                        )
+                    ),
                     const Gap(6),
                   ],
                 )),
@@ -395,6 +398,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
       builder: (BuildContext context) {
         return Wrap(
           children: [
+
             Container(
               margin: const EdgeInsets.all(15),
               decoration:
@@ -404,63 +408,102 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                      alignment: Alignment.center,
-                      margin: const EdgeInsets.only(top: 10, bottom: 10),
-                      child: const Text('Logout', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: primaryColor))),
-                  Container(
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.only(top: 10, bottom: 15, left: 12),
-                    child: const Text('Are you sure want to Logout?', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, color: black)),
+                      height: 2,
+                      width: 40,
+                      color: black,
+                      margin: const EdgeInsets.only(bottom: 18)
                   ),
                   Container(
-                    margin: const EdgeInsets.only(left: 10, right: 10, bottom: 12, top: 10),
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child: SizedBox(
-                                height: 42,
-                                child: TextButton(
-                                  style: ButtonStyle(
-                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                          side: const BorderSide(width: 1, color: primaryColor),
-                                          borderRadius: BorderRadius.circular(20),
-                                        ),
-                                      ),
-                                      backgroundColor: MaterialStateProperty.all<Color>(white)),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text("Cancel", style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16, color: primaryColor)),
-                                ))),
-                        const Gap(15),
-                        Expanded(
-                          child: SizedBox(
-                            height: 42,
-                            child: TextButton(
-                              style: ButtonStyle(
-                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      side: const BorderSide(width: 1, color: primaryColor),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  ),
-                                  backgroundColor: MaterialStateProperty.all<Color>(white)),
-                              onPressed: () async {
-                                Navigator.pop(context);
-                                SessionManagerMethods.clear();
-                                await SessionManagerMethods.init();
-                                var sessionManager = SessionManager();
-                                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (Route<dynamic> route) => false);
-                              },
-                              child: const Text("Logout", style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16, color: primaryColor)),
+                      alignment: Alignment.center,
+                      margin: const EdgeInsets.only(bottom: 10),
+                      child: const Text('Logout', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: black))),
+                  Container(
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.only(left: 12),
+                    child: const Text('Are you sure want to Logout?', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, color: black)),
+                  ),
+                  Row(
+                    children: [
+                      Flexible(
+                        flex: 1,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: const EdgeInsets.only(
+                              left: 12, right: 12, top: 30),
+                          child: TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  side: const BorderSide(
+                                      color: black,
+                                      width: 1,
+                                      style: BorderStyle.solid),
+                                  borderRadius: BorderRadius.circular(22.0),
+                                ),
+                              ),
+                              backgroundColor:
+                              MaterialStateProperty.all<Color>(white),
+                            ),
+                            child:  Padding(
+                              padding: const EdgeInsets.all(6.0),
+                              child: Text(
+                                "Cancel",
+                                style: TextStyle(
+                                    color: black,
+                                    fontSize: contentSize,
+                                    fontWeight: FontWeight.w500
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      Flexible(
+                        flex: 1,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: const EdgeInsets.only(left: 12, right: 12, top: 30),
+                          child: TextButton(
+                            onPressed: () async {
+                              Navigator.pop(context);
+                              SessionManagerMethods.clear();
+                              await SessionManagerMethods.init();
+                              var sessionManager = SessionManager();
+                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (Route<dynamic> route) => false);
+                            },
+                            style: ButtonStyle(
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    side: const BorderSide(
+                                        color: black,
+                                        width: 1,
+                                        style: BorderStyle.solid
+                                    ),
+                                    borderRadius: BorderRadius.circular(22.0),
+                                  ),
+                                ),
+                                backgroundColor: MaterialStateProperty.all<Color>(black)
+                            ),
+                            child:   Padding(
+                              padding: const EdgeInsets.all(6.0),
+                              child: Text(
+                                "Logout",
+                                style: TextStyle(
+                                    color: white,
+                                    fontSize: contentSize,
+                                    fontWeight: FontWeight.w500
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                  const Gap(30)
                 ],
               ),
             ),
@@ -485,11 +528,11 @@ class _DashboardPageState extends BaseState<DashboardPage> {
 
       final url = Uri.parse(MAIN_URL + dashboardUrl);
       Map<String, String> jsonBody = {
-        'type': sessionManager.getType().toString(),
+        'type': sessionManager.getType() ?? "",
       };
 
       final response = await http.post(url, body: jsonBody, headers: {
-        "Authorization": sessionManager.getToken().toString(),
+        "Authorization": sessionManager.getToken() ?? "",
       });
 
       final statusCode = response.statusCode;
@@ -520,7 +563,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
               titleColorStatic: "#ff809dd6",
               bgColorStatic: "#ffe7ebf7",
               itemIconStatic: "assets/images/slicing-27.png",
-              countStatic: records?.totalOrders.toString() ?? "",
+              countStatic: records?.totalOrders ?? "",
               arrowColorStatic: "#ff809dd6"),
           HomePageMenuGetSet(
               nameStatic: "Total Amount",

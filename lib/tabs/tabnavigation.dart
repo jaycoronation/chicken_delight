@@ -6,6 +6,7 @@ import '../constant/colors.dart';
 import '../screens/AddOrderScreen.dart';
 import '../screens/DashboardPage.dart';
 import '../screens/OrderListPage.dart';
+import '../screens/ProductListScreen.dart';
 import '../utils/app_utils.dart';
 import '../utils/session_manager.dart';
 
@@ -23,7 +24,7 @@ class _TabNavigationPageState extends State<TabNavigation> {
   DateTime preBackPressTime = DateTime.now();
   static final List<Widget> _pages = <Widget>[
     const DashboardPage(),
-    Container(),
+    ProductListScreen(),
     AddOrderScreen(),
     const OrderListPage(),
     Container()
@@ -131,9 +132,8 @@ class _TabNavigationPageState extends State<TabNavigation> {
                               {
                                 setState(() {
                                   isOrderListSearch = false;
-                                  // _pages.removeAt(1);
-                                  // _pages.insert(1, ProductListMainPage(NavigationService.catSlugNavigation, NavigationService.catIdNavigation,
-                                  //     NavigationService.catNameNavigation, false, key: UniqueKey()));
+                                  _pages.removeAt(1);
+                                  _pages.insert(1, ProductListScreen());
                                 });
                               }
                               else if (value == 2)//&& isAddProductPage)

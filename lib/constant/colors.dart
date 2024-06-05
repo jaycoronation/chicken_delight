@@ -77,6 +77,7 @@ double kButtonCornerRadius = 22.0;
 getAppBarTitleStyle() {
   return const TextStyle(fontSize: 20, color: black, fontWeight: FontWeight.w700);
 }
+
 getAppBarBlackTitleStyle() {
   return const TextStyle(fontSize: 17, color: black, fontWeight: FontWeight.w600);
 }

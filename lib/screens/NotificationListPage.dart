@@ -67,7 +67,8 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
                     child: SingleChildScrollView(
                       controller: _scrollViewController,
                       child: _listLayout(),
-                    )),
+                    )
+                ),
                 if (_isLoadingMore == true)
                   Container(
                     padding: const EdgeInsets.only(top: 10, bottom: 10),

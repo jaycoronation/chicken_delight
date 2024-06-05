@@ -34,10 +34,10 @@ class OrderListPage extends StatefulWidget {
 class _OrderListPageState extends BaseState<OrderListPage> {
   bool _isLoading = false;
 
-  List<OrderList> listOrders = List<OrderList>.empty(growable: true);
-  List<OrderList> listOrdersMain = List<OrderList>.empty(growable: true);
+  List<OrderList> listOrders = [];
+  List<OrderList> listOrdersMain = [];
 
-  List<CommonResponseModel> orderFilterOption = List<CommonResponseModel>.empty(growable: true);
+  List<CommonResponseModel> orderFilterOption = [];
   var orderStatus = "";
   TextEditingController searchController = TextEditingController();
   var searchText = "";
@@ -247,8 +247,8 @@ class _OrderListPageState extends BaseState<OrderListPage> {
 
                                   getOrderListData(true);
                                 },
-                                child: Text(orderFilterOption[index].message.toString(),
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: orderFilterOption[index].isSelected ?? false
+                                child: Text(orderFilterOption[index].message ?? "",
+                                  style: TextStyle(fontSize: small, fontWeight: FontWeight.w400, color: orderFilterOption[index].isSelected ?? false
                                       ? white : black),),
                               ),
                             ),
@@ -277,7 +277,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                             textAlign: TextAlign.start,
                             controller: searchController,
                             cursorColor: black,
-                            style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: black),
+                            style: TextStyle(fontWeight: FontWeight.normal, fontSize: subTitle, color: black),
                             decoration: InputDecoration(
                                 hintText: "Search by order id...",
                                 focusedBorder: OutlineInputBorder(
@@ -327,7 +327,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                               }
                               else if (text.length > 2) {
                                 setState(() {
-                                  searchText = searchController.text.toString().trim();
+                                  searchText = searchController.text ?? "";
                                 });
                                 getOrderListData(true, true);
                               }
@@ -441,28 +441,28 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                                     children: [
                                                       Row(
                                                         children: [
-                                                          const Text("Franchise", textAlign: TextAlign.start,
-                                                            style: TextStyle(fontSize: 12, color: kGray, fontWeight: FontWeight.w600),
+                                                           Text("Franchise", textAlign: TextAlign.start,
+                                                            style: TextStyle(fontSize: small, color: kGray, fontWeight: FontWeight.w600),
                                                           ),
                                                           const Gap(8),
                                                           Text(checkValidString(listOrders[index].createdFor), textAlign: TextAlign.start,
-                                                            style: const TextStyle(fontSize: 13, color: black, fontWeight: FontWeight.w600),
+                                                            style: TextStyle(fontSize: small, color: black, fontWeight: FontWeight.w600),
                                                           ),
                                                         ],
                                                       ),
                                                       Row(
                                                         children: [
-                                                          const Text("Order Number", textAlign: TextAlign.start,
-                                                            style: TextStyle(fontSize: 12, color: kGray, fontWeight: FontWeight.w600),
+                                                           Text("Order Number", textAlign: TextAlign.start,
+                                                            style: TextStyle(fontSize: small, color: kGray, fontWeight: FontWeight.w600),
                                                           ),
                                                           const Gap(8),
                                                           Text(checkValidString(listOrders[index].orderNumber), textAlign: TextAlign.start,
-                                                            style: const TextStyle(fontSize: 13, color: primaryColor, fontWeight: FontWeight.w600),
+                                                            style:  TextStyle(fontSize: small, color: primaryColor, fontWeight: FontWeight.w600),
                                                           ),
                                                         ],
                                                       ),
                                                      /* Text(checkValidString(listOrders[index].paymentMethod), textAlign: TextAlign.start,
-                                                       style: const TextStyle(fontSize: 13, color: black, fontWeight: FontWeight.w600),
+                                                       style: const TextStyle(fontSize: small, color: black, fontWeight: FontWeight.w600),
                                                       ),*/
                                                       const Gap(5)
                                                     ],
@@ -473,12 +473,12 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                                       alignment: Alignment.topRight,
                                                       decoration: BoxDecoration(
                                                         borderRadius: BorderRadius.all(Radius.circular(kButtonCornerRadius)),
-                                                        color:  kLightGray,
+                                                        color:  appBG,
                                                       ),
                                                       child: Padding(
                                                         padding: const EdgeInsets.only(top: 6.0, bottom: 6, left: 8, right: 7),
-                                                        child: Text(listOrders[index].status.toString(),
-                                                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: listOrders[index].status.toString() == "Cancelled" ? Colors.red : Colors.green),),
+                                                        child: Text(listOrders[index].status ?? "",
+                                                          style: TextStyle(fontSize: small, fontWeight: FontWeight.w500, color: listOrders[index].status == "Cancelled" ? Colors.red : Colors.green),),
                                                       ),
                                                     ),
                                                   ),
@@ -486,9 +486,9 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                               ),
                                               const DottedLine(dashLength: 1, dashGapLength: 6, lineThickness: 1, dashRadius: 3, dashColor: kTextDarkGray),
                                               const Gap(5),
-                                              Text(listOrders[index].remarks?.toString() ?? "",
+                                              Text(listOrders[index].remarks ?? "",
                                                 textAlign: TextAlign.start,
-                                                style: const TextStyle(fontSize: 13, color: black, fontWeight: FontWeight.bold),
+                                                style: TextStyle(fontSize: small, color: black, fontWeight: FontWeight.bold),
                                               ),
                                               /*ListView.builder(
                                                   scrollDirection: Axis.vertical,
@@ -502,7 +502,8 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                                     crossAxisAlignment: CrossAxisAlignment.center,
                                                     mainAxisAlignment: MainAxisAlignment.center,
                                                     children: [
-                                                     *//* Container(
+                                                     */
+                                              /* Container(
                                                         margin: const EdgeInsets.only(left: 3, top: 8, bottom: 10, right: 10),
                                                         height: 60,
                                                         width: 60,
@@ -521,7 +522,8 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                                             width: 60,
                                                           ),
                                                         ),
-                                                      ),*//*
+                                                      ),*/
+                                              /*
                                                       Expanded(
                                                           child: Column(
                                                         mainAxisAlignment: MainAxisAlignment.center,
@@ -529,12 +531,12 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                                         children: [
                                                           Text(checkValidString(toDisplayCase(listOrders[index].items![i].item.toString().trim())),
                                                             textAlign: TextAlign.start,
-                                                            style: const TextStyle(fontSize: 13, color: black, fontWeight: FontWeight.bold),
+                                                            style: const TextStyle(fontSize: small, color: black, fontWeight: FontWeight.bold),
                                                           ),
                                                           const Gap(2),
                                                           Text("${checkValidString(listOrders[index].items?[i].quantity)} X ${checkValidString(getPrice(listOrders[index].items![i].basePrice.toString()))}",
                                                             textAlign: TextAlign.start,
-                                                            style: const TextStyle(fontSize: 13, color: kTextDarkGray, fontWeight: FontWeight.w600),
+                                                            style: const TextStyle(fontSize: small, color: kTextDarkGray, fontWeight: FontWeight.w600),
                                                           ),
 
                                                         ],
@@ -560,14 +562,14 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                                         margin: const EdgeInsets.only(right: 12),
                                                         child: Text(checkValidString(listOrders[index].timestamp),
                                                           textAlign: TextAlign.start,
-                                                          style: const TextStyle(fontSize: 12, color: hintDark, fontWeight: FontWeight.w300),
+                                                          style: TextStyle(fontSize: small, color: hintDark, fontWeight: FontWeight.w300),
                                                         ),
                                                       )),
                                                       Container(
                                                         margin: const EdgeInsets.only(top: 2),
-                                                        child: Text(getPrice(listOrders[index].grandTotal.toString()),
+                                                        child: Text(getPrice(listOrders[index].grandTotal ?? ""),
                                                           textAlign: TextAlign.center,
-                                                          style: const TextStyle(fontSize: 12, color: black, fontWeight: FontWeight.w600),
+                                                          style: TextStyle(fontSize: small, color: black, fontWeight: FontWeight.w600),
                                                         ),
                                                       ),
                                                       Container(
@@ -599,9 +601,9 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                       children: [
                         SizedBox(width: 30, height: 30,
                             child: Lottie.asset('assets/images/loader_new.json', repeat: true, animate: true, frameRate: FrameRate.max)),
-                        const Text(
+                         Text(
                             ' Loading more...',
-                            style: TextStyle(color: black, fontWeight: FontWeight.w400, fontSize: 16)
+                            style: TextStyle(color: black, fontWeight: FontWeight.w400, fontSize: subTitle)
                         )
                       ],
                     ),
@@ -643,7 +645,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                 ),
                                 Container(
                                   margin: const EdgeInsets.fromLTRB(14, 10, 14, 12),
-                                  child: const Text("Select Option", style: TextStyle(color: black, fontWeight: FontWeight.bold, fontSize: 15)),
+                                  child: Text("Select Option", style: TextStyle(color: black, fontWeight: FontWeight.bold, fontSize: subTitle)),
                                 ),
                               ],
                             ),
@@ -651,7 +653,6 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                               behavior: HitTestBehavior.opaque,
                               onTap: () {
                                 Navigator.pop(context);
-
                                 setState(() {
                                   // selectedFilter = "";
 
@@ -679,9 +680,9 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                 ),
                                 alignment: Alignment.centerRight,
                                 margin: const EdgeInsets.only(top:10, bottom: 5, left: 10, right: 10),
-                                child: const Padding(
+                                child: Padding(
                                   padding: EdgeInsets.all(6.0),
-                                  child: Text("Clear Filter", style: TextStyle(fontWeight: FontWeight.w400, color: primaryColor, fontSize: 14)
+                                  child: Text("Clear Filter", style: TextStyle(fontWeight: FontWeight.w400, color: primaryColor, fontSize: description)
                                   ),
                                 ),
                               ),
@@ -853,7 +854,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                             padding: const EdgeInsets.only(left: 20, right: 20, top: 8, bottom: 8),
                                             alignment: Alignment.centerLeft,
                                             child: Text(checkValidString(dateFilterList[index]),
-                                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: dateFilterList[index] == selectedDateFilter ? primaryColor : black),
+                                              style: TextStyle(fontSize: description, fontWeight: FontWeight.w500, color: dateFilterList[index] == selectedDateFilter ? primaryColor : black),
                                             ),
                                           ),
                                         ),
@@ -924,13 +925,13 @@ class _OrderListPageState extends BaseState<OrderListPage> {
         'page': _pageIndex.toString(),
         'status': orderStatus,
         'search': searchText,
-        "franchise_id": sessionManager.getUserId().toString(),
+        "franchise_id": sessionManager.getUserId() ?? "",
         "fromDate": dateStartSelectionChanged, //"2024-06-03"
         "toDate": dateEndSelectionChanged, //"2024-06-03"
       };
 
       final response = await http.post(url, body: jsonBody, headers: {
-        "Authorization": sessionManager.getToken().toString(),
+        "Authorization": sessionManager.getToken() ?? "",
       });
       final statusCode = response.statusCode;
 

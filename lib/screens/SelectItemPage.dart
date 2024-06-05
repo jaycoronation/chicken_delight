@@ -24,11 +24,10 @@ class _SelectItemPageState extends BaseState<SelectItemPage> {
 
   late ScrollController _scrollController;
 
-  List<Records> listItems = [];
-  List<Records> listItemsMain = [];
+ List<Records> listItems = [];
+List<Records> listItemsMain = [];
 
   final TextEditingController _searchController = TextEditingController();
-
 
   @override
   void initState() {

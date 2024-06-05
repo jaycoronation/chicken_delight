@@ -42,9 +42,9 @@ class _ForgotPasswordScreenState extends BaseState<ForgotPasswordScreen> {
                Container(
                  width : MediaQuery.of(context).size.width,
                  padding: const EdgeInsets.all(22),
-                 decoration:  BoxDecoration(
+                 decoration:  const BoxDecoration(
                    // border: Border.all(color: appBg, width: 0.5),
-                   borderRadius:const BorderRadius.all(Radius.circular(18),) ,
+                   borderRadius:BorderRadius.all(Radius.circular(18),) ,
                    color: white,
                  ),
                  child: Column(
@@ -62,11 +62,11 @@ class _ForgotPasswordScreenState extends BaseState<ForgotPasswordScreen> {
                      Text('Reset Password',
                        style: TextStyle(fontSize: titleFont, color: black,fontWeight: FontWeight.w600),
                      ),
-                     Gap(4),
+                     const Gap(4),
                      Text('Enter your registered email',
                          style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
                      ),
-                     Gap(28),
+                     const Gap(28),
                      TextField(
                        readOnly: false,
                        keyboardType: TextInputType.emailAddress,

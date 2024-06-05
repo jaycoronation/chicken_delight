@@ -160,10 +160,11 @@ Widget getSmallButtonWithoutFill(String title, bool isLoading, void Function() o
 
 double largeFont = 28;
 double titleFont = 22;
+double titleFont20 = 22;
 double medium = 18;
 double subTitle = 16;
 double description = 14;
-double small = 13;
+double small = 12;
 
 
 Widget getCommonButtonLoad(String title, bool isLoading, void Function() onPressed){
