@@ -42,7 +42,7 @@ class MyNoDataWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              Container(
+              /*Container(
                 margin: const EdgeInsets.only(bottom: 20, left: 50, right: 50),
                 width: double.infinity,
                 child: ElevatedButton(
@@ -61,7 +61,7 @@ class MyNoDataWidget extends StatelessWidget {
                   child: Text(btnTitle, textAlign: TextAlign.center,
                       style: const TextStyle(fontSize: 16, color: white, fontWeight: FontWeight.w600)),
                 ),
-              ),
+              ),*/
             ],
           ),
         )

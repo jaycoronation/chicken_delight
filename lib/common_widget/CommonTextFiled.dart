@@ -58,6 +58,7 @@ class CommonTextFieldForPassword extends StatelessWidget {
   final int maxLength;
   final String prefixIcon;
   final String suffixIcon;
+  final bool obscureText;
 
 
   const CommonTextFieldForPassword({
@@ -67,6 +68,7 @@ class CommonTextFieldForPassword extends StatelessWidget {
     this.maxLength = TextField.noMaxLength,
     this.prefixIcon = "",
     this.suffixIcon = "",
+    this.obscureText = false,
 
     super.key
   });
@@ -80,7 +82,7 @@ class CommonTextFieldForPassword extends StatelessWidget {
       maxLength: maxLength,
       keyboardType: inputType,
       style: getTextFiledStyle(),
-      obscureText: true,
+      obscureText: obscureText,
       decoration: InputDecoration(
         labelText: hintText,
         counterText: "",
@@ -393,8 +395,9 @@ class SearchTextField extends StatelessWidget {
             ? GestureDetector(
           onTap:onTapClear,
           child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Image.asset(suffixIcon, width: 22, height: 22)),
+              padding: const EdgeInsets.all(16.0),
+              child: Image.asset(suffixIcon, width: 14, height: 14)
+          ),
         )
             : null,
         // suffixIcon: suffixIcon,

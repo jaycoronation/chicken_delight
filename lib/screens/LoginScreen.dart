@@ -218,7 +218,6 @@ class _LoginScreenState extends BaseState<LoginScreen> {
 
         );
         startActivity(context, const TabNavigation(0));
-        showSnackBar(loginResponse.message, context);
 
       } else {
         setState(() {

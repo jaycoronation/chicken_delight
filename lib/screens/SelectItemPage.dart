@@ -69,7 +69,7 @@ List<Records> listItemsMain = [];
                         //   showSnackBar("Please enter unit for all selected samples.", context);
                         // }
                       } else {
-                        showSnackBar("Please select at-least one sample.", context);
+                        showSnackBar("Please select at-least one product.", context);
                       }
                     }
 
@@ -100,10 +100,9 @@ List<Records> listItemsMain = [];
                         //   showSnackBar("Please enter unit for all selected samples.", context);
                         // }
                       } else {
-                        showSnackBar("Please select at-least one sample.", context);
+                        showSnackBar("Please select at-least one product.", context);
                       }
                     }
-
                   },
                   child: const Text("Done", textAlign: TextAlign.center,
                       style: TextStyle(fontWeight: FontWeight.w500, color: black, fontSize: 15))),
@@ -117,7 +116,7 @@ List<Records> listItemsMain = [];
                   child: SearchTextField(
                     controller: _searchController,
                     hintText: "Search...",
-                    suffixIcon: 'assets/images/ic_close_light_primary.png',
+                    suffixIcon: 'assets/images/ic_close.png',
                     onTapClear: () async {
                       setState(() {
                         _searchController.text = "";

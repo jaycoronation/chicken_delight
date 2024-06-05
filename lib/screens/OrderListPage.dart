@@ -179,8 +179,10 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                   searchController.text = "";
                   searchText = "";
                 });
+                if (!isOrderListSearch) {
+                  getOrderListData(false);
+                }
 
-                getOrderListData(false);
                 // showSnackBar("Show Filter Dialog", context);
               },
               child: Container(
@@ -384,7 +386,6 @@ class _OrderListPageState extends BaseState<OrderListPage> {
         }
 
         getOrderListData(true);
-
       },
       itemBuilder: (context, index) {
         return RefreshIndicator(
@@ -394,8 +395,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
             padding: const EdgeInsets.only(left: 10, right: 10),
             child: Column(
               children: [
-                Expanded(
-                    child: SingleChildScrollView(
+                Expanded(child: SingleChildScrollView(
                       controller: _scrollViewController,
                       child: AnimationLimiter(
                         child: ListView.builder(
@@ -601,8 +601,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                       children: [
                         SizedBox(width: 30, height: 30,
                             child: Lottie.asset('assets/images/loader_new.json', repeat: true, animate: true, frameRate: FrameRate.max)),
-                         Text(
-                            ' Loading more...',
+                         Text(' Loading more...',
                             style: TextStyle(color: black, fontWeight: FontWeight.w400, fontSize: subTitle)
                         )
                       ],
@@ -913,7 +912,6 @@ class _OrderListPageState extends BaseState<OrderListPage> {
             }
         });
       }
-
 
       HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
         HttpLogger(logLevel: LogLevel.BODY),
