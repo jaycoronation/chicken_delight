@@ -7,6 +7,7 @@ import '../screens/AddOrderScreen.dart';
 import '../screens/DashboardPage.dart';
 import '../screens/OrderListPage.dart';
 import '../screens/ProductListScreen.dart';
+import '../screens/ProfileScreen.dart';
 import '../utils/app_utils.dart';
 import '../utils/session_manager.dart';
 
@@ -27,7 +28,7 @@ class _TabNavigationPageState extends State<TabNavigation> {
     ProductListScreen(),
     AddOrderScreen(),
     const OrderListPage(),
-    Container()
+    ProfileScreen()
   ];
 
   SessionManager sessionManager = SessionManager();
@@ -155,6 +156,15 @@ class _TabNavigationPageState extends State<TabNavigation> {
                                   _pages.insert(3, OrderListPage(key: UniqueKey()));
                                 });
                               }
+                              else if (value == 4 && isOrderListLoad)
+                              {
+                                setState(() {
+                                  _pages.removeAt(4);
+                                  _pages.insert(4, ProfileScreen(key: UniqueKey()));
+                                });
+                              }
+
+
 
                               if (value != 2)
                               {

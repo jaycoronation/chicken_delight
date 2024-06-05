@@ -220,7 +220,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   foregroundColor: black,
-                                  backgroundColor: orderFilterOption[index].isSelected ?? false ? black : white,
+                                  backgroundColor: orderFilterOption[index].isSelected ?? false ? black : appBG,
                                   elevation: 0.0,
                                   padding: const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 10),
                                   side: const BorderSide(color: black, width: 0.5, style: BorderStyle.solid),

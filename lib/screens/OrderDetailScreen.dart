@@ -91,6 +91,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                       Text(status,
                           style: TextStyle(fontSize: subTitle, color: status == "Cancelled" ? Colors.red : Colors.green,fontWeight: FontWeight.w600),textAlign: TextAlign.left
                       ),
+                      Image.asset('assets/images/ic_right_arrow_new.png', height: 14, width: 14, color: black),
                     ],
                   ),
                   Row(
@@ -233,7 +234,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                                                       overflow: TextOverflow.clip
                                                   ),
                                                   Gap(4),
-                                                  Row(
+                                                   Row(
                                                     children: [
                                                       Text("${getSetInner.quantity ?? " "}/${getSetInner.unit ?? " "}  x  CA\$${getSetInner.basePrice ?? " "}",
                                                           style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500),textAlign: TextAlign.left

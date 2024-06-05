@@ -60,18 +60,9 @@ class _DashboardPageState extends BaseState<DashboardPage> {
           automaticallyImplyLeading: false,
           title: Container(
             alignment: Alignment.topLeft,
-            child: Image.asset('assets/images/ic_chicken_logo.jpg', height: 50, width: 120),
+            child: Image.asset('assets/images/ic_chicken_logo.jpg', height: 40, width: 100),
           ),
           actions: [
-            GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () {
-                logoutFromApp(context);
-              },
-              child:const Icon(Icons.logout, color: black, size: 32,),
-
-            ),
-            const Gap(10),
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () {
@@ -390,128 +381,6 @@ class _DashboardPageState extends BaseState<DashboardPage> {
     widget is DashboardPage;
   }
 
-  void logoutFromApp(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: white,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))),
-      builder: (BuildContext context) {
-        return Wrap(
-          children: [
-
-            Container(
-              margin: const EdgeInsets.all(15),
-              decoration:
-              const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)), color: white),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                      height: 2,
-                      width: 40,
-                      color: black,
-                      margin: const EdgeInsets.only(bottom: 18)
-                  ),
-                  Container(
-                      alignment: Alignment.center,
-                      margin: const EdgeInsets.only(bottom: 10),
-                      child: const Text('Logout', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: black))),
-                  Container(
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.only(left: 12),
-                    child: const Text('Are you sure want to Logout?', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, color: black)),
-                  ),
-                  Row(
-                    children: [
-                      Flexible(
-                        flex: 1,
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          margin: const EdgeInsets.only(
-                              left: 12, right: 12, top: 30),
-                          child: TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  side: const BorderSide(
-                                      color: black,
-                                      width: 1,
-                                      style: BorderStyle.solid),
-                                  borderRadius: BorderRadius.circular(22.0),
-                                ),
-                              ),
-                              backgroundColor:
-                              MaterialStateProperty.all<Color>(white),
-                            ),
-                            child:  Padding(
-                              padding: const EdgeInsets.all(6.0),
-                              child: Text(
-                                "Cancel",
-                                style: TextStyle(
-                                    color: black,
-                                    fontSize: contentSize,
-                                    fontWeight: FontWeight.w500
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Flexible(
-                        flex: 1,
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          margin: const EdgeInsets.only(left: 12, right: 12, top: 30),
-                          child: TextButton(
-                            onPressed: () async {
-                              Navigator.pop(context);
-                              SessionManagerMethods.clear();
-                              await SessionManagerMethods.init();
-                              var sessionManager = SessionManager();
-                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (Route<dynamic> route) => false);
-                            },
-                            style: ButtonStyle(
-                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                    side: const BorderSide(
-                                        color: black,
-                                        width: 1,
-                                        style: BorderStyle.solid
-                                    ),
-                                    borderRadius: BorderRadius.circular(22.0),
-                                  ),
-                                ),
-                                backgroundColor: MaterialStateProperty.all<Color>(black)
-                            ),
-                            child:   Padding(
-                              padding: const EdgeInsets.all(6.0),
-                              child: Text(
-                                "Logout",
-                                style: TextStyle(
-                                    color: white,
-                                    fontSize: contentSize,
-                                    fontWeight: FontWeight.w500
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   // API call function...
   void getDashboardData() async {

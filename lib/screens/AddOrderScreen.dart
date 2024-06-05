@@ -150,8 +150,8 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                   visible: listItems.isNotEmpty,
                   child: Container(
                     margin: const EdgeInsets.only(left: 10, bottom: 5),
-                    child: const Text("Items",
-                        style: TextStyle(fontWeight: FontWeight.w600, color: black,fontSize: 20)),
+                    child: Text("Items",
+                        style: TextStyle(fontWeight: FontWeight.w600, color: black,fontSize: titleFont20)),
                   ),
                 ),
                 MediaQuery.removePadding(
@@ -249,7 +249,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                                 icon:const Icon(Icons.remove)//Image.asset('assets/images/ic_blue_minus.png', height: 24, width: 24),
                                               ),
                                               Text(listItems[index].quantity.toString(),
-                                                  style: const TextStyle(fontWeight: FontWeight.w400, color: black, fontSize: 13)),
+                                                  style: TextStyle(fontWeight: FontWeight.w400, color: black, fontSize: small)),
                                               IconButton(
                                                 onPressed: () {
                                                   setState(() {
@@ -354,9 +354,9 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                       Container(
                         alignment: Alignment.centerLeft,
                         margin: const EdgeInsets.only(left: 10, bottom: 10, top: 10),
-                        child: const Text("Remark",
+                        child: Text("Remark",
                             textAlign: TextAlign.left,
-                            style: TextStyle(fontWeight: FontWeight.w600, color: black,fontSize: 20)),
+                            style: TextStyle(fontWeight: FontWeight.w600, color: black,fontSize: titleFont20)),
                       ),
                       Container(
                         margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
@@ -381,9 +381,9 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                         Container(
                           alignment: Alignment.centerLeft,
                           margin: const EdgeInsets.only(left: 10, bottom: 10, top: 10),
-                          child: const Text("Order Summary",
+                          child: Text("Order Summary",
                               textAlign: TextAlign.left,
-                              style: TextStyle(fontWeight: FontWeight.w600, color: black,fontSize: 20)),
+                              style: TextStyle(fontWeight: FontWeight.w600, color: black,fontSize: titleFont20)),
                         ),
                         Container(
                           margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
@@ -398,13 +398,16 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text("Total Items", textAlign: TextAlign.start,
-                                          style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 14)),
+                                          style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 14)
+                                      ),
                                       Gap(6),
                                       Text("Sub Total", textAlign: TextAlign.start,
-                                          style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 14)),
+                                          style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 14)
+                                      ),
                                       Gap(6),
                                       Text("Shipping Charges", textAlign: TextAlign.start,
-                                          style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 14)),
+                                          style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 14)
+                                      ),
                                     ],
                                   ),
                                   const Spacer(),
@@ -413,14 +416,14 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       Text(listItems.length.toString(), textAlign: TextAlign.start,
-                                          style: const TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 13)),
+                                          style: TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: small)),
                                       const Gap(6),
                                       Text(subTotal.toStringAsFixed(2),
                                           textAlign: TextAlign.start,
-                                          style: const TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 13)),
+                                          style: TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: small)),
                                       const Gap(6),
                                       Text(getPrice("75"), textAlign: TextAlign.start,
-                                          style:const TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 13)),
+                                          style: TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: small)),
                                     ],
                                   ),
                                 ],
@@ -435,9 +438,9 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                   Container(
                                     alignment: Alignment.centerLeft,
                                     margin: const EdgeInsets.only(top: 10),
-                                    child: const Text("Grand Total",
+                                    child: Text("Grand Total",
                                         textAlign: TextAlign.left,
-                                        style: TextStyle(fontWeight: FontWeight.w600, color: black,fontSize: 18)),
+                                        style: TextStyle(fontWeight: FontWeight.w600, color: black,fontSize: medium)),
                                   ),
                                   const Spacer(),
                                   Text(grandTotal.toStringAsFixed(2), textAlign: TextAlign.start,
@@ -453,21 +456,22 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                 ),
                 const Gap(20),
                 Container(
-                  margin: const EdgeInsets.only(bottom: 20),
-                  alignment: Alignment.center,
-                  child: getCommonButtonWithoutFill("Proceed", isLoading, () {
-                    if (listItems.isEmpty)
+                  margin: const EdgeInsets.only(top: 30, bottom: 10, left: 60, right: 60),
+                  width: MediaQuery.of(context).size.width,
+                  child: getCommonButtonLoad("Proceed", isLoading,  () {
                     {
-                      showSnackBar("Please select item.", context);
+                      if (listItems.isEmpty)
+                      {
+                        showSnackBar("Please select item.", context);
+                      }
+                      else
+                      {
+                        _makeJsonData();
+                        saveItem();
+                      }
                     }
-                    else
-                    {
-                      _makeJsonData();
-                      saveItem();
-                    }
-
                   }),
-                )
+                ),
               ],
             ),
           ),
@@ -520,10 +524,12 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                     color: primaryColor,
                     margin: const EdgeInsets.only(top: 10, bottom: 10),
                   ),
-                  Container(margin: const EdgeInsets.only(top: 10, bottom: 10), child: const Text('Remove Product', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: black))),
+                  Container(margin: const EdgeInsets.only(top: 10, bottom: 10), 
+                      child: Text('Remove Product', style: TextStyle(fontSize: medium, fontWeight: FontWeight.w700, color: black))
+                  ),
                   Container(
                     margin: const EdgeInsets.only(top: 10, bottom: 15),
-                    child: const Text('Are you sure want to remove this product?', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: black)),
+                    child: Text('Are you sure want to remove this product?', style: TextStyle(fontSize: subTitle, fontWeight: FontWeight.w400, color: black)),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 20, right: 20, bottom: 30),
@@ -540,9 +546,9 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
-                                child: const Text('No',
+                                child: Text('No',
                                     style: TextStyle(
-                                      fontSize: 15,
+                                      fontSize: subTitle,
                                       fontWeight: FontWeight.w600,
                                       color: primaryColor,
                                     ))),
@@ -574,7 +580,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
 
                                 });
                               },
-                              child: const Text('Yes', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: white)),
+                              child: Text('Yes', style: TextStyle(fontSize: subTitle, fontWeight: FontWeight.w600, color: white)),
                             ),
                           ),
                         ),
@@ -609,7 +615,6 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
 
   }
 
-
   // API Call func...
   geItemList() async {
 
@@ -625,7 +630,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
       };
 
       final response = await http.post(url, body: jsonBody, headers: {
-        "Authorization": sessionManager.getToken().toString(),
+        "Authorization": sessionManager.getToken() ?? "",
       });
 
       final statusCode = response.statusCode;
@@ -673,7 +678,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
       final url = Uri.parse(MAIN_URL + itemSave);
       Map<String, String> jsonBody = {
         'couponCode': "",
-        'created_for': sessionManager.getUserId().toString(),
+        'created_for': sessionManager.getUserId() ?? "",
         'grand_total': grandTotal.toString(),
         'items': listItems.isNotEmpty ? jsonEncode(listItems).toString().trim()  :"",
         'paymentMethod': "[]",
@@ -684,7 +689,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
       };
 
       final response = await http.post(url, body: jsonBody, headers: {
-        "Authorization": sessionManager.getToken().toString(),
+        "Authorization": sessionManager.getToken() ?? "",
       });
       final statusCode = response.statusCode;
       print(response);
