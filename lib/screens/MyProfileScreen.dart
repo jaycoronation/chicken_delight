@@ -14,9 +14,12 @@ import '../constant/colors.dart';
 import '../model/CityResponseModel.dart';
 import '../model/CountryResponseModel.dart';
 import '../model/StateResponseModel.dart';
+import '../model/common/CommonResponseModel.dart';
 import '../utils/app_utils.dart';
 import '../utils/base_class.dart';
 import '../widget/no_data_new.dart';
+import 'package:http/http.dart' as http;
+
 
 class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen({Key? key}) : super(key: key);
@@ -626,7 +629,38 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                    width: MediaQuery.of(context).size.width,
                    child: getCommonButtonLoad("Save", isLoading,  () {
                      {
-
+                       if(nameController.text.isEmpty)
+                         {
+                           showSnackBar("Please enter your name", context);
+                         }
+                       else if(emailController.text.isNotEmpty)
+                       {
+                         showSnackBar("Please enter your email address", context);
+                       }
+                       else if(mobileController.text.isNotEmpty)
+                       {
+                         showSnackBar("Please enter your mobile number", context);
+                       }
+                       else if(businessNameController.text.isNotEmpty)
+                       {
+                         showSnackBar("Please enter your business name", context);
+                       }
+                       else if(countryController.text.isNotEmpty)
+                       {
+                         showSnackBar("Please select Country", context);
+                       }
+                       else if(stateController.text.isNotEmpty)
+                       {
+                         showSnackBar("Please select state", context);
+                       }
+                       else if(cityController.text.isNotEmpty)
+                       {
+                         showSnackBar("Please select city", context);
+                       }
+                       else
+                         {
+                           _profileSaveApi();
+                         }
                      }
                    }),
                  ),
@@ -1377,6 +1411,71 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
       }
     } on Exception catch (e) {
       print(e);
+    }
+  }
+
+  _profileSaveApi() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    Map<String, String> jsonBody = {
+    'from_app': 'true',
+    'name': nameController.value.text,
+    'email': emailController.value.text,
+    'username': userNameController.value.text,
+    'id': sessionManager.getUserId() ?? "",
+    'address_line_1': addressLine1Controller.value.text,
+    'address_line_2': addressLine2Controller.value.text,
+    'address_line_3': addressLine3Controller.value.text,
+    'address_line_4': addressLine4Controller.value.text,
+    'country_id': countryId,
+    'state_id': stateId,
+    'city_id': cityController.value.text,
+    'mobile': mobileController.value.text,
+    'type': '2',
+    'website': websiteController.value.text,
+    'business_name': businessNameController.value.text,
+    'country_code': "1",
+    };
+
+    final url = Uri.parse(MAIN_URL + updateProfile);
+
+    Map<String, String> headers = {"Access-Token": sessionManager.getToken().toString().trim()};
+
+    print("Json Body ==== ${jsonBody}");
+
+    http.MultipartRequest request = http.MultipartRequest('POST', url,);
+    request.headers.addAll(headers);
+
+    if (profilePicFile.path.isNotEmpty)
+    {
+      request.files.add(await http.MultipartFile.fromPath('profile_pic', profilePicFile.path));
+    }
+    //request.headers.("Access-Token": sessionManager.getAccessToken().toString().trim())
+    request.fields.addAll(jsonBody);
+
+    http.StreamedResponse response = await request.send();
+    var responseBytes = await response.stream.toBytes();
+    var responseString = utf8.decode(responseBytes);
+
+    final statusCode = response.statusCode;
+    Map<String, dynamic> user = jsonDecode(responseString);
+    print("User ===== $user");
+    var dataResponse = CommonResponseModel.fromJson(user);
+
+    print(dataResponse);
+
+    if (statusCode == 200 && dataResponse.success == 1) {
+      setState(() {
+        isLoading = false;
+      });
+      showSnackBar(dataResponse.message, context);
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+      showSnackBar(dataResponse.message, context);
     }
   }
 

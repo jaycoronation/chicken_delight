@@ -21,3 +21,5 @@ String itemSave = "outwardorder/save";
 String CountryList = "country";
 String stateList = "states";
 String cities = "cities";
+
+String updateProfile = "manageuser/updateprofile";
