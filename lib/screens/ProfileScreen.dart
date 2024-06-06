@@ -14,6 +14,7 @@ import '../model/ProfileScreen.dart';
 import '../utils/base_class.dart';
 import '../utils/session_manager.dart';
 import '../utils/session_manager_methods.dart';
+import 'MyProfileScreen.dart';
 
 
 class ProfileScreen extends StatefulWidget {
@@ -79,6 +80,9 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
                           children: [
                             GestureDetector(
                               behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => MyProfileScreen()));
+                              },
                               child: Row(
                                 children: [
                                   SizedBox(
@@ -129,10 +133,7 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
                                   const Gap(10)
                                 ],
                               ),
-                              onTap: () {
-                              },
                             ),
-
                           ],
                         ),
                       ),

@@ -69,7 +69,7 @@ class _LoginScreenState extends BaseState<LoginScreen> {
                       const Gap(28),
                       TextField(
                         readOnly: false,
-                        keyboardType: TextInputType.text,
+                        keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
                         textCapitalization: TextCapitalization.words,
                         cursorColor: black,
