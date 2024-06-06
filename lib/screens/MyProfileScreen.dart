@@ -630,9 +630,9 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                    child: getCommonButtonLoad("Save", isLoading,  () {
                      {
                        if(nameController.text.isEmpty)
-                         {
-                           showSnackBar("Please enter your name", context);
-                         }
+                       {
+                         showSnackBar("Please enter your name", context);
+                       }
                        else if(emailController.text.isNotEmpty)
                        {
                          showSnackBar("Please enter your email address", context);
@@ -658,13 +658,12 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                          showSnackBar("Please select city", context);
                        }
                        else
-                         {
-                           _profileSaveApi();
-                         }
+                       {
+                         _profileSaveApi();
+                       }
                      }
                    }),
                  ),
-
                ],
              ),
            )
