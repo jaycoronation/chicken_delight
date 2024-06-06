@@ -212,7 +212,7 @@ class _TabNavigationPageState extends State<TabNavigation> {
                                 //const ImageIcon(AssetImage("assets/images/ic_profile_orange.png"),),
                               ) : */
                               BottomNavigationBarItem(
-                                label: 'Store',
+                                label: 'Profile',
                                 icon:ImageIcon(AssetImage("assets/images/profile_gray.png"),),
                                 //const ImageIcon(AssetImage("assets/images/ic_profile_orange.png"),),
                               ),

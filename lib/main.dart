@@ -1,18 +1,48 @@
 import 'dart:async';
 
+import 'package:chicken_delight/push_notification/PushNotificationService.dart';
 import 'package:chicken_delight/screens/LoginScreen.dart';
-import 'package:chicken_delight/screens/OrderDetailScreen.dart';
-import 'package:chicken_delight/screens/DashboardPage.dart';
 import 'package:chicken_delight/tabs/tabnavigation.dart';
 import 'package:chicken_delight/utils/app_utils.dart';
 import 'package:chicken_delight/utils/base_class.dart';
 import 'package:chicken_delight/utils/session_manager_methods.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'constant/colors.dart';
+import 'constant/global_context.dart';
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // you need to initialize firebase first
+  await Firebase.initializeApp();
+  print("Handling a background message: ${message.data.toString()}");
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp();
+
+  await SessionManagerMethods.init();
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+  if (initialMessage != null) {
+    // App received a notification when it was killed
+    print("@@@@@@@@Main Dart@@@@@@@@" + initialMessage.data.toString());
+    NavigationService.notif_type = initialMessage.data['content_type'];
+    NavigationService.orderID = initialMessage.data['content_id'];
+  }
+
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
+  flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+      AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
+
+  await PushNotificationService().setupInteractedMessage();
+
   await SessionManagerMethods.init();
   runApp(const MyApp());
 }
@@ -35,19 +65,19 @@ class MyApp extends StatelessWidget {
             contentPadding: const EdgeInsets.only(left: 12, right: 12, top: 18, bottom: 18),
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(kEditTextCornerRadius),
-                borderSide: const BorderSide(width: 1, style: BorderStyle.solid, color: grayNew)),
+                borderSide: const BorderSide(width: 1, style: BorderStyle.solid, color: grayDividerDetail)),
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(kEditTextCornerRadius),
-                borderSide: const BorderSide(width: 1, style: BorderStyle.solid, color: lightPrimaryColor)),
+                borderSide: const BorderSide(width: 1, style: BorderStyle.solid, color: black)),
             errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(kEditTextCornerRadius), borderSide: const BorderSide(width: 1, color: grayNew)),
+                borderRadius: BorderRadius.circular(kEditTextCornerRadius), borderSide: const BorderSide(width: 1, color: grayDividerDetail)),
             focusedErrorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(kEditTextCornerRadius), borderSide: const BorderSide(width: 1, color: grayNew)),
+                borderRadius: BorderRadius.circular(kEditTextCornerRadius), borderSide: const BorderSide(width: 1, color: grayDividerDetail)),
             enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(kEditTextCornerRadius),
-                borderSide: const BorderSide(width: 1, style: BorderStyle.solid, color: grayNew)),
-            labelStyle: const TextStyle(color: lightPrimaryColor, fontSize: 14, fontWeight: FontWeight.w400),
-            hintStyle: const TextStyle(color: lightPrimaryColor, fontSize: 14, fontWeight: FontWeight.w400),
+                borderSide: const BorderSide(width: 1, style: BorderStyle.solid, color: grayDividerDetail)),
+            labelStyle: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w400),
+            hintStyle: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w400),
           ),
           fontFamily: 'Inter',
           textSelectionTheme: TextSelectionThemeData(selectionColor: primaryColor.withOpacity(0.3)),

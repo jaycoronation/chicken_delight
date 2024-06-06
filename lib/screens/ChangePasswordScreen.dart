@@ -47,6 +47,19 @@ class _ChangePasswordScreenState extends BaseState<ChangePasswordScreen> {
       },
       child: Scaffold(
         backgroundColor: chicken_bg,
+        appBar: AppBar(
+          toolbarHeight: kToolbarHeight,
+          automaticallyImplyLeading: false,
+          leading: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child:getBackArrowBlack()),
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor: appBG,
+        ),
         body: Padding(
           padding: const EdgeInsets.only(left: 18.0, right: 18),
           child: Column(
@@ -58,7 +71,7 @@ class _ChangePasswordScreenState extends BaseState<ChangePasswordScreen> {
                 padding: const EdgeInsets.all(22),
                 decoration:  BoxDecoration(
                   // border: Border.all(color: appBg, width: 0.5),
-                  borderRadius:const BorderRadius.all(Radius.circular(18),) ,
+                  borderRadius: BorderRadius.all(Radius.circular(kContainerCornerRadius),) ,
                   color: white,
                 ),
                 child: Column(
@@ -93,14 +106,6 @@ class _ChangePasswordScreenState extends BaseState<ChangePasswordScreen> {
                         color: black,
                       ),
                       decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: grayDividerDetail),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: grayDividerDetail),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
                         labelText: 'Password',
                         labelStyle:  TextStyle(fontSize: description, color:gray_dark),
                         suffixIcon: GestureDetector(
@@ -126,14 +131,6 @@ class _ChangePasswordScreenState extends BaseState<ChangePasswordScreen> {
                         color: black,
                       ),
                       decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: grayDividerDetail),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: grayDividerDetail),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
                         labelText: 'Confirm Password',
                         labelStyle:  TextStyle(fontSize: description, color:gray_dark),
                         suffixIcon: GestureDetector(
@@ -159,6 +156,10 @@ class _ChangePasswordScreenState extends BaseState<ChangePasswordScreen> {
                           else if(confirmController.text.isEmpty)
                           {
                             showSnackBar("Please enter your confirm password", context);
+                          }
+                          else if(passwordController.text == confirmController.text)
+                          {
+                            showSnackBar("New and Confirm Password must be equal.", context);
                           }
                           else
                           {

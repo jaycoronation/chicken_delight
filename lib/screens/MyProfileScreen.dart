@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -93,7 +94,7 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
              margin: const EdgeInsets.all(12),
              padding: const EdgeInsets.all(12),
              decoration: BoxDecoration(
-               borderRadius: BorderRadius.circular(18.0),
+               borderRadius: BorderRadius.circular(kContainerCornerRadius),
                color: white,
              ),
              child: Column(
@@ -104,7 +105,7 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                  Center(
                    child: GestureDetector(
                        behavior: HitTestBehavior.opaque,
-                       onTap: (){
+                       onTap: () {
                          _showBottomSheetForImagePicker("Profile Pic");
                        },
                        child: Stack(
@@ -116,10 +117,7 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                                height: 120,
                                alignment: Alignment.center,
                                decoration: BoxDecoration(
-                                   border: Border.all(
-                                       color: black,
-                                       width: 1
-                                   ),
+                                   border: Border.all(color: black, width: 1),
                                    shape: BoxShape.circle
                                ),
                                child: ClipOval(
@@ -134,10 +132,7 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                                height: 120,
                                alignment: Alignment.center,
                                decoration: BoxDecoration(
-                                   border: Border.all(
-                                       color: black,
-                                       width: 1
-                                   ),
+                                   border: Border.all(color: black, width: 1),
                                    shape: BoxShape.circle
                                ),
                                child: profilePic.isEmpty
@@ -169,7 +164,7 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                    textInputAction: TextInputAction.next,
                    textCapitalization: TextCapitalization.words,
                    cursorColor: black,
-                   controller:nameController,
+                   controller: nameController,
                    style: TextStyle(
                      fontWeight: FontWeight.w500,
                      fontSize: subTitle,
@@ -182,14 +177,6 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                      contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
                      counterText: "",
                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                     enabledBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
-                     focusedBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
                    ),
                  ),
                  const Gap(16),
@@ -199,27 +186,17 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                    textInputAction: TextInputAction.next,
                    textCapitalization: TextCapitalization.words,
                    cursorColor: black,
-                   controller:userNameController,
+                   controller: userNameController,
                    style: TextStyle(
                      fontWeight: FontWeight.w500,
                      fontSize: subTitle,
                      color: black,
                    ),
                    decoration: InputDecoration(
-                     // fillColor: grayForDetail,
-                     // filled: true,
                      labelText: 'User Name',
                      contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
                      counterText: "",
                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                     enabledBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
-                     focusedBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
                    ),
                  ),
                  const Gap(16),
@@ -227,7 +204,6 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                    readOnly: false,
                    keyboardType: TextInputType.emailAddress,
                    textInputAction: TextInputAction.next,
-                   textCapitalization: TextCapitalization.words,
                    cursorColor: black,
                    controller:emailController,
                    style: TextStyle(
@@ -236,20 +212,10 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                      color: black,
                    ),
                    decoration: InputDecoration(
-                     // fillColor: grayForDetail,
-                     // filled: true,
                      labelText: 'Email Address',
                      contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
                      counterText: "",
                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                     enabledBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
-                     focusedBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
                    ),
                  ),
                  const Gap(16),
@@ -257,7 +223,6 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                    readOnly: false,
                    keyboardType: TextInputType.phone,
                    textInputAction: TextInputAction.next,
-                   textCapitalization: TextCapitalization.words,
                    cursorColor: black,
                    maxLength: 10,
                    controller:mobileController,
@@ -267,21 +232,12 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                      color: black,
                    ),
                    decoration: InputDecoration(
-                     // fillColor: grayForDetail,
-                     // filled: true,
                      labelText: 'Mobile Number',
-                     contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
+                     contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14),
                      counterText: "",
                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                     enabledBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
-                     focusedBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
                    ),
+                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                  ),
                  const Gap(16),
                  TextField(
@@ -298,20 +254,10 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                      color: black,
                    ),
                    decoration: InputDecoration(
-                     // fillColor: grayForDetail,
-                     // filled: true,
                      labelText: 'Business Name',
                      contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
                      counterText: "",
                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                     enabledBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
-                     focusedBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
                    ),
                  ),
                  const Gap(16),
@@ -319,7 +265,6 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                    readOnly: false,
                    keyboardType: TextInputType.text,
                    textInputAction: TextInputAction.next,
-                   textCapitalization: TextCapitalization.words,
                    cursorColor: black,
                    maxLength: 10,
                    controller: websiteController,
@@ -329,20 +274,10 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                      color: black,
                    ),
                    decoration: InputDecoration(
-                     // fillColor: grayForDetail,
-                     // filled: true,
                      labelText: 'Website',
                      contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
                      counterText: "",
                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                     enabledBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
-                     focusedBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
                    ),
                  ),
                  const Gap(16),
@@ -359,20 +294,10 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                      color: black,
                    ),
                    decoration: InputDecoration(
-                     // fillColor: grayForDetail,
-                     // filled: true,
                      labelText: 'Address Line - 1 ',
                      contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
                      counterText: "",
                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                     enabledBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
-                     focusedBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
                    ),
                  ),
                  const Gap(16),
@@ -389,20 +314,10 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                      color: black,
                    ),
                    decoration: InputDecoration(
-                     // fillColor: grayForDetail,
-                     // filled: true,
                      labelText: 'Address Line - 2 ',
                      contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
                      counterText: "",
                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                     enabledBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
-                     focusedBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
                    ),
                  ),
                  const Gap(16),
@@ -419,20 +334,10 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                      color: black,
                    ),
                    decoration: InputDecoration(
-                     // fillColor: grayForDetail,
-                     // filled: true,
                      labelText: 'Address Line - 3 ',
                      contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
                      counterText: "",
                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                     enabledBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
-                     focusedBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
                    ),
                  ),
                  const Gap(16),
@@ -449,27 +354,16 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                      color: black,
                    ),
                    decoration: InputDecoration(
-                     // fillColor: grayForDetail,
-                     // filled: true,
                      labelText: 'Address Line - 4 ',
                      contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
                      counterText: "",
                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                     enabledBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
-                     focusedBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
                    ),
                  ),
                  const Gap(16),
                  TextField(
                    readOnly: true,
                    textInputAction: TextInputAction.next,
-                   textCapitalization: TextCapitalization.words,
                    cursorColor: black,
                    controller: countryController,
                    style: TextStyle(
@@ -481,20 +375,10 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                      openCountryBottomSheet();
                    },
                    decoration: InputDecoration(
-                     // fillColor: grayForDetail,
-                     // filled: true,
                      labelText: 'Country',
                      contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
                      counterText: "",
                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                     enabledBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
-                     focusedBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
                    ),
                  ),
                  const Gap(16),
@@ -509,20 +393,10 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                      color: black,
                    ),
                    decoration: InputDecoration(
-                     // fillColor: grayForDetail,
-                     // filled: true,
                      labelText: 'State',
                      contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
                      counterText: "",
                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                     enabledBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
-                     focusedBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
                    ),
                    onTap: () {
                      if(countryId.isEmpty){
@@ -545,26 +419,16 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                      color: black,
                    ),
                    decoration: InputDecoration(
-                     // fillColor: grayForDetail,
-                     // filled: true,
                      labelText: 'City',
                      contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
                      counterText: "",
                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                     enabledBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
-                     focusedBorder: OutlineInputBorder(
-                       borderSide: const BorderSide(color: grayDividerDetail),
-                       borderRadius: BorderRadius.circular(16),
-                     ),
                    ),
                    onTap: () {
-                     if(stateId.isEmpty){
+                     if(stateId.isEmpty) {
                        showSnackBar("Please Select State", context);
                      }
-                     else if(_cityList.isEmpty){
+                     else if(_cityList.isEmpty) {
                        showSnackBar("No Cities Found", context);
                      }
                      else{
@@ -629,31 +493,38 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                    width: MediaQuery.of(context).size.width,
                    child: getCommonButtonLoad("Save", isLoading,  () {
                      {
-                       if(nameController.text.isEmpty)
+                       if (nameController.text.isEmpty)
                        {
                          showSnackBar("Please enter your name", context);
                        }
-                       else if(emailController.text.isNotEmpty)
+                       else if(emailController.text.isEmpty)
                        {
                          showSnackBar("Please enter your email address", context);
                        }
-                       else if(mobileController.text.isNotEmpty)
+                       else if (!isValidEmail(emailController.text))
+                       {
+                         showSnackBar("Please enter valid email address", context);
+                       }
+                       else if(mobileController.text.isEmpty)
                        {
                          showSnackBar("Please enter your mobile number", context);
                        }
-                       else if(businessNameController.text.isNotEmpty)
+                       else if (mobileController.text.length != 10) {
+                         showSnackBar('Please enter valid phone number',context);
+                       }
+                       else if(businessNameController.text.isEmpty)
                        {
                          showSnackBar("Please enter your business name", context);
                        }
-                       else if(countryController.text.isNotEmpty)
+                       else if(countryController.text.isEmpty)
                        {
-                         showSnackBar("Please select Country", context);
+                         showSnackBar("Please select country", context);
                        }
-                       else if(stateController.text.isNotEmpty)
+                       else if(stateController.text.isEmpty)
                        {
                          showSnackBar("Please select state", context);
                        }
-                       else if(cityController.text.isNotEmpty)
+                       else if(cityController.text.isEmpty)
                        {
                          showSnackBar("Please select city", context);
                        }
@@ -695,9 +566,11 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
     Map<String, String> jsonBody = {
       
     };
-    final response = await http.post(url, body: jsonBody);
+    final response = await http.post(url, body: jsonBody, headers: {
+      "Authorization": sessionManager.getToken() ?? "",
+    });
     final statusCode = response.statusCode;
-    print(response);
+
     final body = response.body;
     Map<String, dynamic> user = jsonDecode(body);
     var dataResponse = CountryResponseModel.fromJson(user);
@@ -769,14 +642,6 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                               contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
                               counterText: "",
                               labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: grayDividerDetail),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: grayDividerDetail),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
                               prefixIcon: InkWell(
                                 onTap: () {},
                                 child: const Icon(Icons.search_rounded, size: 26, color: black,
@@ -973,14 +838,6 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                               contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
                               counterText: "",
                               labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: grayDividerDetail),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: grayDividerDetail),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
                               prefixIcon: InkWell(
                                 onTap: () {},
                                 child: const Icon(Icons.search_rounded, size: 26, color: black,
@@ -1169,14 +1026,6 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                               contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
                               counterText: "",
                               labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: grayDividerDetail),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: grayDividerDetail),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
                               prefixIcon: InkWell(
                                 onTap: () {},
                                 child: const Icon(Icons.search_rounded, size: 26, color: black,
@@ -1274,9 +1123,9 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(18),
-          topRight: Radius.circular(18)
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(kContainerCornerRadius),
+          topRight: Radius.circular(kContainerCornerRadius)
       )),
       builder: (BuildContext context) {
         return Wrap(
@@ -1381,10 +1230,10 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
 
   Future<void> pickImageFromCamera(String isFor) async {
     try {
-      var pickedfiles =
+      var pickedFiles =
       await ImagePicker().pickImage(source: ImageSource.camera, imageQuality: 50);
-      if (pickedfiles != null) {
-        final filePath = pickedfiles.path;
+      if (pickedFiles != null) {
+        final filePath = pickedFiles.path;
         File tempFile = File(filePath);
         _cropImage(filePath, isFor);
         print("_pickImage picImgPath ====>$pickImgPath");
@@ -1398,9 +1247,9 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
 
   Future<void> pickImageFromGallery(String isFor) async {
     try {
-      var pickedfiles = await ImagePicker().pickImage(source: ImageSource.gallery,  imageQuality: 50);
-      if (pickedfiles != null) {
-        final filePath = pickedfiles.path;
+      var pickedFiles = await ImagePicker().pickImage(source: ImageSource.gallery,  imageQuality: 50);
+      if (pickedFiles != null) {
+        final filePath = pickedFiles.path;
         File tempFile = File(filePath);
         _cropImage(filePath,isFor);
 
@@ -1432,7 +1281,7 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
     'state_id': stateId,
     'city_id': cityController.value.text,
     'mobile': mobileController.value.text,
-    'type': '2',
+    'type': sessionManager.getType() ?? "",
     'website': websiteController.value.text,
     'business_name': businessNameController.value.text,
     'country_code': "1",
@@ -1440,9 +1289,7 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
 
     final url = Uri.parse(MAIN_URL + updateProfile);
 
-    Map<String, String> headers = {"Access-Token": sessionManager.getToken().toString().trim()};
-
-    print("Json Body ==== ${jsonBody}");
+    Map<String, String> headers = {"Access-Token": sessionManager.getToken() ?? ""};
 
     http.MultipartRequest request = http.MultipartRequest('POST', url,);
     request.headers.addAll(headers);

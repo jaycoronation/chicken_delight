@@ -1,5 +1,6 @@
 import 'package:chicken_delight/constant/colors.dart';
 import 'package:chicken_delight/widget/loading.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -111,36 +112,39 @@ List<Records> listItemsMain = [];
           ),
           body: Column(
             children: [
-              Container(
-                  margin: const EdgeInsets.only(left: 15, right: 15, top: 15),
-                  child: SearchTextField(
-                    controller: _searchController,
-                    hintText: "Search...",
-                    suffixIcon: 'assets/images/ic_close.png',
-                    onTapClear: () async {
-                      setState(() {
-                        _searchController.text = "";
-                        listItems = listItemsMain;
-                      });
-                    },
-                    onChanged: (String text) {
-                      _searchController.text = text;
-                      _searchController.selection = TextSelection.fromPosition(TextPosition(offset: _searchController.text.length));
-
-                      setState(() {
-                        if (text.isNotEmpty) {
-                          listItems = [];
-                          for (int i = 0; i < listItemsMain.length; i++) {
-                            if (listItemsMain[i].name.toString().toLowerCase().contains(text.toString().toLowerCase())) {
-                              listItems.add(listItemsMain[i]);
-                            }
-                          }
-                        } else {
+              Visibility(
+                visible: listItems.isNotEmpty,
+                child: Container(
+                    margin: const EdgeInsets.only(left: 15, right: 15),
+                    child: SearchTextField(
+                      controller: _searchController,
+                      hintText: "Search...",
+                      suffixIcon: 'assets/images/ic_close.png',
+                      onTapClear: () async {
+                        setState(() {
+                          _searchController.text = "";
                           listItems = listItemsMain;
-                        }
-                      });
-                    },
-                  )),
+                        });
+                      },
+                      onChanged: (String text) {
+                        _searchController.text = text;
+                        _searchController.selection = TextSelection.fromPosition(TextPosition(offset: _searchController.text.length));
+
+                        setState(() {
+                          if (text.isNotEmpty) {
+                            listItems = [];
+                            for (int i = 0; i < listItemsMain.length; i++) {
+                              if (listItemsMain[i].name.toString().toLowerCase().contains(text.toString().toLowerCase())) {
+                                listItems.add(listItemsMain[i]);
+                              }
+                            }
+                          } else {
+                            listItems = listItemsMain;
+                          }
+                        });
+                      },
+                    )),
+              ),
               isLoading
                   ? const LoadingWidget()
                   : listItems.isNotEmpty
@@ -207,8 +211,10 @@ List<Records> listItemsMain = [];
                             },
                           ),
                         )
-                      : MyNoDataWidget(msg: "No items found", imageName: '', subMsg: '',
-                onTap: () {  }, btnTitle: '', colorCode: const Color(0xFF6a89ba),),
+                      : Expanded(
+                        child: MyNoDataWidget(msg: "No items found", imageName: 'ic-no-products.png', subMsg: '',
+                                        onTap: () {  }, btnTitle: '', colorCode: const Color(0xFF6a89ba),),
+                      ),
               const Gap(20)
             ],
           ),

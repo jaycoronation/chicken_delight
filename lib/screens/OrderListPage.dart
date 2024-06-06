@@ -275,7 +275,6 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                           width: double.infinity,
                           child: TextField(
                             keyboardType: TextInputType.text,
-                            textCapitalization: TextCapitalization.sentences,
                             textAlign: TextAlign.start,
                             controller: searchController,
                             cursorColor: black,
@@ -341,7 +340,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
               ],
             ) ,
           ),
-          centerTitle: false,
+          centerTitle: true,
           elevation: 0,
           backgroundColor: appBG,
         ),
@@ -640,7 +639,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                               children: [
                                 const SizedBox(
                                     width: 60,
-                                    child: Divider(height: 1.5, thickness: 1.5, color: primaryColor)
+                                    child: Divider(height: 1.5, thickness: 1.5, color: black)
                                 ),
                                 Container(
                                   margin: const EdgeInsets.fromLTRB(14, 10, 14, 12),
@@ -672,16 +671,16 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                               },
                               child: Container(
                                 decoration: BoxDecoration(
-                                    color: lightPrimaryColor,
-                                    border: Border.all(width: 1, color: kLightPurple),
+                                    color: white,
+                                    border: Border.all(width: 1, color: black),
                                     borderRadius: const BorderRadius.all(Radius.circular(6.0)),
                                     shape: BoxShape.rectangle
                                 ),
                                 alignment: Alignment.centerRight,
                                 margin: const EdgeInsets.only(top:10, bottom: 5, left: 10, right: 10),
                                 child: Padding(
-                                  padding: EdgeInsets.all(6.0),
-                                  child: Text("Clear Filter", style: TextStyle(fontWeight: FontWeight.w400, color: primaryColor, fontSize: description)
+                                  padding: const EdgeInsets.all(6.0),
+                                  child: Text("Clear Filter", style: TextStyle(fontWeight: FontWeight.w400, color: black, fontSize: description)
                                   ),
                                 ),
                               ),
@@ -853,7 +852,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                             padding: const EdgeInsets.only(left: 20, right: 20, top: 8, bottom: 8),
                                             alignment: Alignment.centerLeft,
                                             child: Text(checkValidString(dateFilterList[index]),
-                                              style: TextStyle(fontSize: description, fontWeight: FontWeight.w500, color: dateFilterList[index] == selectedDateFilter ? primaryColor : black),
+                                              style: TextStyle(fontSize: description, fontWeight:dateFilterList[index] == selectedDateFilter ? FontWeight.w700 : FontWeight.w400, color: black),
                                             ),
                                           ),
                                         ),

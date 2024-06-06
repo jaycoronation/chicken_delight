@@ -73,7 +73,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(18.0),
+                      borderRadius: BorderRadius.circular(kContainerCornerRadius),
                       color: primaryColor,
                     ),
                     height: 36,

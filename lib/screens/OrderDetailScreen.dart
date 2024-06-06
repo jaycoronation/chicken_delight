@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:chicken_delight/model/common/CommonResponseModel.dart';
@@ -27,7 +26,6 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
 
   bool isLoading = false;
   List<ItemsList> listItems = [];
-  // Profile getSet = Profile();
   String subTotal = "";
   String grandTotal = "";
   String wareAddressLine1 = "";
@@ -74,13 +72,13 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
             backgroundColor: chicken_bg,
           ),
           body: Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16),
+            padding: const EdgeInsets.only(left: 16, right: 16),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Gap(8),
+                  const Gap(8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,7 +89,6 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                       Text(status,
                           style: TextStyle(fontSize: subTitle, color: status == "Cancelled" ? Colors.red : Colors.green,fontWeight: FontWeight.w600),textAlign: TextAlign.left
                       ),
-                      Image.asset('assets/images/ic_right_arrow_new.png', height: 14, width: 14, color: black),
                     ],
                   ),
                   Row(
@@ -102,7 +99,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                           child: GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: (){
-                              markDialog();
+                              showDialog("Processed");
                             },
                             child: Container(
                               alignment: Alignment.center,
@@ -128,7 +125,8 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                           child: GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: (){
-                              cancelDialog();
+                              showDialog("Cancel");
+
                             },
                             child: Container(
                               alignment: Alignment.center,
@@ -154,8 +152,8 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                           child: GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: (){
-                              makePaymentDialog();
-                            },
+                              showDialog("Completed");
+                              },
                             child: Container(
                               alignment: Alignment.center,
                               margin: const EdgeInsets.only(top: 20, bottom: 10),
@@ -175,7 +173,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                       ),
                     ],
                   ),
-                  Gap(8),
+                  const Gap(8),
                   MediaQuery.removePadding(
                     context: context,
                     removeBottom: true,
@@ -190,7 +188,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                           margin: const EdgeInsets.only(top: 10,bottom: 10),
                           padding: const EdgeInsets.all(14),
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(18),
+                              borderRadius: BorderRadius.circular(kContainerCornerRadius),
                               color: white,
                           ),
                           child: Column(
@@ -266,7 +264,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                     margin: const EdgeInsets.only(top:10,bottom: 10),
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(18),
+                      borderRadius: BorderRadius.circular(kContainerCornerRadius),
                       color: white,
                     ),
                     child: Column(
@@ -335,7 +333,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                     margin: const EdgeInsets.only(top: 10,bottom: 10),
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(18),
+                      borderRadius: BorderRadius.circular(kContainerCornerRadius),
                       color: white,
                     ),
                     child: Column(
@@ -360,7 +358,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                     margin: const EdgeInsets.only(top: 10,bottom: 10),
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(18),
+                      borderRadius: BorderRadius.circular(kContainerCornerRadius),
                       color: white,
                     ),
                     child: Column(
@@ -385,7 +383,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                     margin: const EdgeInsets.only(top: 10,bottom: 20),
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(18),
+                      borderRadius: BorderRadius.circular(kContainerCornerRadius),
                       color: white,
                     ),
                     child: Column(
@@ -415,7 +413,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
    widget is OrderDetailScreen;
   }
 
-  makePaymentDialog() async {
+  showDialog(String isFor) async {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: white,
@@ -440,12 +438,43 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                         color: black,
                         margin: const EdgeInsets.only(bottom: 18)
                     ),
-                    Text("Are you sure you want to mark Processed?",
+                    Text(isFor == "Processed"
+                        ? "Are you sure you want to mark as processed?"
+                        : isFor == "Cancel"
+                        ? "Are you sure want to cancel order?"
+                        : "Are you sure you want to mark payment done?",
                         style: TextStyle(
                             color: black,
                             fontWeight: FontWeight.w500,
                             fontSize: textFiledSize),
                         textAlign: TextAlign.center
+                    ),
+                    Visibility(
+                      visible: isFor != "Completed",
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 16.0, right: 16, top: 22),
+                        child: TextField(
+                          readOnly: false,
+                          keyboardType: TextInputType.text,
+                          textInputAction: TextInputAction.next,
+                          textCapitalization: TextCapitalization.words,
+                          cursorColor: black,
+                          maxLines: 3,
+                          controller:isFor == "Processed" ? remarksController : cancelRemarksController,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: subTitle,
+                            color: black,
+                          ),
+                          decoration: InputDecoration(
+                            labelText: 'Remarks',
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
+                            counterText: "",
+                            labelStyle:  TextStyle(fontSize: description, color:gray_dark),
+                            alignLabelWithHint: true
+                          ),
+                        ),
+                      ),
                     ),
                     Row(
                       children: [
@@ -453,169 +482,12 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                           flex: 1,
                           child: Container(
                             width: MediaQuery.of(context).size.width,
-                            margin: const EdgeInsets.only(
-                                left: 12, right: 12, bottom: 30, top: 30),
+                            margin: const EdgeInsets.only(left: 15, right: 12, bottom: 30, top: 20),
                             child: TextButton(
                               onPressed: () {
-                                saveOrder("Completed");
-                              },
-                              style: ButtonStyle(
-                                shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                    side: const BorderSide(
-                                        color: black,
-                                        width: 1,
-                                        style: BorderStyle.solid),
-                                    borderRadius: BorderRadius.circular(22.0),
-                                  ),
-                                ),
-                                backgroundColor:
-                                MaterialStateProperty.all<Color>(white),
-                              ),
-                              child:  Padding(
-                                padding: const EdgeInsets.all(6.0),
-                                child: Text(
-                                  "Yes",
-                                  style: TextStyle(
-                                      color: black,
-                                      fontSize: contentSize,
-                                      fontWeight: FontWeight.w500
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            margin: const EdgeInsets.only(left: 12, right: 12, bottom: 30, top: 30),
-                            child: TextButton(
-                              onPressed: (){
                                 Navigator.pop(context);
                               },
                               style: ButtonStyle(
-                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      side: const BorderSide(
-                                          color: black,
-                                          width: 1,
-                                          style: BorderStyle.solid
-                                      ),
-                                      borderRadius: BorderRadius.circular(22.0),
-                                    ),
-                                  ),
-                                  backgroundColor: MaterialStateProperty.all<Color>(black)
-                              ),
-                              child:   Padding(
-                                padding: const EdgeInsets.all(6.0),
-                                child: Text(
-                                  "Cancel",
-                                  style: TextStyle(
-                                      color: white,
-                                      fontSize: contentSize,
-                                      fontWeight: FontWeight.w500
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                )
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
-  markDialog() async {
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: white,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-      elevation: 5,
-      isDismissible: true,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, updateState) {
-            return Wrap(
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                      height: 16,
-                    ),
-                    Container(
-                        height: 2,
-                        width: 40,
-                        color: black,
-                        margin: const EdgeInsets.only(bottom: 18)
-                    ),
-                    Text("Are you sure you want to mark Processed?",
-                        style: TextStyle(
-                            color: black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: textFiledSize),
-                        textAlign: TextAlign.center
-                    ),
-
-                    Padding(
-                      padding: const EdgeInsets.only(left: 16.0, right: 16, top: 22),
-                      child: TextField(
-                        readOnly: false,
-                        keyboardType: TextInputType.text,
-                        textInputAction: TextInputAction.next,
-                        textCapitalization: TextCapitalization.words,
-                        cursorColor: black,
-                        // maxLines: 4,
-                        maxLength: 10, //Any specific length
-                        maxLines: 2,
-                        controller: remarksController,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: subTitle,
-                          color: black,
-                        ),
-                        decoration: InputDecoration(
-                          // fillColor: grayForDetail,
-                          // filled: true,
-                          labelText: 'Remarks',
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
-                          counterText: "",
-                          labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: grayDividerDetail),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: grayDividerDetail),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            margin: const EdgeInsets.only(
-                                left: 12, right: 12, bottom: 30, top: 30),
-                            child: TextButton(
-                              onPressed: () {
-                                saveOrder("Processed");
-                              },
-                              style: ButtonStyle(
                                 shape: MaterialStateProperty.all<
                                     RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
@@ -623,16 +495,16 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                                         color: black,
                                         width: 1,
                                         style: BorderStyle.solid),
-                                    borderRadius: BorderRadius.circular(22.0),
+                                    borderRadius: BorderRadius.circular(kButtonCornerRadius),
                                   ),
                                 ),
                                 backgroundColor:
                                 MaterialStateProperty.all<Color>(white),
                               ),
-                              child:  Padding(
+                              child:   Padding(
                                 padding: const EdgeInsets.all(6.0),
                                 child: Text(
-                                  "Yes",
+                                  "Cancel",
                                   style: TextStyle(
                                       color: black,
                                       fontSize: contentSize,
@@ -647,10 +519,22 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                           flex: 1,
                           child: Container(
                             width: MediaQuery.of(context).size.width,
-                            margin: const EdgeInsets.only(left: 12, right: 12, bottom: 30, top: 30),
+                            margin: const EdgeInsets.only(
+                                left: 12, right: 15, bottom: 30, top: 30),
                             child: TextButton(
-                              onPressed: (){
-
+                              onPressed: () {
+                                if (isFor == "Processed")
+                                {
+                                  saveOrder("Processed");
+                                }
+                                else if (isFor == "Cancel")
+                                {
+                                  deleteOrder();
+                                }
+                                else
+                                {
+                                  saveOrder("Completed");
+                                }
                               },
                               style: ButtonStyle(
                                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -660,171 +544,16 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                                           width: 1,
                                           style: BorderStyle.solid
                                       ),
-                                      borderRadius: BorderRadius.circular(22.0),
+                                      borderRadius: BorderRadius.circular(kButtonCornerRadius),
                                     ),
                                   ),
                                   backgroundColor: MaterialStateProperty.all<Color>(black)
-                              ),
-                              child:   Padding(
-                                padding: const EdgeInsets.all(6.0),
-                                child: Text(
-                                  "Cancel",
-                                  style: TextStyle(
-                                      color: white,
-                                      fontSize: contentSize,
-                                      fontWeight: FontWeight.w500
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                )
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
-  cancelDialog() async {
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: white,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-      elevation: 5,
-      isDismissible: true,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, updateState) {
-            return Wrap(
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                      height: 16,
-                    ),
-                    Container(
-                        height: 2,
-                        width: 40,
-                        color: black,
-                        margin: const EdgeInsets.only(bottom: 18)
-                    ),
-                    Text("Are you sure want to Cancel?",
-                        style: TextStyle(
-                            color: black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: textFiledSize),
-                        textAlign: TextAlign.center
-                    ),
-
-                    Padding(
-                      padding: const EdgeInsets.only(left: 16.0, right: 16, top: 22),
-                      child: TextField(
-                        readOnly: false,
-                        keyboardType: TextInputType.text,
-                        textInputAction: TextInputAction.next,
-                        textCapitalization: TextCapitalization.words,
-                        cursorColor: black,
-                        maxLength: 10, //Any specific length
-                        maxLines: 2,
-                        controller: cancelRemarksController,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: subTitle,
-                          color: black,
-                        ),
-                        decoration: InputDecoration(
-                          // fillColor: grayForDetail,
-                          // filled: true,
-                          labelText: 'Remarks',
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
-                          counterText: "",
-                          labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: grayDividerDetail),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: grayDividerDetail),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            margin: const EdgeInsets.only(
-                                left: 12, right: 12, bottom: 30, top: 30),
-                            child: TextButton(
-                              onPressed: () {
-                                deleteOrder();
-                              },
-                              style: ButtonStyle(
-                                shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                    side: const BorderSide(
-                                        color: black,
-                                        width: 1,
-                                        style: BorderStyle.solid),
-                                    borderRadius: BorderRadius.circular(22.0),
-                                  ),
-                                ),
-                                backgroundColor:
-                                MaterialStateProperty.all<Color>(white),
                               ),
                               child:  Padding(
                                 padding: const EdgeInsets.all(6.0),
                                 child: Text(
                                   "Yes",
                                   style: TextStyle(
-                                      color: black,
-                                      fontSize: contentSize,
-                                      fontWeight: FontWeight.w500
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            margin: const EdgeInsets.only(left: 12, right: 12, bottom: 30, top: 30),
-                            child: TextButton(
-                              onPressed: (){
-
-                              },
-                              style: ButtonStyle(
-                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      side: const BorderSide(
-                                          color: black,
-                                          width: 1,
-                                          style: BorderStyle.solid
-                                      ),
-                                      borderRadius: BorderRadius.circular(22.0),
-                                    ),
-                                  ),
-                                  backgroundColor: MaterialStateProperty.all<Color>(black)
-                              ),
-                              child:   Padding(
-                                padding: const EdgeInsets.all(6.0),
-                                child: Text(
-                                  "Cancel",
-                                  style: TextStyle(
                                       color: white,
                                       fontSize: contentSize,
                                       fontWeight: FontWeight.w500
@@ -833,7 +562,8 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                               ),
                             ),
                           ),
-                        )
+                        ),
+
                       ],
                     )
                   ],
@@ -847,7 +577,6 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
   }
 
   // API Call func...
-
   saveOrder(String orderStatus) async {
     if (isOnline)
     {
@@ -861,19 +590,19 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
 
       final url = Uri.parse(MAIN_URL + orderSave);
       Map<String, String> jsonBody = {
-
       };
-      if(orderStatus == "Completed")
+
+      if (orderStatus == "Completed")
       {
         jsonBody = {
-          'id': "14",
+          'id': orderId,
           'payment_status': orderStatus
         };
       }
       else
       {
         jsonBody = {
-          'id': "14",
+          'id': orderId,
           'order_stages': orderStatus,
           'remarks': remarksController.value.text,
         };
@@ -881,7 +610,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
 
       final response = await http.post(url, body: jsonBody);
       final statusCode = response.statusCode;
-      print(response);
+
       final body = response.body;
       Map<String, dynamic> user = jsonDecode(body);
       var dataResponse = CommonResponseModel.fromJson(user);
@@ -918,7 +647,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
       final url = Uri.parse(MAIN_URL + orderDelete);
 
       Map<String, String> jsonBody = {
-        'id': "14",
+        'id': orderId,
         'remarks': cancelRemarksController.value.text,
       };
 
@@ -965,7 +694,8 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
         'id': orderId,
       };
 
-      final response = await http.post(url, body: jsonBody, headers:  {"Authorization": sessionManager.getToken().toString().trim()});
+      final response = await http.post(url, body: jsonBody,
+          headers:  {"Authorization": sessionManager.getToken() ?? ""});
 
       final statusCode = response.statusCode;
 

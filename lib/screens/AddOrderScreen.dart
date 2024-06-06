@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:chicken_delight/common_widget/CommonTextFiled.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
@@ -30,6 +29,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
 
   var subTotal = 0.0;
   var grandTotal = 0.0;
+
 
   @override
   void initState() {
@@ -68,12 +68,18 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
+                Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.only(top: 8, bottom: 8),
                     width: MediaQuery.of(context).size.width,
-                    child: TextButton(
-                      onPressed: () async {
-
-                        if (listItemsAPI.isNotEmpty) {
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(kContainerCornerRadius),
+                      color: black,
+                    ),
+                    child: GestureDetector(
+                      onTap: () async {
+                        if (listItemsAPI.isNotEmpty)
+                        {
                           final result = await Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => SelectItemPage(listItemsAPI)),
@@ -121,30 +127,25 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                           }
                         }
                         else
-                          {
-                            showSnackBar("No items found", context);
-                          }
+                        {
+                          showSnackBar("No items found", context);
+                        }
 
                       },
-                      style: ButtonStyle(
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0)),
-                        ),
-                        backgroundColor: MaterialStateProperty.all<Color>(white),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Add Item",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: subTitle, fontWeight: FontWeight.w500, color: white,),
+                          ),
+
+                          const Icon(Icons.add, color: white, size: 26,)
+                        ],
                       ),
-                      child:Padding(
-                        padding: const EdgeInsets.only(top: 5,bottom: 5),
-                        child: Row(
-                          children: [
-                            Text("Add Item",
-                              style: TextStyle(fontSize: subTitle, fontWeight: FontWeight.w500, color: primaryColor,),
-                            ),
-                            const Spacer(),
-                            const Icon(Icons.add, color: black, size: 26,)
-                          ],
-                        ),
-                      ),
-                    )),
+                    )
+                ),
                 const Gap(8),
                 Visibility(
                   visible: listItems.isNotEmpty,
@@ -168,7 +169,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                           padding: const EdgeInsets.all(10),
                           margin: const EdgeInsets.only(bottom: 10),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(18),
+                            borderRadius: BorderRadius.circular(kContainerCornerRadius),
                             color: white,
                           ),
                           child: Row(
@@ -188,8 +189,10 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(listItems[index].name ?? "",
-                                        style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
-                                        overflow: TextOverflow.clip,
+                                      style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500,
+                                        overflow: TextOverflow.clip,),
+                                      textAlign: TextAlign.left,
+                                      overflow: TextOverflow.clip,
                                       maxLines: 3,
                                     ),
                                     const Gap(5),
@@ -200,7 +203,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                           alignment: Alignment.center,
                                           height: 40,
                                           decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(18),
+                                            borderRadius: BorderRadius.circular(kContainerCornerRadius),
                                             border: Border.all(
                                               color: grayDividerDetail,
                                               width: 0.8,
@@ -218,57 +221,57 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                         Container(
                                           height: 40,
                                           decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(18),
+                                            borderRadius: BorderRadius.circular(kContainerCornerRadius),
                                             border: Border.all(color: grayDividerDetail, width: 0.8),
                                           ),
                                           alignment: Alignment.center,
                                           child: Row(
                                             children: [
                                               IconButton(
-                                                onPressed: () {
-                                                  setState(() {
-                                                    if (isOnline)
-                                                    {
-                                                      if (listItems[index].quantity == 1) {
-                                                        removeItem(index);
-                                                      } else {
-                                                        listItems[index].quantity = listItems[index].quantity! - 1;
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      if (isOnline)
+                                                      {
+                                                        if (listItems[index].quantity == 1) {
+                                                          removeItem(index);
+                                                        } else {
+                                                          listItems[index].quantity = listItems[index].quantity! - 1;
+                                                        }
+
+                                                        var total = num.parse(listItems[index].salePrice.toString()) * num.parse(listItems[index].quantity.toString());
+                                                        listItems[index].amount = total;
+                                                        getPriceCalculated();
                                                       }
-                                
-                                                      var total = num.parse(listItems[index].salePrice.toString()) * num.parse(listItems[index].quantity.toString());
-                                                      listItems[index].amount = total;
-                                                      getPriceCalculated();
-                                                    }
-                                                    else
-                                                    {
-                                                      noInternetSnackBar(context);
-                                                    }
-                                                  });
-                                
-                                                },
-                                                icon:const Icon(Icons.remove)//Image.asset('assets/images/ic_blue_minus.png', height: 24, width: 24),
+                                                      else
+                                                      {
+                                                        noInternetSnackBar(context);
+                                                      }
+                                                    });
+
+                                                  },
+                                                  icon:const Icon(Icons.remove)//Image.asset('assets/images/ic_blue_minus.png', height: 24, width: 24),
                                               ),
                                               Text(listItems[index].quantity.toString(),
                                                   style: TextStyle(fontWeight: FontWeight.w400, color: black, fontSize: small)),
                                               IconButton(
-                                                onPressed: () {
-                                                  setState(() {
-                                                    if (isOnline)
-                                                    {
-                                                      listItems[index].quantity = (listItems[index].quantity! + 1)!;
-                                                      var total = num.parse(listItems[index].salePrice.toString()) * num.parse(listItems[index].quantity.toString());
-                                                      listItems[index].amount = total;
-                                
-                                                      getPriceCalculated();
-                                                    }
-                                                    else
-                                                    {
-                                                      noInternetSnackBar(context);
-                                                    }
-                                                  });
-                                
-                                                },
-                                                icon: const Icon(Icons.add)//Image.asset('assets/images/ic_blue_add.png', height: 24, width: 24),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      if (isOnline)
+                                                      {
+                                                        listItems[index].quantity = (listItems[index].quantity! + 1);
+                                                        var total = num.parse(listItems[index].salePrice.toString()) * num.parse(listItems[index].quantity.toString());
+                                                        listItems[index].amount = total;
+
+                                                        getPriceCalculated();
+                                                      }
+                                                      else
+                                                      {
+                                                        noInternetSnackBar(context);
+                                                      }
+                                                    });
+
+                                                  },
+                                                  icon: const Icon(Icons.add)//Image.asset('assets/images/ic_blue_add.png', height: 24, width: 24),
                                               )
                                             ],
                                           ),
@@ -292,7 +295,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                                   listItems[index].mrpPrice = total.toString();
                                                   print(getSubTotal());
                                                 }
-                                
+
                                               });
                                             },
                                             )
@@ -300,10 +303,10 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                         Text("/${listItems[index].unit ?? " "}",
                                             style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500),textAlign: TextAlign.left
                                         ),
-                                        Gap(20),
+                                        const Gap(20),
                                       ],
                                     ),
-                                    Gap(5),
+                                    const Gap(5),
                                     Text(getPrice(listItems[index].amount.toString()) ,
                                       style: TextStyle(fontSize: description, color: black,
                                         fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),
@@ -312,21 +315,13 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                   ],
                                 ),
                               ),
-                              Gap(10),
+                              const Gap(10),
                               GestureDetector(
                                 behavior: HitTestBehavior.opaque,
                                 onTap: () {
                                   if (isOnline)
                                   {
                                     setState(() {
-                                      /*for (int i = 0; i < listItemsAPI.length; i++)
-                                      {
-                                        if (listItemsAPI[i].id == listItems[index].id)
-                                        {
-                                          listItemsAPI[i].isSelected = false;
-                                        }
-                                      }
-                                      listItems.removeAt(index);*/
                                       removeItem(index);
                                     });
                                   }
@@ -343,10 +338,82 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                       }
                   ),
                 ),
+                /*GestureDetector(
+                  onTap: () async {
+                    if (listItemsAPI.isNotEmpty)
+                    {
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SelectItemPage(listItemsAPI)),
+                      );
+                      print("result ===== $result");
+                      listItems = [];
+                      if (result != null)
+                      {
+                        List<Records> listItemsTmp = [];
+                        listItemsTmp = result;
+
+                        setState(() {
+                          for (int i = 0; i < listItemsTmp.length; i++)
+                          {
+                            if (listItemsTmp[i].isSelected == true)
+                            {
+                              Records getSet = Records();
+
+                              getSet = Records(
+                                  id: listItemsTmp[i].id,
+                                  description: listItemsTmp[i].description,
+                                  name: listItemsTmp[i].name,
+                                  icon: listItemsTmp[i].icon,
+                                  productCode: listItemsTmp[i].productCode,
+                                  unit: listItemsTmp[i].unit,
+                                  variationName: listItemsTmp[i].variationName,
+                                  skuCode: listItemsTmp[i].skuCode,
+                                  salePrice: listItemsTmp[i].salePrice,
+                                  mrpPrice: listItemsTmp[i].mrpPrice,
+                                  dpPrice: listItemsTmp[i].dpPrice,
+                                  category: listItemsTmp[i].category,
+                                  variationId: listItemsTmp[i].variationId,
+                                  categoryId: listItemsTmp[i].categoryId,
+                                  isSelected : listItemsTmp[i].isSelected,
+                                  quantity: 1,
+                                  amount: num.parse(listItemsTmp[i].salePrice.toString())
+                              );
+
+                              listItems.add(getSet);
+                            }
+                          }
+                          getPriceCalculated();
+
+                        });
+                      }
+                    }
+                    else
+                    {
+                      showSnackBar("No items found", context);
+                    }
+
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.only(top: 5,bottom: 5),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Add Item",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: subTitle, fontWeight: FontWeight.w500, color: primaryColor,),
+                        ),
+                        const Spacer(),
+                        const Icon(Icons.add, color: black, size: 26,)
+                      ],
+                    ),
+                  ),
+                ),*/
                 Container(
-                  margin: const EdgeInsets.only(bottom: 10),
+                  margin: const EdgeInsets.only(bottom: 10, top: 5),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(kContainerCornerRadius),
                     color: white,
                   ),
                   child: Column(
@@ -373,7 +440,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                   visible: listItems.isNotEmpty,
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(18),
+                      borderRadius: BorderRadius.circular(kContainerCornerRadius),
                       color: white,
                     ),
                     child: Column(
@@ -418,7 +485,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                       Text(listItems.length.toString(), textAlign: TextAlign.start,
                                           style: TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: small)),
                                       const Gap(6),
-                                      Text(subTotal.toStringAsFixed(2),
+                                      Text(getPrice(subTotal.toStringAsFixed(2)),
                                           textAlign: TextAlign.start,
                                           style: TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: small)),
                                       const Gap(6),
@@ -428,7 +495,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                   ),
                                 ],
                               ),
-                              Gap(10),
+                              const Gap(10),
                               const Divider(
                                 height: 0.8,
                                 color: grayNew,
@@ -443,7 +510,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                         style: TextStyle(fontWeight: FontWeight.w600, color: black,fontSize: medium)),
                                   ),
                                   const Spacer(),
-                                  Text(grandTotal.toStringAsFixed(2), textAlign: TextAlign.start,
+                                  Text(getPrice(grandTotal.toStringAsFixed(2)), textAlign: TextAlign.start,
                                       style:const TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 16)),
                                 ],
                               ),
@@ -454,12 +521,10 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                     ),
                   ),
                 ),
-                const Gap(20),
                 Container(
-                  margin: const EdgeInsets.only(top: 30, bottom: 10, left: 60, right: 60),
+                  margin: const EdgeInsets.only(top: 20, bottom: 30, left: 60, right: 60),
                   width: MediaQuery.of(context).size.width,
-                  child: getCommonButtonLoad("Proceed", isLoading,  () {
-                    {
+                  child: getCommonButtonLoad("Proceed", isLoading,() {
                       if (listItems.isEmpty)
                       {
                         showSnackBar("Please select item.", context);
@@ -469,7 +534,6 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                         _makeJsonData();
                         saveItem();
                       }
-                    }
                   }),
                 ),
               ],
@@ -498,9 +562,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
         }
       }
 
-      print("subTotal ==== " + subTotal.toString());
       grandTotal = subTotal + 75;
-
     });
   }
 
@@ -521,10 +583,10 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                     height: 2,
                     width: 40,
                     alignment: Alignment.center,
-                    color: primaryColor,
+                    color: black,
                     margin: const EdgeInsets.only(top: 10, bottom: 10),
                   ),
-                  Container(margin: const EdgeInsets.only(top: 10, bottom: 10), 
+                  Container(margin: const EdgeInsets.only(top: 10, bottom: 10),
                       child: Text('Remove Product', style: TextStyle(fontSize: medium, fontWeight: FontWeight.w700, color: black))
                   ),
                   Container(
@@ -538,7 +600,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                         Expanded(
                           child: Container(
                             decoration: BoxDecoration(
-                              border: Border.all(width: 0.4, color: primaryColor),
+                              border: Border.all(width: 0.4, color: black),
                               borderRadius: BorderRadius.all(Radius.circular(kButtonCornerRadius)),
                             ),
                             margin: const EdgeInsets.only(right: 10),
@@ -550,7 +612,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                     style: TextStyle(
                                       fontSize: subTitle,
                                       fontWeight: FontWeight.w600,
-                                      color: primaryColor,
+                                      color: black,
                                     ))),
                           ),
                         ),
@@ -558,7 +620,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                           child: DecoratedBox(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(kButtonCornerRadius),
-                              color: primaryColor,
+                              color: black,
                             ),
                             child: TextButton(
                               onPressed: () async {
@@ -570,9 +632,9 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                       listItemsAPI[i].isSelected = false;
                                     }
                                   }
+
                                   listItems.removeAt(index);
                                   getPriceCalculated();
-
                                   if (listItems.isEmpty) {
                                   //  isValidProduct = false;
                                   }
@@ -602,8 +664,6 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
     for (int i = 0; i < listItems.length; i++)
     {
       listItemsTemp.add(listItems[i]);
-      // print("stockPrice---->" +checkValidString(listProductsTemp[i].stockPrice.toString()));
-      print("quantity--->" + checkValidString(listItemsTemp[i].quantity.toString()));
     }
 
     if (listItemsTemp.isNotEmpty)
@@ -703,10 +763,8 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
           listItems.clear();
           remarksController.clear();
           isOrderListLoad = true;
-
         });
         showSnackBar(dataResponse.message, context);
-       // Navigator.pop(context,"success");
       } else {
         setState(() {
           isLoading = false;

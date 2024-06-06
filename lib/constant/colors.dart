@@ -57,7 +57,7 @@ const Color kPurple = Color(0xff809dd6);
 const Color kLightOrange1 = Color(0xffedab7e);
 const Color kSkin = Color(0xffe0c580);
 
-double kEditTextCornerRadius = 6.0;
+double kEditTextCornerRadius = 16.0;
 double kBorderRadius = 10.0;
 
 double contentSize = 14.0;
@@ -67,7 +67,7 @@ double textSize = 15.0;
 double textFiledSize = 16.0;
 double largeTextSize = 26.0;
 
-double kSearchBarCornerRadius = 8.0;
+double kContainerCornerRadius = 18.0;
 double kNoDataViewCornerRadius = 60.0;
 double kButtonCornerRadius = 22.0;
 

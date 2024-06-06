@@ -259,7 +259,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                   margin: const EdgeInsets.only(left: 12, right: 12, bottom: 10),
                                   decoration: BoxDecoration(
                                     color: white,
-                                    borderRadius: BorderRadius.circular(18),
+                                    borderRadius: BorderRadius.circular(kContainerCornerRadius),
                                   ),
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.start,

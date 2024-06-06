@@ -39,14 +39,14 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: appBG,
-      appBar:AppBar(
+      appBar: AppBar(
         toolbarHeight: kToolbarHeight,
         automaticallyImplyLeading: false,
         title: getTitle("Notifications"),
         leading: GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () {
-              Navigator.pop(context,null);
+              Navigator.pop(context);
             },
             child:getBackArrowBlack()),
         centerTitle: true,
@@ -60,7 +60,7 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
         //   ? MyNoDataWidget(msg: 'No notices yet!', imageName: "ic-no-notification.png", colorCode: const Color(0xFF5586aa),
         // subMsg:"You have currently no notifications.\nWe'll notify you when something\nnew arrives!", onTap: refreshData, btnTitle: "Back to Home",)
           : Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
+            padding: const EdgeInsets.only(left: 12, right: 12),
             child: Column(
               children: [
                 Expanded(
@@ -149,80 +149,77 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
                  child: FadeInAnimation(
                    child: Container(
                      color: appBG,
-                     child: Padding(
-                       padding: const EdgeInsets.only(left: 6, right: 6, top: 4, bottom: 4),
-                       child: GestureDetector(
-                         behavior: HitTestBehavior.opaque,
-                         onTap: () {
-                         /*  if(listNotification[index].contentType == "product_inquiry") {
-                             Navigator.push(context, MaterialPageRoute(builder: (context) => InquiryDetailScreen(listNotification[index].contentId.toString())));
-                           }else if(listNotification[index].contentType == "order_reciver") {
-                             Navigator.push(context, MaterialPageRoute(builder: (context) => OrderSummaryScreen(checkValidString(listNotification[index].contentId), false)));
-                           }else if(listNotification[index].contentType == "order") {
-                             Navigator.push(context, MaterialPageRoute(builder: (context) => OrderSummaryScreen(checkValidString(listNotification[index].contentId), false)));
-                           }else {
-                           }*/
-                         },
-                         child: Column(
-                           children: [
-                             Card(
-                                 color: white,
-                                 clipBehavior: Clip.antiAliasWithSaveLayer,
-                                 elevation: 0,
-                                 shape: RoundedRectangleBorder(
-                                   borderRadius: BorderRadius.circular(kTextFieldCornerRadius),
-                                     side: const BorderSide(color: kLightGray, width: 0.5)
-                                 ),
-                               child: Padding(
-                                 padding: const EdgeInsets.all(8.0),
-                                 child: Row(
-                                   children: [
-                                    /* Card(
-                                         clipBehavior: Clip.antiAlias,
-                                         elevation: 0,
-                                         shape: RoundedRectangleBorder(
-                                             borderRadius: BorderRadius.circular(kButtonCornerRadius),
-                                             side: const BorderSide(color: kLightGray, width: 0.5)
-                                         ),
-                                         child: FadeInImage.assetNetwork(
-                                             image: "${listNotification[index].image.toString().trim()}&h=500&zc=2",
-                                             fit: BoxFit.cover,
-                                             width: 65,
-                                             height: 65,
-                                             placeholder: 'assets/images/ic_logo_bag.png')
-                                         //Image.asset('assets/images/ic_logo_bag.png', width:60, height: 60, fit: BoxFit.contain,)
-                                     ),
-                                     const Gap(5),*/
-                                     Expanded(
-                                       child: Column(
-                                         mainAxisAlignment: MainAxisAlignment.center,
-                                         crossAxisAlignment: CrossAxisAlignment.start,
-                                         children: [
-                                           Text("message",//checkValidString(listNotification[index].message),
-                                             maxLines: 2,
-                                             overflow: TextOverflow.ellipsis,
-                                             textAlign: TextAlign.start,
-                                             style: const TextStyle(fontSize: 13, color: black, fontWeight: FontWeight.w600),
-                                           ),
-                                           const Gap(2),
-                                           Text("3 Jun,2024, 03:00pm",//checkValidString(listNotification[index].time),
-                                             maxLines: 1,
-                                             overflow: TextOverflow.ellipsis,
-                                             textAlign: TextAlign.start,
-                                             style: const TextStyle(fontSize: 13, color: kTextDarkGray, fontWeight: FontWeight.w500),
-                                           ),
-                                         ],
+                     child: GestureDetector(
+                       behavior: HitTestBehavior.opaque,
+                       onTap: () {
+                       /*  if(listNotification[index].contentType == "product_inquiry") {
+                           Navigator.push(context, MaterialPageRoute(builder: (context) => InquiryDetailScreen(listNotification[index].contentId.toString())));
+                         }else if(listNotification[index].contentType == "order_reciver") {
+                           Navigator.push(context, MaterialPageRoute(builder: (context) => OrderSummaryScreen(checkValidString(listNotification[index].contentId), false)));
+                         }else if(listNotification[index].contentType == "order") {
+                           Navigator.push(context, MaterialPageRoute(builder: (context) => OrderSummaryScreen(checkValidString(listNotification[index].contentId), false)));
+                         }else {
+                         }*/
+                       },
+                       child: Column(
+                         children: [
+                           Card(
+                               color: white,
+                               clipBehavior: Clip.antiAliasWithSaveLayer,
+                               elevation: 0,
+                               shape: RoundedRectangleBorder(
+                                 borderRadius: BorderRadius.circular(kTextFieldCornerRadius),
+                                   side: const BorderSide(color: kLightGray, width: 0.5)
+                               ),
+                             child: Padding(
+                               padding: EdgeInsets.only(left: 12, right: 12, top: 10, bottom: 10),
+                               child: Row(
+                                 children: [
+                                  /* Card(
+                                       clipBehavior: Clip.antiAlias,
+                                       elevation: 0,
+                                       shape: RoundedRectangleBorder(
+                                           borderRadius: BorderRadius.circular(kButtonCornerRadius),
+                                           side: const BorderSide(color: kLightGray, width: 0.5)
                                        ),
+                                       child: FadeInImage.assetNetwork(
+                                           image: "${listNotification[index].image.toString().trim()}&h=500&zc=2",
+                                           fit: BoxFit.cover,
+                                           width: 65,
+                                           height: 65,
+                                           placeholder: 'assets/images/ic_logo_bag.png')
+                                       //Image.asset('assets/images/ic_logo_bag.png', width:60, height: 60, fit: BoxFit.contain,)
+                                   ),
+                                   const Gap(5),*/
+                                   Expanded(
+                                     child: Column(
+                                       mainAxisAlignment: MainAxisAlignment.center,
+                                       crossAxisAlignment: CrossAxisAlignment.start,
+                                       children: [
+                                         Text("message",//checkValidString(listNotification[index].message),
+                                           maxLines: 2,
+                                           overflow: TextOverflow.ellipsis,
+                                           textAlign: TextAlign.start,
+                                           style: TextStyle(fontSize: 13, color: black, fontWeight: FontWeight.w600),
+                                         ),
+                                         Gap(2),
+                                         Text("3 Jun,2024, 03:00pm",//checkValidString(listNotification[index].time),
+                                           maxLines: 1,
+                                           overflow: TextOverflow.ellipsis,
+                                           textAlign: TextAlign.start,
+                                           style: TextStyle(fontSize: 13, color: kTextDarkGray, fontWeight: FontWeight.w500),
+                                         ),
+                                       ],
                                      ),
-                                   ],
-                                 ),
+                                   ),
+                                 ],
                                ),
                              ),
-                             // Container(
-                             //     margin: const EdgeInsets.only(top: 5),
-                             //     height: index == listNotification.length-1 ? 0 : 0.8, color: kLightestGray),
-                           ],
-                         ),
+                           ),
+                           // Container(
+                           //     margin: const EdgeInsets.only(top: 5),
+                           //     height: index == listNotification.length-1 ? 0 : 0.8, color: kLightestGray),
+                         ],
                        ),
                      ),
                    ),

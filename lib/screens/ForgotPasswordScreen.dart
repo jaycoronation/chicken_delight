@@ -33,6 +33,19 @@ class _ForgotPasswordScreenState extends BaseState<ForgotPasswordScreen> {
        },
        child: Scaffold(
          backgroundColor: chicken_bg,
+         appBar: AppBar(
+           toolbarHeight: kToolbarHeight,
+           automaticallyImplyLeading: false,
+           leading: GestureDetector(
+               behavior: HitTestBehavior.opaque,
+               onTap: () {
+                 Navigator.pop(context);
+               },
+               child:getBackArrowBlack()),
+           centerTitle: true,
+           elevation: 0,
+           backgroundColor: appBG,
+         ),
          body: Padding(
            padding: const EdgeInsets.only(left: 18.0, right: 18),
            child: Column(
@@ -42,9 +55,9 @@ class _ForgotPasswordScreenState extends BaseState<ForgotPasswordScreen> {
                Container(
                  width : MediaQuery.of(context).size.width,
                  padding: const EdgeInsets.all(22),
-                 decoration:  const BoxDecoration(
+                 decoration: BoxDecoration(
                    // border: Border.all(color: appBg, width: 0.5),
-                   borderRadius:BorderRadius.all(Radius.circular(18),) ,
+                   borderRadius:BorderRadius.all(Radius.circular(kContainerCornerRadius),) ,
                    color: white,
                  ),
                  child: Column(
@@ -71,7 +84,6 @@ class _ForgotPasswordScreenState extends BaseState<ForgotPasswordScreen> {
                        readOnly: false,
                        keyboardType: TextInputType.emailAddress,
                        textInputAction: TextInputAction.next,
-                       textCapitalization: TextCapitalization.words,
                        cursorColor: black,
                        controller:emailController,
                        style: TextStyle(
@@ -80,20 +92,10 @@ class _ForgotPasswordScreenState extends BaseState<ForgotPasswordScreen> {
                          color: black,
                        ),
                        decoration: InputDecoration(
-                         // fillColor: grayForDetail,
-                         // filled: true,
                          labelText: 'Email Address',
                          contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
                          counterText: "",
                          labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                         enabledBorder: OutlineInputBorder(
-                           borderSide: const BorderSide(color: grayDividerDetail),
-                           borderRadius: BorderRadius.circular(16),
-                         ),
-                         focusedBorder: OutlineInputBorder(
-                           borderSide: const BorderSide(color: grayDividerDetail),
-                           borderRadius: BorderRadius.circular(16),
-                         ),
                        ),
                      ),
                      Container(
@@ -104,6 +106,10 @@ class _ForgotPasswordScreenState extends BaseState<ForgotPasswordScreen> {
                            if(emailController.text.isEmpty)
                            {
                              showSnackBar("Please enter your email address", context);
+                           }
+                           else if (!isValidEmail(emailController.text))
+                           {
+                             showSnackBar("Please enter valid email address", context);
                            }
                            else
                            {

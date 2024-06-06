@@ -40,6 +40,19 @@ class _ForgotPwOtpScreenState extends BaseState<ForgotPwOtpScreen> {
       },
       child: Scaffold(
         backgroundColor: chicken_bg,
+        appBar: AppBar(
+          toolbarHeight: kToolbarHeight,
+          automaticallyImplyLeading: false,
+          leading: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child:getBackArrowBlack()),
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor: appBG,
+        ),
         body: Padding(
           padding: const EdgeInsets.only(left: 18.0, right: 18),
           child: Column(
@@ -51,7 +64,7 @@ class _ForgotPwOtpScreenState extends BaseState<ForgotPwOtpScreen> {
                 padding: const EdgeInsets.all(22),
                 decoration:  BoxDecoration(
                   // border: Border.all(color: appBg, width: 0.5),
-                  borderRadius:const BorderRadius.all(Radius.circular(18),) ,
+                  borderRadius:BorderRadius.all(Radius.circular(kContainerCornerRadius),) ,
                   color: white,
                 ),
                 child: Column(
@@ -78,7 +91,6 @@ class _ForgotPwOtpScreenState extends BaseState<ForgotPwOtpScreen> {
                       readOnly: false,
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
-                      textCapitalization: TextCapitalization.words,
                       cursorColor: black,
                       controller:otpController,
                       style: TextStyle(
@@ -87,20 +99,10 @@ class _ForgotPwOtpScreenState extends BaseState<ForgotPwOtpScreen> {
                         color: black,
                       ),
                       decoration: InputDecoration(
-                        // fillColor: grayForDetail,
-                        // filled: true,
-                        labelText: 'Enter your code address',
+                        labelText: 'Enter code',
                         contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
                         counterText: "",
                         labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: grayDividerDetail),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: grayDividerDetail),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
                       ),
                     ),
                     Container(
@@ -110,7 +112,7 @@ class _ForgotPwOtpScreenState extends BaseState<ForgotPwOtpScreen> {
                         {
                           if(otpController.text.isEmpty)
                           {
-                            showSnackBar("Please enter your email address", context);
+                            showSnackBar("Please enter code", context);
                           }
                           else
                           {

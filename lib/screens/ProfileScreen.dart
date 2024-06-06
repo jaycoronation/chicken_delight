@@ -1,12 +1,9 @@
 import 'dart:core';
-import 'package:chicken_delight/screens/DashboardPage.dart';
 import 'package:chicken_delight/screens/LoginScreen.dart';
 import 'package:chicken_delight/utils/app_utils.dart';
 import 'package:chicken_delight/widget/loading.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import '../common_widget/common_widget.dart';
 import '../constant/colors.dart';
@@ -34,8 +31,6 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
 
   List<StoreMenuGetSet> useFullLinks = [];
   List<StoreMenuGetSet> listLogout = [];
-
-  final SessionManagerMethods _sessionManagerMethods = SessionManagerMethods();
 
   @override
   void initState() {
@@ -141,10 +136,10 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
                   ),
 
                   Container(
-                    margin: EdgeInsets.only(top: 18),
-                    padding: EdgeInsets.all(12),
+                    margin: const EdgeInsets.only(top: 18),
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(18),
+                      borderRadius: BorderRadius.circular(kContainerCornerRadius),
                       color: white,
                       border: Border.all(
                         color: white,
@@ -162,7 +157,7 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Image.asset('assets/images/ic_logout.png', height: 22, width: 22, color: black),
-                              Gap(12),
+                              const Gap(12),
                               Expanded(
                                 child: Text("Logout",
                                     style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
@@ -188,7 +183,6 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
     super.dispose();
   }
 
-
   @override
   void castStatefulWidget() {
     widget is ProfileScreen;
@@ -197,116 +191,73 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
   void logoutFromApp(BuildContext context) {
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: white,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
       builder: (BuildContext context) {
         return Wrap(
           children: [
-
             Container(
-              margin: const EdgeInsets.all(15),
-              decoration:
-              const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)), color: white),
+              decoration: const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)), color: white),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                      height: 2,
-                      width: 40,
-                      color: black,
-                      margin: const EdgeInsets.only(bottom: 18)
-                  ),
-                  Container(
-                      alignment: Alignment.center,
-                      margin: const EdgeInsets.only(bottom: 10),
-                      child: const Text('Logout', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: black))),
-                  Container(
+                    height: 2,
+                    width: 40,
                     alignment: Alignment.center,
-                    margin: const EdgeInsets.only(left: 12),
-                    child: const Text('Are you sure want to Logout?', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, color: black)),
+                    color: black,
+                    margin: const EdgeInsets.only(top: 10, bottom: 10),
                   ),
-                  Row(
-                    children: [
-                      Flexible(
-                        flex: 1,
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          margin: const EdgeInsets.only(
-                              left: 12, right: 12, top: 30),
-                          child: TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  side: const BorderSide(
+                  Container(margin: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: Text('Logout', style: TextStyle(fontSize: medium, fontWeight: FontWeight.w700, color: black))
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 10, bottom: 15),
+                    child: Text('Are you sure want to Logout?', style: TextStyle(fontSize: subTitle, fontWeight: FontWeight.w400, color: black)),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 20, right: 20, bottom: 30),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(width: 0.4, color: black),
+                              borderRadius: BorderRadius.all(Radius.circular(kButtonCornerRadius)),
+                            ),
+                            margin: const EdgeInsets.only(right: 10),
+                            child: TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text('Cancel',
+                                    style: TextStyle(
+                                      fontSize: subTitle,
+                                      fontWeight: FontWeight.w600,
                                       color: black,
-                                      width: 1,
-                                      style: BorderStyle.solid),
-                                  borderRadius: BorderRadius.circular(22.0),
-                                ),
-                              ),
-                              backgroundColor:
-                              MaterialStateProperty.all<Color>(white),
+                                    ))),
+                          ),
+                        ),
+                        Expanded(
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(kButtonCornerRadius),
+                              color: black,
                             ),
-                            child:  Padding(
-                              padding: const EdgeInsets.all(6.0),
-                              child: Text(
-                                "Cancel",
-                                style: TextStyle(
-                                    color: black,
-                                    fontSize: contentSize,
-                                    fontWeight: FontWeight.w500
-                                ),
-                              ),
+                            child: TextButton(
+                              onPressed: () async {
+                                Navigator.pop(context);
+                                SessionManagerMethods.clear();
+                                await SessionManagerMethods.init();
+                                var sessionManager = SessionManager();
+                                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (Route<dynamic> route) => false);
+                              },
+                              child: Text('Logout', style: TextStyle(fontSize: subTitle, fontWeight: FontWeight.w600, color: white)),
                             ),
                           ),
                         ),
-                      ),
-                      Flexible(
-                        flex: 1,
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          margin: const EdgeInsets.only(left: 12, right: 12, top: 30),
-                          child: TextButton(
-                            onPressed: () async {
-                              Navigator.pop(context);
-                              SessionManagerMethods.clear();
-                              await SessionManagerMethods.init();
-                              var sessionManager = SessionManager();
-                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (Route<dynamic> route) => false);
-                            },
-                            style: ButtonStyle(
-                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                    side: const BorderSide(
-                                        color: black,
-                                        width: 1,
-                                        style: BorderStyle.solid
-                                    ),
-                                    borderRadius: BorderRadius.circular(22.0),
-                                  ),
-                                ),
-                                backgroundColor: MaterialStateProperty.all<Color>(black)
-                            ),
-                            child:   Padding(
-                              padding: const EdgeInsets.all(6.0),
-                              child: Text(
-                                "Logout",
-                                style: TextStyle(
-                                    color: white,
-                                    fontSize: contentSize,
-                                    fontWeight: FontWeight.w500
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -316,7 +267,6 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
       },
     );
   }
-
 
   void deactivateAccountFromApp() {
     showModalBottomSheet<void>(

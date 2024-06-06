@@ -42,9 +42,9 @@ class _LoginScreenState extends BaseState<LoginScreen> {
                 Container(
                   width : MediaQuery.of(context).size.width,
                   padding: const EdgeInsets.all(22),
-                  decoration:  const BoxDecoration(
+                  decoration: BoxDecoration(
                     // border: Border.all(color: appBg, width: 0.5),
-                    borderRadius:BorderRadius.all(Radius.circular(18),) ,
+                    borderRadius:BorderRadius.all(Radius.circular(kContainerCornerRadius),) ,
                     color: white,
                   ),
                   child: Column(
@@ -71,7 +71,6 @@ class _LoginScreenState extends BaseState<LoginScreen> {
                         readOnly: false,
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
-                        textCapitalization: TextCapitalization.words,
                         cursorColor: black,
                         controller:emailController,
                         style: TextStyle(
@@ -80,20 +79,10 @@ class _LoginScreenState extends BaseState<LoginScreen> {
                           color: black,
                         ),
                         decoration: InputDecoration(
-                          // fillColor: grayForDetail,
-                          // filled: true,
                           labelText: 'Email Address',
                           contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
                           counterText: "",
                           labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: grayDividerDetail),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: grayDividerDetail),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
                         ),
                       ),
                       const Gap(12),
@@ -109,14 +98,6 @@ class _LoginScreenState extends BaseState<LoginScreen> {
                           color: black,
                         ),
                         decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: grayDividerDetail),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: grayDividerDetail),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
                           labelText: 'Password',
                           labelStyle:  TextStyle(fontSize: description, color:gray_dark),
                           suffixIcon: GestureDetector(
@@ -150,6 +131,10 @@ class _LoginScreenState extends BaseState<LoginScreen> {
                             if(emailController.text.isEmpty)
                             {
                               showSnackBar("Please enter your email address", context);
+                            }
+                            else if (!isValidEmail(emailController.text))
+                            {
+                              showSnackBar("Please enter valid email address", context);
                             }
                             else if(passwordController.text.isEmpty)
                             {
