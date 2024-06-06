@@ -157,7 +157,7 @@ class _ChangePasswordScreenState extends BaseState<ChangePasswordScreen> {
                           {
                             showSnackBar("Please enter your confirm password", context);
                           }
-                          else if(passwordController.text == confirmController.text)
+                          else if (passwordController.text == confirmController.text)
                           {
                             showSnackBar("New and Confirm Password must be equal.", context);
                           }

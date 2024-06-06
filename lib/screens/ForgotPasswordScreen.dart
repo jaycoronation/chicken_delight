@@ -165,7 +165,7 @@ class _ForgotPasswordScreenState extends BaseState<ForgotPasswordScreen> {
              isLoading = false;
            });
 
-           showSnackBar(loginResponse.message, context);
+          // showSnackBar(loginResponse.message, context);
            startActivity(context, ForgotPwOtpScreen(emailController.value.text));
 
          } else {
