@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:chicken_delight/model/common/CommonResponseModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import '../common_widget/common_widget.dart';
@@ -88,88 +89,6 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                       ),
                       Text(status,
                           style: TextStyle(fontSize: subTitle, color: status == "Cancelled" ? Colors.red : Colors.green,fontWeight: FontWeight.w600),textAlign: TextAlign.left
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Visibility(
-                        visible: status == "Accepted" || status == "Processed",
-                        child: Expanded(
-                          child: GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: (){
-                              showDialog("Processed");
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              margin: const EdgeInsets.only(top: 20, bottom: 10),
-                              padding: const EdgeInsets.all(10),
-                              width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12.0),
-                                color: black,
-                              ),
-                             child: Text("Mark as\nProcessed",
-                                 style: TextStyle(fontSize: small, color: white, fontWeight: FontWeight.w600),
-                                 textAlign: TextAlign.center
-                             ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Gap(12),
-                      Visibility(
-                        visible: status == "Accepted" || status == "Processed",
-                        child: Expanded(
-                          child: GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: (){
-                              showDialog("Cancel");
-
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              margin: const EdgeInsets.only(top: 20, bottom: 10),
-                              padding: const EdgeInsets.all(10),
-                              width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12.0),
-                                color: black,
-                              ),
-                              child: Text("Cancel\n Order",
-                                  style: TextStyle(fontSize: small, color: white,fontWeight: FontWeight.w600),
-                                  textAlign: TextAlign.center
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Gap(12),
-                      Visibility(
-                        visible: status == "Accepted" || status == "Processed",
-                        child: Expanded(
-                          child: GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: (){
-                              showDialog("Completed");
-                              },
-                            child: Container(
-                              alignment: Alignment.center,
-                              margin: const EdgeInsets.only(top: 20, bottom: 10),
-                              padding: const EdgeInsets.all(10),
-                              width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12.0),
-                                color: black,
-                              ),
-                              child: Text("Mark Payment\nDone",
-                                  style: TextStyle(fontSize: small, color: white,fontWeight: FontWeight.w600),
-                                  textAlign: TextAlign.center
-                              ),
-                            ),
-                          ),
-                        ),
                       ),
                     ],
                   ),
@@ -328,76 +247,85 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                       ],
                     ),
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.only(top: 10,bottom: 10),
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(kContainerCornerRadius),
-                      color: white,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Shipping From",
-                            style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
-                        ),
-                        Gap(10),
-                        Text(warehouseName,
-                            style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
-                        ),
-                        Text(wareAddressLine1,
-                            style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.only(top: 10,bottom: 10),
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(kContainerCornerRadius),
-                      color: white,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Shipping To",
-                            style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
-                        ),
-                        Gap(10),
-                        Text(franchiseName,
-                            style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
-                        ),
-                        Text("$addressLine1,$addressLine2",
-                            style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
-                        ),
-                      ],
+                  Visibility(
+                    visible: warehouseName.isNotEmpty && wareAddressLine1.isNotEmpty,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(top: 10,bottom: 10),
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(kContainerCornerRadius),
+                        color: white,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Shipping From",
+                              style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
+                          ),
+                          Gap(10),
+                          Text(warehouseName,
+                              style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
+                          ),
+                          Text(wareAddressLine1,
+                              style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.only(top: 10,bottom: 20),
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(kContainerCornerRadius),
-                      color: white,
+                  Visibility(
+                    visible: franchiseName.isNotEmpty && addressLine1.isNotEmpty,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(top: 10,bottom: 10),
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(kContainerCornerRadius),
+                        color: white,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Shipping To",
+                              style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
+                          ),
+                          Gap(10),
+                          Text(franchiseName,
+                              style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
+                          ),
+                          Text("$addressLine1,$addressLine2",
+                              style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
+                          ),
+                        ],
+                      ),
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Payment Status",
-                            style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
-                        ),
-                        Gap(10),
-                        Text(paymentStatus,
-                            style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
-                        ),
-                      ],
+                  ),
+                  Visibility(
+                    visible: paymentStatus.isNotEmpty,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(top: 10,bottom: 20),
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(kContainerCornerRadius),
+                        color: white,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Payment Status",
+                              style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
+                          ),
+                          Gap(10),
+                          Text(paymentStatus,
+                              style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -413,272 +341,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
    widget is OrderDetailScreen;
   }
 
-  showDialog(String isFor) async {
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: white,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-      elevation: 5,
-      isDismissible: true,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, updateState) {
-            return Wrap(
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                      height: 16,
-                    ),
-                    Container(
-                        height: 2,
-                        width: 40,
-                        color: black,
-                        margin: const EdgeInsets.only(bottom: 18)
-                    ),
-                    Text(isFor == "Processed"
-                        ? "Are you sure you want to mark as processed?"
-                        : isFor == "Cancel"
-                        ? "Are you sure want to cancel order?"
-                        : "Are you sure you want to mark payment done?",
-                        style: TextStyle(
-                            color: black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: textFiledSize),
-                        textAlign: TextAlign.center
-                    ),
-                    Visibility(
-                      visible: isFor != "Completed",
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 16.0, right: 16, top: 22),
-                        child: TextField(
-                          readOnly: false,
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.next,
-                          textCapitalization: TextCapitalization.words,
-                          cursorColor: black,
-                          maxLines: 3,
-                          controller:isFor == "Processed" ? remarksController : cancelRemarksController,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: subTitle,
-                            color: black,
-                          ),
-                          decoration: InputDecoration(
-                            labelText: 'Remarks',
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
-                            counterText: "",
-                            labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                            alignLabelWithHint: true
-                          ),
-                        ),
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            margin: const EdgeInsets.only(left: 15, right: 12, bottom: 30, top: 20),
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              style: ButtonStyle(
-                                shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                    side: const BorderSide(
-                                        color: black,
-                                        width: 1,
-                                        style: BorderStyle.solid),
-                                    borderRadius: BorderRadius.circular(kButtonCornerRadius),
-                                  ),
-                                ),
-                                backgroundColor:
-                                MaterialStateProperty.all<Color>(white),
-                              ),
-                              child:   Padding(
-                                padding: const EdgeInsets.all(6.0),
-                                child: Text(
-                                  "Cancel",
-                                  style: TextStyle(
-                                      color: black,
-                                      fontSize: contentSize,
-                                      fontWeight: FontWeight.w500
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            margin: const EdgeInsets.only(
-                                left: 12, right: 15, bottom: 30, top: 30),
-                            child: TextButton(
-                              onPressed: () {
-                                if (isFor == "Processed")
-                                {
-                                  saveOrder("Processed");
-                                }
-                                else if (isFor == "Cancel")
-                                {
-                                  deleteOrder();
-                                }
-                                else
-                                {
-                                  saveOrder("Completed");
-                                }
-                              },
-                              style: ButtonStyle(
-                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      side: const BorderSide(
-                                          color: black,
-                                          width: 1,
-                                          style: BorderStyle.solid
-                                      ),
-                                      borderRadius: BorderRadius.circular(kButtonCornerRadius),
-                                    ),
-                                  ),
-                                  backgroundColor: MaterialStateProperty.all<Color>(black)
-                              ),
-                              child:  Padding(
-                                padding: const EdgeInsets.all(6.0),
-                                child: Text(
-                                  "Yes",
-                                  style: TextStyle(
-                                      color: white,
-                                      fontSize: contentSize,
-                                      fontWeight: FontWeight.w500
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                      ],
-                    )
-                  ],
-                )
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
   // API Call func...
-  saveOrder(String orderStatus) async {
-    if (isOnline)
-    {
-      setState(() {
-        isLoading = true;
-      });
-
-      HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-        HttpLogger(logLevel: LogLevel.BODY),
-      ]);
-
-      final url = Uri.parse(MAIN_URL + orderSave);
-      Map<String, String> jsonBody = {
-      };
-
-      if (orderStatus == "Completed")
-      {
-        jsonBody = {
-          'id': orderId,
-          'payment_status': orderStatus
-        };
-      }
-      else
-      {
-        jsonBody = {
-          'id': orderId,
-          'order_stages': orderStatus,
-          'remarks': remarksController.value.text,
-        };
-      }
-
-      final response = await http.post(url, body: jsonBody);
-      final statusCode = response.statusCode;
-
-      final body = response.body;
-      Map<String, dynamic> user = jsonDecode(body);
-      var dataResponse = CommonResponseModel.fromJson(user);
-
-      if (statusCode == 200 && dataResponse.success == 1) {
-        setState(() {
-          isLoading = false;
-        });
-        Navigator.pop(context,"success");
-      } else {
-        setState(() {
-          isLoading = false;
-        });
-      }
-    }
-    else
-    {
-      noInternetSnackBar(context);
-    }
-
-  }
-
-  deleteOrder() async {
-    if (isOnline)
-    {
-      setState(() {
-        isLoading = true;
-      });
-
-      HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-        HttpLogger(logLevel: LogLevel.BODY),
-      ]);
-
-      final url = Uri.parse(MAIN_URL + orderDelete);
-
-      Map<String, String> jsonBody = {
-        'id': orderId,
-        'remarks': cancelRemarksController.value.text,
-      };
-
-      final response = await http.post(url, body: jsonBody);
-
-      final statusCode = response.statusCode;
-      print(response);
-      final body = response.body;
-      Map<String, dynamic> user = jsonDecode(body);
-      var dataResponse = CommonResponseModel.fromJson(user);
-
-      if (statusCode == 200 && dataResponse.success == 1) {
-        setState(() {
-          isLoading = false;
-        });
-        Navigator.pop(context);
-      }
-      else {
-        setState(() {
-          isLoading = false;
-        });
-
-      }
-    }
-    else
-    {
-      noInternetSnackBar(context);
-    }
-
-  }
-
   getOrderDetail() async {
     if (isOnline) {
       setState(() {

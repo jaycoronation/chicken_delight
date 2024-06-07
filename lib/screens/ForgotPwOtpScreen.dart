@@ -73,7 +73,7 @@ class _ForgotPwOtpScreenState extends BaseState<ForgotPwOtpScreen> {
                   children: [
                     Center(
                       child: Image.asset(
-                        "assets/images/ic_chicken_logo.jpg",
+                        "assets/images/ic_chicken_logo.png",
                         height: 120,
                         width: 160,
                         // fit: BoxFit.cover,
@@ -90,7 +90,7 @@ class _ForgotPwOtpScreenState extends BaseState<ForgotPwOtpScreen> {
                     TextField(
                       readOnly: false,
                       keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.next,
+                      textInputAction: TextInputAction.done,
                       cursorColor: black,
                       controller:otpController,
                       style: TextStyle(

@@ -80,7 +80,7 @@ class _ChangePasswordScreenState extends BaseState<ChangePasswordScreen> {
                   children: [
                     Center(
                       child: Image.asset(
-                        "assets/images/ic_chicken_logo.jpg",
+                        "assets/images/ic_chicken_logo.png",
                         height: 120,
                         width: 160,
                         // fit: BoxFit.cover,

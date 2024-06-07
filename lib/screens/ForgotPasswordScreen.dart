@@ -66,7 +66,7 @@ class _ForgotPasswordScreenState extends BaseState<ForgotPasswordScreen> {
                    children: [
                      Center(
                        child: Image.asset(
-                         "assets/images/ic_chicken_logo.jpg",
+                         "assets/images/ic_chicken_logo.png",
                          height: 120,
                          width: 160,
                          // fit: BoxFit.cover,
@@ -83,7 +83,7 @@ class _ForgotPasswordScreenState extends BaseState<ForgotPasswordScreen> {
                      TextField(
                        readOnly: false,
                        keyboardType: TextInputType.emailAddress,
-                       textInputAction: TextInputAction.next,
+                       textInputAction: TextInputAction.done,
                        cursorColor: black,
                        controller:emailController,
                        style: TextStyle(

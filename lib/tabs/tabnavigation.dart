@@ -164,8 +164,6 @@ class _TabNavigationPageState extends State<TabNavigation> {
                                 });
                               }
 
-
-
                               if (value != 2)
                               {
                                 setState(() {
@@ -177,7 +175,7 @@ class _TabNavigationPageState extends State<TabNavigation> {
                               BottomNavigationBarItem(
                                 label: 'Home',
                                 icon: ImageIcon(
-                                  AssetImage("assets/images/ic_dashboard_gray.png"),
+                                  AssetImage("assets/images/ic_home_unselected.png"),
                                 ),
                               ),
                               BottomNavigationBarItem(

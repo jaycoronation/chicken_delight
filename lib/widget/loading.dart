@@ -15,7 +15,7 @@ class LoadingWidget extends StatelessWidget {
             children: [
               Expanded(child: Stack(
                 children: [
-                  Center(child: Image.asset('assets/images/ic_chicken_logo.jpg', height: 32, width: 32,fit : BoxFit.fitWidth,alignment: Alignment.center)),
+                  Center(child: Image.asset('assets/images/ic_chicken_logo.png', height: 32, width: 32,fit : BoxFit.fitWidth,alignment: Alignment.center)),
                   const Center(
                     child: SizedBox(
                         width: 50,

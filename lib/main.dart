@@ -3,13 +3,16 @@ import 'dart:async';
 import 'package:chicken_delight/push_notification/PushNotificationService.dart';
 import 'package:chicken_delight/screens/LoginScreen.dart';
 import 'package:chicken_delight/tabs/tabnavigation.dart';
+import 'package:chicken_delight/utils/TextChanger.dart';
 import 'package:chicken_delight/utils/app_utils.dart';
 import 'package:chicken_delight/utils/base_class.dart';
 import 'package:chicken_delight/utils/session_manager_methods.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:provider/provider.dart';
 
 import 'constant/colors.dart';
 import 'constant/global_context.dart';
@@ -42,6 +45,15 @@ Future<void> main() async {
       AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
 
   await PushNotificationService().setupInteractedMessage();
+
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((value) => runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => TextChanger()),
+        ],
+        child: const MyApp(),
+      )
+  ));
 
   await SessionManagerMethods.init();
   runApp(const MyApp());
@@ -123,7 +135,7 @@ class _MyHomePageState extends BaseState<MyHomePage> {
             fit: BoxFit.cover,
           ),
         ),*/
-        child: Image.asset('assets/images/ic_chicken_logo.jpg',
+        child: Image.asset('assets/images/ic_chicken_logo.png',
           height: 160,
           width: 160,
         ),

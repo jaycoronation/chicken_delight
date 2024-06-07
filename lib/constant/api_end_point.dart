@@ -23,5 +23,6 @@ String stateList = "states";
 String cities = "cities";
 
 String updateProfile = "manageuser/updateprofile";
+String userProfile = "manageuser/userprofile";
 
 String updateDeviceToken = "update_device_token";

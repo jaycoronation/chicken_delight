@@ -53,7 +53,7 @@ class _LoginScreenState extends BaseState<LoginScreen> {
                     children: [
                       Center(
                         child: Image.asset(
-                          "assets/images/ic_chicken_logo.jpg",
+                          "assets/images/ic_chicken_logo.png",
                           height: 120,
                           width: 160,
                           // fit: BoxFit.cover,
@@ -89,6 +89,7 @@ class _LoginScreenState extends BaseState<LoginScreen> {
                       TextField(
                         readOnly: false,
                         keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.done,
                         cursorColor: black,
                         controller: passwordController,
                         obscureText: _passwordVisible ? true : false,

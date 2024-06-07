@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:chicken_delight/model/GetProfileResponseModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -55,24 +56,59 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
   List<Cities> _cityList = [];
   String countryId = "";
   String stateId = "";
+  String cityId = "";
   String pickImgPath = "";
   File profilePicFile = File("");
   File logoFile = File("");
   String profilePic = "";
   String logoPic = "";
 
+  Profile profileData = Profile();
+
 
   @override
   void initState() {
     super.initState();
-    profilePic = sessionManager.getImagePic() ?? "";
-    setData();
-    _getCountry();
+    _getProfile();
+
+
   }
 
   void setData() {
-    userNameController.text = sessionManager.getName() ?? "";
-   // emailController.text = sessionManager.getEmail() ?? "";
+    if (profileData.profilePicture != null)
+    {
+      if (profileData.profilePicture!.isNotEmpty)
+      {
+        profilePic = profileData.profilePicture ?? "";
+      }
+      else
+      {
+        profilePic = sessionManager.getImagePic() ?? "";
+      }
+    }
+    else
+    {
+      profilePic = sessionManager.getImagePic() ?? "";
+    }
+
+    nameController.text = profileData.name ?? "";
+    userNameController.text = profileData.username ?? "";
+    emailController.text = profileData.email ?? "";
+    mobileController.text = profileData.mobile ?? "";
+    businessNameController.text = profileData.businessName ?? "";
+    websiteController.text = profileData.website ?? "";
+    addressLine1Controller.text = profileData.addressLine1 ?? "";
+    addressLine2Controller.text = profileData.addressLine2 ?? "";
+    addressLine3Controller.text = profileData.addressLine3 ?? "";
+    addressLine4Controller.text = profileData.addressLine4 ?? "";
+
+    logoPic = profileData.businessLogo ?? "";
+
+    countryId = profileData.countryId ?? "";
+    stateId = profileData.stateId ?? "";
+    cityId = profileData.cityId ?? "";
+
+    _getCountry();
   }
 
   @override
@@ -187,7 +223,7 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                  ),
                  const Gap(16),
                  TextField(
-                   readOnly: false,
+                   readOnly: true,
                    keyboardType: TextInputType.text,
                    textInputAction: TextInputAction.next,
                    textCapitalization: TextCapitalization.words,
@@ -207,7 +243,7 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                  ),
                  const Gap(16),
                  TextField(
-                   readOnly: false,
+                   readOnly: true,
                    keyboardType: TextInputType.emailAddress,
                    textInputAction: TextInputAction.next,
                    cursorColor: black,
@@ -583,6 +619,20 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
 
     if (statusCode == 200 && dataResponse.success == 1) {
       _countryList = dataResponse.countries ?? [];
+
+      if (countryId.isNotEmpty)
+        {
+          for (int i = 0; i < _countryList.length; i ++)
+          {
+            if (_countryList[i].id == countryId)
+            {
+              countryController.text = _countryList[i].name ?? "";
+            }
+          }
+          _getState();
+        }
+
+
       setState(() {
         isLoading = false;
       });
@@ -728,7 +778,8 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                                           child: Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Flexible(child: Text( listCountrySearch.isEmpty  ? _countryList[i].name.toString() : listCountrySearch[i].name.toString(),style: const TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: black), textAlign: TextAlign.start,)),
+                                              Flexible(child: Text(listCountrySearch.isEmpty ? _countryList[i].name.toString() : listCountrySearch[i].name.toString(),
+                                                style: const TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: black), textAlign: TextAlign.start,)),
                                             ],
                                           ),
                                         ),
@@ -766,7 +817,9 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
       'country_id': countryId,
     };
 
-    final response = await http.post(url, body: jsonBody);
+    final response = await http.post(url, body: jsonBody, headers: {
+      "Authorization": sessionManager.getToken() ?? "",
+    });
 
     final statusCode = response.statusCode;
     print(response);
@@ -776,6 +829,17 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
 
     if (statusCode == 200 && dataResponse.success == 1) {
       _stateList = dataResponse.states ?? [];
+      if (stateId.isNotEmpty)
+      {
+        for (int i = 0; i < _stateList.length; i ++)
+        {
+          if (_stateList[i].id == stateId)
+          {
+            stateController.text = _stateList[i].name ?? "";
+          }
+        }
+        _getCity();
+      }
       setState(() {
         isLoading = false;
       });
@@ -957,7 +1021,9 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
       'state_id': stateId,
     };
 
-    final response = await http.post(url, body: jsonBody);
+    final response = await http.post(url, body: jsonBody, headers: {
+      "Authorization": sessionManager.getToken() ?? "",
+    });
 
     final statusCode = response.statusCode;
     print(response);
@@ -967,6 +1033,18 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
 
     if (statusCode == 200 && dataResponse.success == 1) {
       _cityList = dataResponse.cities ?? [];
+      if (cityId.isNotEmpty)
+      {
+        for (int i = 0; i < _cityList.length; i ++)
+        {
+          if (_cityList[i].id == cityId)
+          {
+            cityController.text = _cityList[i].name ?? "";
+          }
+        }
+
+      }
+
       setState(() {
         isLoading = false;
       });
@@ -1330,5 +1408,44 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
       showSnackBar(dataResponse.message, context);
     }
   }
+
+  _getProfile() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+
+    final url = Uri.parse(MAIN_URL + userProfile);
+
+    Map<String, String> jsonBody = {
+    };
+
+    final response = await http.post(url, body: jsonBody, headers: {
+      "Authorization": sessionManager.getToken() ?? "",
+    });
+
+    final statusCode = response.statusCode;
+    final body = response.body;
+    Map<String, dynamic> user = jsonDecode(body);
+    var dataResponse = GetProfileResponseModel.fromJson(user);
+
+    if (statusCode == 200 && dataResponse.success == 1) {
+      profileData = dataResponse.profile ?? Profile();
+
+      setData();
+
+      setState(() {
+        isLoading = false;
+      });
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
 
 }

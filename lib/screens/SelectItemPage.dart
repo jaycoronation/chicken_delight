@@ -71,22 +71,7 @@ class _SelectItemPageState extends BaseState<SelectItemPage> {
                       currentFocus.unfocus();
                     }
 
-                    if (listItems.isEmpty)
-                    {
-                      Navigator.pop(context);
-                    }
-                    else
-                    {
-                      if (isCheckAny()) {
-                        // if (checkIsValid()) {
-                          Navigator.pop(context, listItemsMain);
-                        // } else {
-                        //   showSnackBar("Please enter unit for all selected samples.", context);
-                        // }
-                      } else {
-                        showSnackBar("Please select at-least one product.", context);
-                      }
-                    }
+                    Navigator.pop(context);
                   },
                   child: const Text("Done", textAlign: TextAlign.center,
                       style: TextStyle(fontWeight: FontWeight.w500, color: black, fontSize: 15))),

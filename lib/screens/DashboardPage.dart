@@ -75,7 +75,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
           automaticallyImplyLeading: false,
           title: Container(
             alignment: Alignment.topLeft,
-            child: Image.asset('assets/images/ic_chicken_logo.jpg', height: 40, width: 100),
+            child: Image.asset('assets/images/ic_chicken_logo.png', height: 40, width: 100),
           ),
           actions: [
             GestureDetector(

@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 
 class TextChanger with ChangeNotifier, DiagnosticableTreeMixin {
-  String _updateCounter = "";
+  String _addOrder = "";
 
-  String get updateCounter => _updateCounter;
+  String get addOrder => _addOrder;
 
-  void setUpdateCounter(String data) {
-    _updateCounter = data;
+  void setAddOrder(String data) {
+    _addOrder = data;
     notifyListeners();
   }
 
@@ -14,6 +14,7 @@ class TextChanger with ChangeNotifier, DiagnosticableTreeMixin {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(StringProperty('updateCounter', updateCounter));
+    properties.add(StringProperty('addOrder', addOrder));
   }
+
 }
