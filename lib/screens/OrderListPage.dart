@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 
 import 'package:lottie/lottie.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../common_widget/common_widget.dart';
@@ -107,26 +108,25 @@ class _OrderListPageState extends BaseState<OrderListPage> {
     });
     getOrderListData(true);
 
-    isOrderListLoad = false;
+    // isOrderListLoad = false;
 
     super.initState();
   }
 
-/*  @override
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    var textRefresh = context.watch<TextChanger>().refreshListData.toString();
+    var textRefresh = context.watch<TextChanger>().addOrder;
+    print("Chart data<<><><><><><>>${textRefresh}}");
 
-    print("Order History set data<<><><><><><>>" + textRefresh);
-
-    if(textRefresh == "refreshOrderListData")
-    {
+    if (textRefresh != null && textRefresh.isNotEmpty) {
+      //Future.delayed(const Duration(seconds: 5)).then((val) {
       getOrderListData(true);
-
+      // });
     }
 
-  }*/
+  }
 
   void pagination() {
     if (!_isLastPage && !_isLoadingMore) {

@@ -12,11 +12,13 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:provider/provider.dart';
 
 import '../common_widget/common_widget.dart';
 import '../constant/colors.dart';
 import '../model/HomePageMenuModel.dart';
 import '../model/common/CommonResponseModel.dart';
+import '../utils/TextChanger.dart';
 import '../utils/base_class.dart';
 import '../widget/loading.dart';
 import '../widget/no_internet.dart';
@@ -48,8 +50,6 @@ class _DashboardPageState extends BaseState<DashboardPage> {
     getDashboardData();
 
     isHomeLoad = false;
-
-
     super.initState();
   }
 
@@ -64,6 +64,22 @@ class _DashboardPageState extends BaseState<DashboardPage> {
       deviceName = iosInfo.utsname.machine ?? '';
     }
   }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    var textRefresh = context.watch<TextChanger>().addOrder;
+    print("Chart data<<><><><><><>>${textRefresh}}");
+
+    if (textRefresh != null && textRefresh.isNotEmpty) {
+      //Future.delayed(const Duration(seconds: 5)).then((val) {
+        getDashboardData();
+     // });
+    }
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -349,17 +365,17 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                             children: [
                               Text(checkValidString(listOrders[index].orderNumber), textAlign: TextAlign.start, maxLines: 1,
                                   style:  TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: small)),
-                               Gap(6),
+                              const Gap(6),
                               Text(checkValidString(getPrice(listOrders[index].grandTotal ?? "")),
                                   textAlign: TextAlign.start,maxLines: 1,
                                   style:  TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: small)),
-                               Gap(6),
+                              const Gap(6),
                               Text(checkValidString(listOrders[index].remarks), textAlign: TextAlign.start, maxLines: 1,
                                   style: TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: small)),
-                               Gap(6),
+                              const Gap(6),
                               Text(getDateFromTimestamp(checkValidString(listOrders[index].timestamp)), textAlign: TextAlign.start, maxLines: 1,
                                   style:  TextStyle(color: black, fontWeight: FontWeight.w600, fontSize: small)),
-                               Gap(6),
+                              const Gap(6),
                               Text(checkValidString(listOrders[index].status), textAlign: TextAlign.start, maxLines: 1,
                                   style:  TextStyle(color: black, fontWeight: FontWeight.w600, fontSize: small)),
     

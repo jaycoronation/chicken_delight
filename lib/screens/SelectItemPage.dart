@@ -71,7 +71,18 @@ class _SelectItemPageState extends BaseState<SelectItemPage> {
                       currentFocus.unfocus();
                     }
 
-                    Navigator.pop(context);
+                    if (listItems.isEmpty)
+                    {
+                      Navigator.pop(context);
+                    }
+                    else
+                    {
+                      if (isCheckAny()) {
+                        Navigator.pop(context, listItemsMain);
+                      } else {
+                        showSnackBar("Please select at-least one product.", context);
+                      }
+                    }
                   },
                   child: const Text("Done", textAlign: TextAlign.center,
                       style: TextStyle(fontWeight: FontWeight.w500, color: black, fontSize: 15))),

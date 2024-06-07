@@ -4,14 +4,16 @@ import 'package:chicken_delight/common_widget/CommonTextFiled.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:provider/provider.dart';
 import '../common_widget/common_widget.dart';
 import '../constant/api_end_point.dart';
 import '../constant/colors.dart';
+import '../constant/global_context.dart';
 import '../model/ItemResponseModel.dart';
 import '../model/common/CommonResponseModel.dart';
+import '../utils/TextChanger.dart';
 import '../utils/app_utils.dart';
 import '../utils/base_class.dart';
-import 'SelectItemPage.dart';
 
 class AddOrderScreen extends StatefulWidget {
 
@@ -24,17 +26,21 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
 
   bool isLoading = false;
 
-  List<Records> listItemsAPI = [];
-  List<Records> listItems = [];
-
   var subTotal = 0.0;
   var grandTotal = 0.0;
 
 
   @override
   void initState() {
-    geItemList();
     super.initState();
+
+    for (int i = 0; i < NavigationService.listItemsTmp.length; i++)
+      {
+        var total = num.parse(NavigationService.listItemsTmp[i].salePrice.toString()) * num.parse(NavigationService.listItemsTmp[i].quantity.toString());
+        NavigationService.listItemsTmp[i].amount = total;
+      }
+
+    getPriceCalculated();
   }
 
   @override
@@ -53,7 +59,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
           leading: GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () {
-                Navigator.pop(context);
+                Navigator.pop(context, "1");
               },
               child:getBackArrowBlack()
           ),
@@ -68,87 +74,8 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.only(top: 8, bottom: 8),
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(kContainerCornerRadius),
-                      color: black,
-                    ),
-                    child: GestureDetector(
-                      onTap: () async {
-                        if (listItemsAPI.isNotEmpty)
-                        {
-                          final result = await Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => SelectItemPage(listItemsAPI)),
-                          );
-                          print("result ===== $result");
-                          listItems = [];
-                          if (result != null)
-                          {
-                            List<Records> listItemsTmp = [];
-                            listItemsTmp = result;
-
-                            setState(() {
-                              for (int i = 0; i < listItemsTmp.length; i++)
-                              {
-                                if (listItemsTmp[i].isSelected == true)
-                                {
-                                  Records getSet = Records();
-
-                                  getSet = Records(
-                                      id: listItemsTmp[i].id,
-                                      description: listItemsTmp[i].description,
-                                      name: listItemsTmp[i].name,
-                                      icon: listItemsTmp[i].icon,
-                                      productCode: listItemsTmp[i].productCode,
-                                      unit: listItemsTmp[i].unit,
-                                      variationName: listItemsTmp[i].variationName,
-                                      skuCode: listItemsTmp[i].skuCode,
-                                      salePrice: listItemsTmp[i].salePrice,
-                                      mrpPrice: listItemsTmp[i].mrpPrice,
-                                      dpPrice: listItemsTmp[i].dpPrice,
-                                      category: listItemsTmp[i].category,
-                                      variationId: listItemsTmp[i].variationId,
-                                      categoryId: listItemsTmp[i].categoryId,
-                                      isSelected : listItemsTmp[i].isSelected,
-                                      quantity: 1,
-                                      amount: num.parse(listItemsTmp[i].salePrice.toString())
-                                  );
-
-                                  listItems.add(getSet);
-                                }
-                              }
-                              getPriceCalculated();
-
-                            });
-                          }
-                        }
-                        else
-                        {
-                          showSnackBar("No items found", context);
-                        }
-
-                      },
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("Add Item",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: subTitle, fontWeight: FontWeight.w500, color: white,),
-                          ),
-
-                          const Icon(Icons.add, color: white, size: 26,)
-                        ],
-                      ),
-                    )
-                ),
-                const Gap(8),
                 Visibility(
-                  visible: listItems.isNotEmpty,
+                  visible: NavigationService.listItems.isNotEmpty,
                   child: Container(
                     margin: const EdgeInsets.only(left: 10, bottom: 5),
                     child: Text("Items",
@@ -162,7 +89,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                   child: ListView.builder(
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
-                      itemCount: listItems.length,
+                      itemCount: NavigationService.listItemsTmp.length,
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         return Container(
@@ -177,7 +104,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
                                 child: Image.network(
-                                  listItems[index].icon ?? "",
+                                  NavigationService.listItemsTmp[index].icon ?? "",
                                   fit: BoxFit.cover,
                                   height: 70,
                                   width:70,
@@ -188,7 +115,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(listItems[index].name ?? "",
+                                    Text(NavigationService.listItemsTmp[index].name ?? "",
                                       style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500,
                                         overflow: TextOverflow.clip,),
                                       textAlign: TextAlign.left,
@@ -209,7 +136,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                               width: 0.8,
                                             ),
                                           ),
-                                          child: Text(listItems[index].salePrice ?? " ",
+                                          child: Text(NavigationService.listItemsTmp[index].salePrice ?? " ",
                                               style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500),
                                               textAlign: TextAlign.center
                                           ),
@@ -232,14 +159,14 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                                     setState(() {
                                                       if (isOnline)
                                                       {
-                                                        if (listItems[index].quantity == 1) {
+                                                        if (NavigationService.listItemsTmp[index].quantity == 1) {
                                                           removeItem(index);
                                                         } else {
-                                                          listItems[index].quantity = listItems[index].quantity! - 1;
+                                                          NavigationService.listItemsTmp[index].quantity = NavigationService.listItemsTmp[index].quantity! - 1;
                                                         }
 
-                                                        var total = num.parse(listItems[index].salePrice.toString()) * num.parse(listItems[index].quantity.toString());
-                                                        listItems[index].amount = total;
+                                                        var total = num.parse(NavigationService.listItemsTmp[index].salePrice.toString()) * num.parse(NavigationService.listItemsTmp[index].quantity.toString());
+                                                        NavigationService.listItemsTmp[index].amount = total;
                                                         getPriceCalculated();
                                                       }
                                                       else
@@ -251,16 +178,16 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                                   },
                                                   icon:const Icon(Icons.remove)//Image.asset('assets/images/ic_blue_minus.png', height: 24, width: 24),
                                               ),
-                                              Text(listItems[index].quantity.toString(),
+                                              Text(NavigationService.listItemsTmp[index].quantity.toString(),
                                                   style: TextStyle(fontWeight: FontWeight.w400, color: black, fontSize: small)),
                                               IconButton(
                                                   onPressed: () {
                                                     setState(() {
                                                       if (isOnline)
                                                       {
-                                                        listItems[index].quantity = (listItems[index].quantity! + 1);
-                                                        var total = num.parse(listItems[index].salePrice.toString()) * num.parse(listItems[index].quantity.toString());
-                                                        listItems[index].amount = total;
+                                                        NavigationService.listItemsTmp[index].quantity = (NavigationService.listItemsTmp[index].quantity! + 1);
+                                                        var total = num.parse(NavigationService.listItemsTmp[index].salePrice.toString()) * num.parse(NavigationService.listItemsTmp[index].quantity.toString());
+                                                        NavigationService.listItemsTmp[index].amount = total;
 
                                                         getPriceCalculated();
                                                       }
@@ -276,38 +203,14 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                             ],
                                           ),
                                         ),
-                                        /*SizedBox(
-                                            width: 100,
-                                            height: 40,
-                                            child: BottomLineDigitOnlyTextField(controller: listItems[index].quantityController,
-                                              hintText: "Qty",
-                                              onChanged: (text) {
-                                              setState(() {
-                                                if (text.isNotEmpty) {
-                                                  var total = num.parse(listItems[index].salePrice.toString()) * num.parse(listItems[index].quantityController.text);
-                                                  listItems[index].mrpPrice = total.toString();
-                                                  print(getSubTotal());
-                                                  //  print(getGrandTotal());
-                                                }
-                                                else
-                                                {
-                                                  var total = num.parse(listItems[index].salePrice.toString()) * 1;
-                                                  listItems[index].mrpPrice = total.toString();
-                                                  print(getSubTotal());
-                                                }
-
-                                              });
-                                            },
-                                            )
-                                        ),*/
-                                        Text("/${listItems[index].unit ?? " "}",
+                                        Text("/${NavigationService.listItemsTmp[index].unit ?? " "}",
                                             style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500),textAlign: TextAlign.left
                                         ),
                                         const Gap(20),
                                       ],
                                     ),
                                     const Gap(5),
-                                    Text(getPrice(listItems[index].amount.toString()) ,
+                                    Text(getPrice(NavigationService.listItemsTmp[index].amount?.toStringAsFixed(2) ?? "") ,
                                       style: TextStyle(fontSize: description, color: black,
                                         fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),
                                       textAlign: TextAlign.right,
@@ -338,78 +241,6 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                       }
                   ),
                 ),
-                /*GestureDetector(
-                  onTap: () async {
-                    if (listItemsAPI.isNotEmpty)
-                    {
-                      final result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SelectItemPage(listItemsAPI)),
-                      );
-                      print("result ===== $result");
-                      listItems = [];
-                      if (result != null)
-                      {
-                        List<Records> listItemsTmp = [];
-                        listItemsTmp = result;
-
-                        setState(() {
-                          for (int i = 0; i < listItemsTmp.length; i++)
-                          {
-                            if (listItemsTmp[i].isSelected == true)
-                            {
-                              Records getSet = Records();
-
-                              getSet = Records(
-                                  id: listItemsTmp[i].id,
-                                  description: listItemsTmp[i].description,
-                                  name: listItemsTmp[i].name,
-                                  icon: listItemsTmp[i].icon,
-                                  productCode: listItemsTmp[i].productCode,
-                                  unit: listItemsTmp[i].unit,
-                                  variationName: listItemsTmp[i].variationName,
-                                  skuCode: listItemsTmp[i].skuCode,
-                                  salePrice: listItemsTmp[i].salePrice,
-                                  mrpPrice: listItemsTmp[i].mrpPrice,
-                                  dpPrice: listItemsTmp[i].dpPrice,
-                                  category: listItemsTmp[i].category,
-                                  variationId: listItemsTmp[i].variationId,
-                                  categoryId: listItemsTmp[i].categoryId,
-                                  isSelected : listItemsTmp[i].isSelected,
-                                  quantity: 1,
-                                  amount: num.parse(listItemsTmp[i].salePrice.toString())
-                              );
-
-                              listItems.add(getSet);
-                            }
-                          }
-                          getPriceCalculated();
-
-                        });
-                      }
-                    }
-                    else
-                    {
-                      showSnackBar("No items found", context);
-                    }
-
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.only(top: 5,bottom: 5),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Add Item",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: subTitle, fontWeight: FontWeight.w500, color: primaryColor,),
-                        ),
-                        const Spacer(),
-                        const Icon(Icons.add, color: black, size: 26,)
-                      ],
-                    ),
-                  ),
-                ),*/
                 Container(
                   margin: const EdgeInsets.only(bottom: 10, top: 5),
                   decoration: BoxDecoration(
@@ -437,7 +268,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                   ),
                 ),
                 Visibility(
-                  visible: listItems.isNotEmpty,
+                  visible: NavigationService.listItemsTmp.isNotEmpty,
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(kContainerCornerRadius),
@@ -482,7 +313,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      Text(listItems.length.toString(), textAlign: TextAlign.start,
+                                      Text(NavigationService.listItemsTmp.length.toString(), textAlign: TextAlign.start,
                                           style: TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: small)),
                                       const Gap(6),
                                       Text(getPrice(subTotal.toStringAsFixed(2)),
@@ -525,7 +356,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                   margin: const EdgeInsets.only(top: 20, bottom: 30, left: 60, right: 60),
                   width: MediaQuery.of(context).size.width,
                   child: getCommonButtonLoad("Proceed", isLoading,() {
-                      if (listItems.isEmpty)
+                      if (NavigationService.listItemsTmp.isEmpty)
                       {
                         showSnackBar("Please select item.", context);
                       }
@@ -553,11 +384,11 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
     setState(() {
       subTotal = 0.0;
 
-      for (var i = 0; i < listItems.length; i++) {
-        if (listItems[i].quantity == 1) {
-          subTotal = subTotal + checkValidDouble(listItems[i].amount.toString());
+      for (var i = 0; i < NavigationService.listItemsTmp.length; i++) {
+        if (NavigationService.listItemsTmp[i].quantity == 1) {
+          subTotal = subTotal + checkValidDouble(NavigationService.listItemsTmp[i].amount.toString());
         } else {
-          var total = checkValidDouble(listItems[i].amount.toString()) * listItems[i].quantity;
+          var total = checkValidDouble(NavigationService.listItemsTmp[i].amount.toString()) * NavigationService.listItemsTmp[i].quantity;
           subTotal = subTotal + total;
         }
       }
@@ -625,20 +456,44 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                             child: TextButton(
                               onPressed: () async {
                                 setState(() {
-                                  for (int i = 0; i < listItemsAPI.length; i++)
+                                  if (NavigationService.listItemsTmp.length == 1)
                                   {
-                                    if (listItemsAPI[i].id == listItems[index].id)
+                                    for (int i = 0; i < NavigationService.listItemsTmp.length; i++)
                                     {
-                                      listItemsAPI[i].isSelected = false;
+                                      if (NavigationService.listItemsTmp[i].id == NavigationService.listItemsTmp[index].id)
+                                      {
+                                        NavigationService.listItemsTmp[i].isSelected = false;
+                                      }
                                     }
-                                  }
 
-                                  listItems.removeAt(index);
-                                  getPriceCalculated();
-                                  if (listItems.isEmpty) {
-                                  //  isValidProduct = false;
+
+                                    NavigationService.listItemsTmp.removeAt(index);
+                                    getPriceCalculated();
+                                    context.read<TextChanger>().refreshProduct("refreshProduct");
+                                    NavigationService.listItems[index].quantity = 0;
+                                    NavigationService.listItems[index].isSelected = false;
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+
                                   }
-                                  Navigator.pop(context);
+                                  else
+                                    {
+                                      for (int i = 0; i < NavigationService.listItemsTmp.length; i++)
+                                      {
+                                        if (NavigationService.listItemsTmp[i].id == NavigationService.listItemsTmp[index].id)
+                                        {
+                                          NavigationService.listItemsTmp[i].isSelected = false;
+                                        }
+                                      }
+
+                                      NavigationService.listItemsTmp.removeAt(index);
+                                      getPriceCalculated();
+
+                                      NavigationService.listItems[index].quantity = 0;
+                                      NavigationService.listItems[index].isSelected = false;
+
+                                      Navigator.pop(context);
+                                    }
 
                                 });
                               },
@@ -661,69 +516,21 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
   void _makeJsonData() async {
     List<Records> listItemsTemp = [];
 
-    for (int i = 0; i < listItems.length; i++)
+    for (int i = 0; i < NavigationService.listItemsTmp.length; i++)
     {
-      listItemsTemp.add(listItems[i]);
+      listItemsTemp.add(NavigationService.listItemsTmp[i]);
     }
 
     if (listItemsTemp.isNotEmpty)
     {
-      listItems.clear();
-      listItems.addAll(listItemsTemp);
+      NavigationService.listItemsTmp.clear();
+      NavigationService.listItemsTmp.addAll(listItemsTemp);
     }
-    print("<><> Json Product ${jsonEncode(listItems).toString().trim()} END<><>");
+    print("<><> Json Product ${jsonEncode(NavigationService.listItemsTmp).toString().trim()} END<><>");
 
   }
 
   // API Call func...
-  geItemList() async {
-
-    if (isOnline)
-    {
-      HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-        HttpLogger(logLevel: LogLevel.BODY),
-      ]);
-
-      final url = Uri.parse(MAIN_URL + itemList);
-
-      Map<String, String> jsonBody = {
-      };
-
-      final response = await http.post(url, body: jsonBody, headers: {
-        "Authorization": sessionManager.getToken() ?? "",
-      });
-
-      final statusCode = response.statusCode;
-      final body = response.body;
-      Map<String, dynamic> user = jsonDecode(body);
-      var dataResponse = ItemResponseModel.fromJson(user);
-
-      if (statusCode == 200 && dataResponse.success == 1)
-      {
-        if (dataResponse.records != null)
-          {
-            if (dataResponse.records!.isNotEmpty) {
-              listItemsAPI = dataResponse.records ?? [];
-            }
-          }
-        setState(() {
-          isLoading = false;
-        });
-      }
-      else {
-        setState(() {
-          isLoading = false;
-        });
-        showSnackBar(dataResponse.message, context);
-      }
-    }
-    else
-    {
-      noInternetSnackBar(context);
-    }
-
-  }
-
   saveItem() async {
     if (isOnline)
     {
@@ -740,7 +547,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
         'couponCode': "",
         'created_for': sessionManager.getUserId() ?? "",
         'grand_total': grandTotal.toString(),
-        'items': listItems.isNotEmpty ? jsonEncode(listItems).toString().trim()  :"",
+        'items': NavigationService.listItemsTmp.isNotEmpty ? jsonEncode(NavigationService.listItemsTmp).toString().trim() : "",
         'paymentMethod': "[]",
         'remarks': remarksController.value.text.toString().isNotEmpty ? remarksController.value.text.toString() : "",
         'shipping_charges': '75',
@@ -760,10 +567,16 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
       if (statusCode == 200 && dataResponse.success == 1) {
         setState(() {
           isLoading = false;
-          listItems.clear();
+          NavigationService.listItemsTmp.clear();
           remarksController.clear();
-          isOrderListLoad = true;
+          // isOrderListLoad = true;
         });
+
+        context.read<TextChanger>().setAddOrder("add");
+        context.read<TextChanger>().refreshProduct("refreshProduct");
+
+        Navigator.pop(context);
+
         showSnackBar(dataResponse.message, context);
       } else {
         setState(() {

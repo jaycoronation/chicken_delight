@@ -140,7 +140,7 @@ class _TabNavigationPageState extends State<TabNavigation> {
                               }
                               else if (value == 2)//&& isAddProductPage)
                                   {
-                                    if(NavigationService.listItems.isNotEmpty)
+                                    if(NavigationService.listItemsTmp.isNotEmpty)
                                     {
                                       print("AddProductPage------------------------>");
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => AddOrderScreen()));
@@ -158,14 +158,14 @@ class _TabNavigationPageState extends State<TabNavigation> {
                                       }
 
                               }
-                              else if (value == 3 && isOrderListLoad)
+                              else if (value == 3) //isOrderListLoad
                               {
                                 setState(() {
                                   _pages.removeAt(3);
                                   _pages.insert(3, OrderListPage(key: UniqueKey()));
                                 });
                               }
-                              else if (value == 4 && isOrderListLoad)
+                              else if (value == 4)
                               {
                                 setState(() {
                                   _pages.removeAt(4);
