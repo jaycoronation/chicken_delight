@@ -1,6 +1,6 @@
 
-const String MAIN_URL = "http://192.168.1.91/chicken_delight/api/services/";
-// const String MAIN_URL = "https://chickendelight.saltpixels.in/api/Services/";
+// const String MAIN_URL = "http://192.168.1.91/chicken_delight/api/services/";
+const String MAIN_URL = "https://chickendelight.saltpixels.in/api/Services/";
 
 String login = "manageuser/login";
 String forgotPw = "manageuser/forgot_password";
