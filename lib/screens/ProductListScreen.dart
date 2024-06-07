@@ -1,7 +1,10 @@
 import 'dart:convert';
 
+import 'package:chicken_delight/constant/global_context.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
@@ -26,7 +29,6 @@ class ProductListScreen extends StatefulWidget {
 
 class _ProductListScreenState extends BaseState<ProductListScreen> {
   bool isLoading = false;
-  List<Records> listItems = [];
   bool _isLoading = false;
 
 
@@ -41,6 +43,11 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
   TextEditingController searchController = TextEditingController();
   var searchText = "";
   bool _isSearchHideShow = false;
+
+  var subTotal = 0.0;
+  var grandTotal = 0.0;
+  List<Records> listItemsAPI = [];
+
 
 
   @override
@@ -213,7 +220,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
           body: isOnline
               ? _isLoading
               ? const LoadingWidget()
-              : listItems.isEmpty
+              : NavigationService.listItems.isEmpty
               ? MyNoDataWidget(
             msg: 'No product yet!',
             imageName: "ic-no-order.png",
@@ -243,63 +250,162 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                   controller: _scrollViewController,
                   child: AnimationLimiter(
                     child: ListView.builder(
-                      itemCount: listItems.length,
+                      itemCount: NavigationService.listItems.length,
                       scrollDirection: Axis.vertical,
                       physics: const NeverScrollableScrollPhysics(),
                       primary: false,
                       shrinkWrap: true,
-                      itemBuilder: (context, index) => AnimationConfiguration.staggeredList(
-                            position: index,
-                            duration: const Duration(milliseconds: 375),
-                            child: SlideAnimation(
-                              verticalOffset: 50.0,
-                              child: FadeInAnimation(
-                                child: Container(
-                                  padding: const EdgeInsets.all(12),
-                                  margin: const EdgeInsets.only(left: 12, right: 12, bottom: 10),
-                                  decoration: BoxDecoration(
-                                    color: white,
-                                    borderRadius: BorderRadius.circular(kContainerCornerRadius),
-                                  ),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(12),
-                                        child: Image.network(listItems[index].icon ?? "",
-                                          fit: BoxFit.cover,
-                                          height: 70,
-                                          width:70,
+                      itemBuilder: (context, index) {
+                        
+                        var getSet = NavigationService.listItems[index];
+
+                        return AnimationConfiguration.staggeredList(
+                          position: index,
+                          duration: const Duration(milliseconds: 375),
+                          child: SlideAnimation(
+                            verticalOffset: 50.0,
+                            child: FadeInAnimation(
+                              child: Container(
+                                padding: const EdgeInsets.all(12),
+                                margin: const EdgeInsets.only(left: 12, right: 12, bottom: 10),
+                                decoration: BoxDecoration(
+                                  color: white,
+                                  borderRadius: BorderRadius.circular(kContainerCornerRadius),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(12),
+                                          child: Image.network(getSet.icon ?? "",
+                                            fit: BoxFit.cover,
+                                            height: 70,
+                                            width:70,
+                                          ),
                                         ),
-                                      ),
-                                      const Gap(12),
-                                      Flexible(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            Text(listItems[index].name ?? "",
-                                                style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
-                                                overflow: TextOverflow.clip
-                                            ),
-                                            Text(listItems[index].productCode ?? "",
-                                                style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
-                                                overflow: TextOverflow.clip
-                                            ),
-                                            Text(getPrice(listItems[index].mrpPrice ?? ""),
-                                                style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
-                                                overflow: TextOverflow.clip
-                                            ),
-                                          ],
+                                        const Gap(12),
+                                        Flexible(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              Text(getSet.name ?? "",
+                                                  style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
+                                                  overflow: TextOverflow.clip
+                                              ),
+                                              Text(getSet.productCode ?? "",
+                                                  style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
+                                                  overflow: TextOverflow.clip
+                                              ),
+                                              Text(getPrice(getSet.mrpPrice ?? ""),
+                                                  style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
+                                                  overflow: TextOverflow.clip
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
+
+
+                                      ],
+                                    ),
+                                    Gap(8),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        Visibility(
+                                          visible:getSet.quantity == null || getSet.quantity.toString() == "0",
+                                          child: GestureDetector(
+                                            behavior: HitTestBehavior.opaque,
+                                            onTap: (){
+                                              setState(() {
+                                                getSet.quantity = 1;
+                                              });
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.all(12),
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(kContainerCornerRadius),
+                                                border: Border.all(color: grayDividerDetail, width: 0.8),
+                                              ),
+                                              alignment: Alignment.center,
+                                              child:  Text("Add",
+                                                  style: TextStyle(fontWeight: FontWeight.w400, color: black, fontSize: small)),
+                                            ),
+                                          ),
+                                        ),
+                                        Gap(12),
+                                        Visibility(
+                                          visible: getSet.quantity != null && getSet.quantity.toString() != "0",
+                                          child: Container(
+                                            height: 40,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(kContainerCornerRadius),
+                                              border: Border.all(color: grayDividerDetail, width: 0.8),
+                                            ),
+                                            alignment: Alignment.center,
+                                            child: Row(
+                                              children: [
+                                                IconButton(
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        if (isOnline)
+                                                        {
+                                                          if (getSet.quantity == 1) {
+                                                            removeItem(index);
+                                                          } else {
+                                                            getSet.quantity = getSet.quantity! - 1;
+                                                          }
+
+                                                          var total = num.parse(getSet.salePrice.toString()) * num.parse((getSet.quantity ?? "").toString());
+                                                          getSet.amount = total;
+                                                        }
+                                                        else
+                                                        {
+                                                          noInternetSnackBar(context);
+                                                        }
+                                                      });
+
+                                                    },
+                                                    icon:const Icon(Icons.remove)//Image.asset('assets/images/ic_blue_minus.png', height: 24, width: 24),
+                                                ),
+                                                Text((getSet.quantity ?? 0).toString(),
+                                                    style: TextStyle(fontWeight: FontWeight.w400, color: black, fontSize: small)),
+                                                IconButton(
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        if (isOnline)
+                                                        {
+                                                          getSet.quantity = ((getSet.quantity ?? 0) + 1);
+                                                          var total = num.parse(getSet.salePrice.toString()) * num.parse(getSet.quantity.toString());
+                                                          getSet.amount = total;
+
+                                                        }
+                                                        else
+                                                        {
+                                                          noInternetSnackBar(context);
+                                                        }
+                                                      });
+
+                                                    },
+                                                    icon: const Icon(Icons.add)//Image.asset('assets/images/ic_blue_add.png', height: 24, width: 24),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
                           ),
+                        );
+                      },
                     ),
                   ),
                 )),
@@ -329,6 +435,97 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
   void castStatefulWidget() {
    widget is ProductListScreen;
   }
+
+
+  void removeItem(int index) {
+    showModalBottomSheet<void>(
+      context: context,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
+      builder: (BuildContext context) {
+        return Wrap(
+          children: [
+            Container(
+              decoration: const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)), color: white),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    height: 2,
+                    width: 40,
+                    alignment: Alignment.center,
+                    color: black,
+                    margin: const EdgeInsets.only(top: 10, bottom: 10),
+                  ),
+                  Container(margin: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: Text('Remove Product', style: TextStyle(fontSize: medium, fontWeight: FontWeight.w700, color: black))
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 10, bottom: 15),
+                    child: Text('Are you sure want to remove this product?', style: TextStyle(fontSize: subTitle, fontWeight: FontWeight.w400, color: black)),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 20, right: 20, bottom: 30),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(width: 0.4, color: black),
+                              borderRadius: BorderRadius.all(Radius.circular(kButtonCornerRadius)),
+                            ),
+                            margin: const EdgeInsets.only(right: 10),
+                            child: TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text('No',
+                                    style: TextStyle(
+                                      fontSize: subTitle,
+                                      fontWeight: FontWeight.w600,
+                                      color: black,
+                                    ))),
+                          ),
+                        ),
+                        Expanded(
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(kButtonCornerRadius),
+                              color: black,
+                            ),
+                            child: TextButton(
+                              onPressed: () async {
+                                setState(() {
+                                  for (int i = 0; i < listItemsAPI.length; i++)
+                                  {
+                                    if (listItemsAPI[i].id == NavigationService.listItems[index].id)
+                                    {
+                                      listItemsAPI[i].isSelected = false;
+                                    }
+                                  }
+
+                                  NavigationService.listItems.removeAt(index);
+
+                                  Navigator.pop(context);
+
+                                });
+                              },
+                              child: Text('Yes', style: TextStyle(fontSize: subTitle, fontWeight: FontWeight.w600, color: white)),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   //API call function...
   void getItemListData(bool isFirstTime, [bool isFromSearch = false]) async {
@@ -373,22 +570,22 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
       var dataResponse = ItemResponseModel.fromJson(order);
 
       if (isFirstTime) {
-        if (listItems.isNotEmpty) {
-          listItems = [];
+        if (NavigationService.listItems.isNotEmpty) {
+          NavigationService.listItems = [];
         }
       }
 
       if (statusCode == 200 && dataResponse.success == 1) {
         if (dataResponse.records != null) {
           if (isFirstTime) {
-            if (listItems.isNotEmpty) {
-              listItems = [];
+            if (NavigationService.listItems.isNotEmpty) {
+              NavigationService.listItems = [];
             }
           }
 
           List<Records>? _tempList = [];
           _tempList = dataResponse.records;
-          listItems.addAll(_tempList!);
+          NavigationService.listItems.addAll(_tempList!);
 
           if (_tempList.isNotEmpty) {
             _pageIndex += 1;

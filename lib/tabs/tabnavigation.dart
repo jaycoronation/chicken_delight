@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:chicken_delight/constant/global_context.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -139,15 +140,23 @@ class _TabNavigationPageState extends State<TabNavigation> {
                               }
                               else if (value == 2)//&& isAddProductPage)
                                   {
-                                print("AddProductPage------------------------>");
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => AddOrderScreen()));
+                                    if(NavigationService.listItems.isNotEmpty)
+                                    {
+                                      print("AddProductPage------------------------>");
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => AddOrderScreen()));
 
-                                setState(() {
-                                  isOrderListSearch = false;
-                                  _currentIndex = 0;
-                                  _pages.removeAt(2);
-                                  _pages.insert(2, AddOrderScreen());
-                                });
+                                      setState(() {
+                                        isOrderListSearch = false;
+                                        _currentIndex = 0;
+                                        _pages.removeAt(2);
+                                        _pages.insert(2, AddOrderScreen());
+                                      });
+                                    }
+                                    else
+                                      {
+                                        showSnackBar("Please select product first", context);
+                                      }
+
                               }
                               else if (value == 3 && isOrderListLoad)
                               {
