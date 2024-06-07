@@ -18,8 +18,10 @@ String notificationUrl = "";
 String itemList = "rawitems/list";
 String itemSave = "outwardorder/save";
 
-String CountryList = "country";
+String countryList = "country";
 String stateList = "states";
 String cities = "cities";
 
 String updateProfile = "manageuser/updateprofile";
+
+String updateDeviceToken = "update_device_token";

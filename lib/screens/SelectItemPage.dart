@@ -1,6 +1,5 @@
 import 'package:chicken_delight/constant/colors.dart';
 import 'package:chicken_delight/widget/loading.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -25,8 +24,8 @@ class _SelectItemPageState extends BaseState<SelectItemPage> {
 
   late ScrollController _scrollController;
 
- List<Records> listItems = [];
-List<Records> listItemsMain = [];
+  List<Records> listItems = [];
+  List<Records> listItemsMain = [];
 
   final TextEditingController _searchController = TextEditingController();
 
@@ -57,23 +56,7 @@ List<Records> listItemsMain = [];
             leading: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  if (listItems.isEmpty)
-                    {
-                      Navigator.pop(context);
-                    }
-                  else
-                    {
-                      if (isCheckAny()) {
-                        // if (checkIsValid()) {
-                          Navigator.pop(context, listItemsMain);
-                        // } else {
-                        //   showSnackBar("Please enter unit for all selected samples.", context);
-                        // }
-                      } else {
-                        showSnackBar("Please select at-least one product.", context);
-                      }
-                    }
-
+                  Navigator.pop(context);
                 },
                 child:getBackArrowBlack()),
             centerTitle: true,

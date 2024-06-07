@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import '../common_widget/common_widget.dart';
 import '../constant/colors.dart';
-import '../model/ProfileScreen.dart';
+import '../model/StoreMenuModel.dart';
 import '../utils/base_class.dart';
 import '../utils/session_manager.dart';
 import '../utils/session_manager_methods.dart';

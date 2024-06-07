@@ -66,7 +66,13 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
   void initState() {
     super.initState();
     profilePic = sessionManager.getImagePic() ?? "";
+    setData();
     _getCountry();
+  }
+
+  void setData() {
+    userNameController.text = sessionManager.getName() ?? "";
+   // emailController.text = sessionManager.getEmail() ?? "";
   }
 
   @override
@@ -561,7 +567,7 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(MAIN_URL + CountryList);
+    final url = Uri.parse(MAIN_URL + countryList);
 
     Map<String, String> jsonBody = {
       

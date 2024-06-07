@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'dart:core';
+import 'dart:io';
 
 import 'package:chicken_delight/constant/api_end_point.dart';
 import 'package:chicken_delight/model/DashboardResponseModel.dart';
-import 'package:chicken_delight/screens/LoginScreen.dart';
 import 'package:chicken_delight/screens/OrderDetailScreen.dart';
 import 'package:chicken_delight/utils/app_utils.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -15,9 +16,8 @@ import 'package:pretty_http_logger/pretty_http_logger.dart';
 import '../common_widget/common_widget.dart';
 import '../constant/colors.dart';
 import '../model/HomePageMenuModel.dart';
+import '../model/common/CommonResponseModel.dart';
 import '../utils/base_class.dart';
-import '../utils/session_manager.dart';
-import '../utils/session_manager_methods.dart';
 import '../widget/loading.dart';
 import '../widget/no_internet.dart';
 import 'NotificationListPage.dart';
@@ -38,16 +38,31 @@ class _DashboardPageState extends BaseState<DashboardPage> {
 
   List<Order> listOrders = [];
   List<HomePageMenuGetSet> analysisList = [];
+  String deviceName = '';
 
 
   @override
   void initState() {
 
+    getDeviceData();
     getDashboardData();
 
     isHomeLoad = false;
 
+
     super.initState();
+  }
+
+  Future<void> getDeviceData() async {
+    final deviceInfoPlugin = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await deviceInfoPlugin.androidInfo;
+      print('Running on ${androidInfo.model}'); // e.g. "Moto G (4)"
+      deviceName = androidInfo.model;
+    } else {
+      IosDeviceInfo iosInfo = await deviceInfoPlugin.iosInfo;
+      deviceName = iosInfo.utsname.machine ?? '';
+    }
   }
 
   @override
@@ -90,7 +105,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(25.0),
-                          color: primaryColor,
+                          color: white,
                         ),
                         height: 22,
                         width: 22,
@@ -98,7 +113,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                         margin: const EdgeInsets.only(left: 20),
                         child: Center(
                           child: Text("0",
-                              style: TextStyle(fontWeight: FontWeight.w400, color: white, fontSize: small)),
+                              style: TextStyle(fontWeight: FontWeight.w400, color: black, fontSize: small)),
                         ),
                       ),
                     ),
@@ -386,7 +401,6 @@ class _DashboardPageState extends BaseState<DashboardPage> {
   void getDashboardData() async {
     if (isOnline)
     {
-
       setState(() {
         _isLoading = true;
       });
@@ -460,6 +474,60 @@ class _DashboardPageState extends BaseState<DashboardPage> {
       noInternetSnackBar(context);
     }
 
+    var fcmToken = await FirebaseMessaging.instance.getToken();
+    print("***************$fcmToken");
+    updateDeviceTokenRequest(fcmToken ?? "");
+
   }
+
+  void updateDeviceTokenRequest(String fcmToken) async {
+    if (isOnline) {
+      HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+        HttpLogger(logLevel: LogLevel.BODY),
+      ]);
+
+      final url = Uri.parse(MAIN_URL + updateDeviceToken);
+
+      var deviceType = "";
+      if (Platform.isIOS)
+      {
+        deviceType = "ios";
+      }
+      else
+      {
+        deviceType = "android";
+      }
+
+      Map<String, String> jsonBody = {
+        "user_id": sessionManager.getUserId() ?? "",
+        "device_type": deviceType,
+        "device_token": fcmToken,
+        "device_name": deviceName
+      };
+
+      final response = await http.post(url, body: jsonBody, headers: {
+        "Authorization": sessionManager.getToken() ?? "",
+      });
+      final statusCode = response.statusCode;
+
+      final body = response.body;
+      Map<String, dynamic> user = jsonDecode(body);
+      var cardResponse = CommonResponseModel.fromJson(user);
+
+      if (statusCode == 200 && cardResponse.success == 1) {
+        setState(() {
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } else {
+      noInternetSnackBar(context);
+    }
+
+  }
+
 
 }
