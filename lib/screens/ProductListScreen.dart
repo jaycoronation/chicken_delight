@@ -143,7 +143,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                   ),
                 ),
               ),
-              Gap(10),
+              const Gap(10),
               GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () async {
@@ -239,8 +239,8 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                     }
 
                   },
-                  child: const Text("Done", textAlign: TextAlign.center,
-                      style: TextStyle(fontWeight: FontWeight.w500, color: black, fontSize: 15))),
+                  child: Image.asset("assets/images/ic_cart.png",width: 28,height: 28,),
+              ),
               const Gap(20)
             ],
             bottom: _isLoading ? null : PreferredSize(
@@ -378,48 +378,39 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                             child: FadeInAnimation(
                               child: Container(
                                 padding: const EdgeInsets.all(12),
-                                margin: const EdgeInsets.only(left: 12, right: 12, bottom: 10),
-                                decoration: BoxDecoration(
-                                  color: white,
-                                  borderRadius: BorderRadius.circular(kContainerCornerRadius),
-                                ),
+                                // decoration: BoxDecoration(
+                                //   color: white,
+                                //   borderRadius: BorderRadius.circular(kContainerCornerRadius),
+                                // ),
                                 child: Column(
                                   children: [
                                     Row(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
-                                        ClipRRect(
-                                          borderRadius: BorderRadius.circular(12),
-                                          child: Image.network(getSet.icon ?? "",
-                                            fit: BoxFit.cover,
-                                            height: 70,
-                                            width:70,
-                                          ),
-                                        ),
-                                        const Gap(12),
                                         Flexible(
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             mainAxisAlignment: MainAxisAlignment.start,
                                             children: [
                                               Text(getSet.name ?? "",
-                                                  style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
+                                                  style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
                                                   overflow: TextOverflow.clip
                                               ),
                                               Text(getSet.productCode ?? "",
-                                                  style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
+                                                  style: TextStyle(fontSize: small, color: black,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
                                                   overflow: TextOverflow.clip
                                               ),
+                                              const Gap(10),
                                               Row(
                                                 children: [
                                                   Text(getPrice(getSet.salePrice ?? ""),
-                                                      style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
+                                                      style: TextStyle(fontSize: small, color: black,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
                                                       overflow: TextOverflow.clip
                                                   ),
                                                   const Gap(5),
                                                   Text(getPrice(getSet.mrpPrice ?? ""),
-                                                      style: TextStyle(fontSize: description, color: gray_dark,fontWeight: FontWeight.w600, overflow: TextOverflow.clip,decoration: TextDecoration.lineThrough),
+                                                      style: TextStyle(fontSize: small, color: gray_dark,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,decoration: TextDecoration.lineThrough),
                                                       textAlign: TextAlign.left,
                                                       overflow: TextOverflow.clip,
 
@@ -427,114 +418,132 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                                 ],
                                               ),
                                               const Gap(5),
-                                              Visibility(
-                                                visible:getSet.quantity != null && getSet.quantity.toString() != "0",
-                                                child: Text(getPrice(getSet.amount?.toStringAsFixed(2) ?? "") ,
-                                                  style: TextStyle(fontSize: description, color: black,
-                                                    fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),
-                                                  textAlign: TextAlign.right,
-                                                ),
-                                              ),
+                                              // Visibility(
+                                              //   visible:getSet.quantity != null && getSet.quantity.toString() != "0",
+                                              //   child: Text(getPrice(getSet.amount?.toStringAsFixed(2) ?? "") ,
+                                              //     style: TextStyle(fontSize: description, color: black,
+                                              //       fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),
+                                              //     textAlign: TextAlign.right,
+                                              //   ),
+                                              // ),
                                             ],
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                    Gap(8),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Visibility(
-                                          visible:getSet.quantity == null || getSet.quantity.toString() == "0",
-                                          child: GestureDetector(
-                                            behavior: HitTestBehavior.opaque,
-                                            onTap: (){
-                                              setState(() {
-                                                getSet.quantity = 1;
-
-                                                var total = num.parse(getSet.salePrice.toString()) * num.parse((getSet.quantity ?? "").toString());
-                                                getSet.amount = total;
-
-                                                if (NavigationService.listItems[index].isSelected ?? false) {
-                                                  NavigationService.listItems[index].isSelected = false;
-                                                } else {
-                                                  NavigationService.listItems[index].isSelected = true;
-                                                }
-                                              });
-                                            },
-                                            child: Container(
-                                              padding: const EdgeInsets.all(12),
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(kContainerCornerRadius),
-                                                border: Border.all(color: grayDividerDetail, width: 0.8),
+                                        const Gap(18),
+                                        Column(
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius: BorderRadius.circular(12),
+                                              child: Image.network(getSet.icon ?? "",
+                                                fit: BoxFit.cover,
+                                                height: 70,
+                                                width:70,
                                               ),
-                                              alignment: Alignment.center,
-                                              child: Text("Add",
-                                                  style: TextStyle(fontWeight: FontWeight.w400, color: black, fontSize: small)),
                                             ),
-                                          ),
-                                        ),
-                                        const Gap(12),
-                                        Visibility(
-                                          visible: getSet.quantity != null && getSet.quantity.toString() != "0",
-                                          child: Container(
-                                            height: 40,
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(kContainerCornerRadius),
-                                              border: Border.all(color: grayDividerDetail, width: 0.8),
-                                            ),
-                                            alignment: Alignment.center,
-                                            child: Row(
+                                            const Gap(18),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              crossAxisAlignment: CrossAxisAlignment.end,
                                               children: [
-                                                IconButton(
-                                                    onPressed: () {
+                                                Visibility(
+                                                  visible:getSet.quantity == null || getSet.quantity.toString() == "0",
+                                                  child: GestureDetector(
+                                                    behavior: HitTestBehavior.opaque,
+                                                    onTap: () {
                                                       setState(() {
-                                                        if (isOnline)
-                                                        {
-                                                          if (getSet.quantity == 1) {
-                                                            removeItem(index);
-                                                          } else {
-                                                            getSet.quantity = getSet.quantity! - 1;
-                                                          }
+                                                        getSet.quantity = 1;
 
-                                                          var total = num.parse(getSet.salePrice.toString()) * num.parse((getSet.quantity ?? "").toString());
-                                                          getSet.amount = total;
-                                                        }
-                                                        else
-                                                        {
-                                                          noInternetSnackBar(context);
+                                                        var total = num.parse(getSet.salePrice.toString()) * num.parse((getSet.quantity ?? "").toString());
+                                                        getSet.amount = total;
+
+                                                        if (NavigationService.listItems[index].isSelected ?? false) {
+                                                          NavigationService.listItems[index].isSelected = false;
+                                                        } else {
+                                                          NavigationService.listItems[index].isSelected = true;
                                                         }
                                                       });
-
                                                     },
-                                                    icon:const Icon(Icons.remove)//Image.asset('assets/images/ic_blue_minus.png', height: 24, width: 24),
+                                                    child: Container(
+                                                      height: 40,
+                                                      width: 100,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(8),
+                                                        border: Border.all(color: primaryColor, width: 0.8),
+                                                      ),
+                                                      alignment: Alignment.center,
+                                                      child: Text("ADD",
+                                                          style: TextStyle(fontWeight: FontWeight.w600, color: primaryColor, fontSize: description)),
+                                                    ),
+                                                  ),
                                                 ),
-                                                Text((getSet.quantity ?? 0).toString(),
-                                                    style: TextStyle(fontWeight: FontWeight.w400, color: black, fontSize: small)),
-                                                IconButton(
-                                                    onPressed: () {
-                                                      setState(() {
-                                                        if (isOnline)
-                                                        {
-                                                          getSet.quantity = ((getSet.quantity ?? 0) + 1);
-                                                          var total = num.parse(getSet.salePrice.toString()) * num.parse(getSet.quantity.toString());
-                                                          getSet.amount = total;
-                                                        }
-                                                        else
-                                                        {
-                                                          noInternetSnackBar(context);
-                                                        }
-                                                      });
+                                                Visibility(
+                                                  visible: getSet.quantity != null && getSet.quantity.toString() != "0",
+                                                  child: Container(
+                                                    height: 40,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(8),
+                                                      border: Border.all(color: primaryColor, width: 0.8),
+                                                      color: primaryColor,
+                                                    ),
+                                                    alignment: Alignment.center,
+                                                    child: Row(
+                                                      children: [
+                                                        IconButton(
+                                                            onPressed: () {
+                                                              setState(() {
+                                                                if (isOnline)
+                                                                {
+                                                                  if (getSet.quantity == 1) {
+                                                                    removeItem(index);
+                                                                  } else {
+                                                                    getSet.quantity = getSet.quantity! - 1;
+                                                                  }
 
-                                                    },
-                                                    icon: const Icon(Icons.add)//Image.asset('assets/images/ic_blue_add.png', height: 24, width: 24),
-                                                )
+                                                                  var total = num.parse(getSet.salePrice.toString()) * num.parse((getSet.quantity ?? "").toString());
+                                                                  getSet.amount = total;
+                                                                }
+                                                                else
+                                                                {
+                                                                  noInternetSnackBar(context);
+                                                                }
+                                                              });
+
+                                                            },
+                                                            icon:const Icon(Icons.remove, color: white,)//Image.asset('assets/images/ic_blue_minus.png', height: 24, width: 24),
+                                                        ),
+                                                        Text((getSet.quantity ?? 0).toString(),
+                                                            style: TextStyle(fontWeight: FontWeight.w600, color: white, fontSize: description)),
+                                                        IconButton(
+                                                            onPressed: () {
+                                                              setState(() {
+                                                                if (isOnline)
+                                                                {
+                                                                  getSet.quantity = ((getSet.quantity ?? 0) + 1);
+                                                                  var total = num.parse(getSet.salePrice.toString()) * num.parse(getSet.quantity.toString());
+                                                                  getSet.amount = total;
+                                                                }
+                                                                else
+                                                                {
+                                                                  noInternetSnackBar(context);
+                                                                }
+                                                              });
+
+                                                            },
+                                                            icon: const Icon(Icons.add,color: white,)//Image.asset('assets/images/ic_blue_add.png', height: 24, width: 24),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
                                               ],
                                             ),
-                                          ),
+                                          ],
                                         ),
                                       ],
+                                    ),
+                                    Gap(18),
+                                    const Divider(
+                                      color: kLightGray,
                                     ),
                                   ],
                                 ),

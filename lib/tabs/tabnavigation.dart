@@ -26,40 +26,40 @@ class _TabNavigationPageState extends State<TabNavigation> {
   DateTime preBackPressTime = DateTime.now();
   static final List<Widget> _pages = <Widget>[
     const DashboardPage(),
-    ProductListScreen(),
-    AddOrderScreen(),
+    const ProductListScreen(),
     const OrderListPage(),
-    ProfileScreen()
+    const ProfileScreen()
   ];
 
   SessionManager sessionManager = SessionManager();
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-        canPop: false,
-        onPopInvoked: (didPop) {
+    return WillPopScope(
+        onWillPop: (){
           if (_currentIndex != 0)
           {
+            print("Is running if condition");
             setState(() {
               _currentIndex = 0;
             });
-            //return Future.value(false);
+            return Future.value(false);
           }
           else
           {
+            print("Is running else condition");
             final timeGap = DateTime.now().difference(preBackPressTime);
             final cantExit = timeGap >= const Duration(seconds: 2);
             preBackPressTime = DateTime.now();
             if (cantExit)
             {
               showSnackBar('Press back button again to exit', context);
-              //return Future.value(false);
+              return Future.value(false);
             }
             else
             {
               SystemNavigator.pop();
-             // return Future.value(true);
+              return Future.value(true);
             }
           }
         },
@@ -96,10 +96,6 @@ class _TabNavigationPageState extends State<TabNavigation> {
                             height: 2,
                             color: _currentIndex == 3 ? primaryColor : white,
                           )),
-                          Expanded(child: Container(
-                            height: 2,
-                            color: _currentIndex == 4 ? primaryColor : white,
-                          ))
                         ],
                       ),
                       SizedBox(
@@ -127,7 +123,7 @@ class _TabNavigationPageState extends State<TabNavigation> {
                                 setState(() {
                                   isOrderListSearch = false;
                                   _pages.removeAt(0);
-                                  _pages.insert(0, DashboardPage(key: UniqueKey()));
+                                  _pages.insert(0, const DashboardPage());
                                 });
                               }
                               else if (value == 1 && isListReLoad)
@@ -135,50 +131,47 @@ class _TabNavigationPageState extends State<TabNavigation> {
                                 setState(() {
                                   isOrderListSearch = false;
                                   _pages.removeAt(1);
-                                  _pages.insert(1, ProductListScreen());
+                                  _pages.insert(1, const ProductListScreen());
                                 });
                               }
-                              else if (value == 2)//&& isAddProductPage)
-                                  {
-                                    if(NavigationService.listItemsTmp.isNotEmpty)
-                                    {
-                                      print("AddProductPage------------------------>");
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => AddOrderScreen()));
-
-                                      setState(() {
-                                        isOrderListSearch = false;
-                                        _currentIndex = 0;
-                                        _pages.removeAt(2);
-                                        _pages.insert(2, AddOrderScreen());
-                                      });
-                                    }
-                                    else
-                                      {
-                                        showSnackBar("Please select product first", context);
-                                      }
-
+                              // else if (value == 2)//&& isAddProductPage)
+                              //     {
+                              //       if(NavigationService.listItemsTmp.isNotEmpty)
+                              //       {
+                              //         print("AddProductPage------------------------>");
+                              //         Navigator.push(context, MaterialPageRoute(builder: (context) => AddOrderScreen()));
+                              //
+                              //         setState(() {
+                              //           isOrderListSearch = false;
+                              //           _currentIndex = 0;
+                              //           _pages.removeAt(2);
+                              //           _pages.insert(2, AddOrderScreen());
+                              //         });
+                              //       }
+                              //       else
+                              //         {
+                              //           showSnackBar("Please select product first", context);
+                              //         }
+                              //
+                              // }
+                              else if (value == 2) //isOrderListLoad
+                              {
+                                setState(() {
+                                  _pages.removeAt(2);
+                                  _pages.insert(2, const OrderListPage());
+                                });
                               }
-                              else if (value == 3) //isOrderListLoad
+                              else if (value == 3)
                               {
                                 setState(() {
                                   _pages.removeAt(3);
-                                  _pages.insert(3, OrderListPage(key: UniqueKey()));
-                                });
-                              }
-                              else if (value == 4)
-                              {
-                                setState(() {
-                                  _pages.removeAt(4);
-                                  _pages.insert(4, ProfileScreen(key: UniqueKey()));
+                                  _pages.insert(3, const ProfileScreen());
                                 });
                               }
 
-                              if (value != 2)
-                              {
-                                setState(() {
-                                  _currentIndex = value;
-                                });
-                              }
+                              setState(() {
+                                _currentIndex = value;
+                              });
                             },
                             items:  const [
                               BottomNavigationBarItem(
@@ -191,12 +184,6 @@ class _TabNavigationPageState extends State<TabNavigation> {
                                 label: 'Products',
                                 icon: ImageIcon(
                                   AssetImage("assets/images/product_gray.png"),
-                                ),
-                              ),
-                              BottomNavigationBarItem(
-                                label: 'Add',
-                                icon: ImageIcon(
-                                  AssetImage("assets/images/ic_plus_gray.png"),
                                 ),
                               ),
                               BottomNavigationBarItem(

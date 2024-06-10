@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:chicken_delight/common_widget/CommonTextFiled.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
@@ -100,141 +101,133 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                             color: white,
                           ),
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Image.network(
-                                  NavigationService.listItemsTmp[index].icon ?? "",
-                                  fit: BoxFit.cover,
-                                  height: 70,
-                                  width:70,
-                                ),
-                              ),
-                              const Gap(12),
                               Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                child: Row(
                                   children: [
-                                    Text(NavigationService.listItemsTmp[index].name ?? "",
-                                      style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500,
-                                        overflow: TextOverflow.clip,),
-                                      textAlign: TextAlign.left,
-                                      overflow: TextOverflow.clip,
-                                      maxLines: 3,
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: Image.network(
+                                        NavigationService.listItemsTmp[index].icon ?? "",
+                                        fit: BoxFit.cover,
+                                        height: 70,
+                                        width:70,
+                                      ),
                                     ),
-                                    const Gap(5),
-                                    Row(
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.only(left: 10, right: 10),
-                                          alignment: Alignment.center,
-                                          height: 40,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(kContainerCornerRadius),
-                                            border: Border.all(
-                                              color: grayDividerDetail,
-                                              width: 0.8,
+                                    const Gap(12),
+                                    Flexible(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(toDisplayCase(NavigationService.listItemsTmp[index].name ?? ""),
+                                            style: TextStyle(fontSize: small, color: black,fontWeight: FontWeight.w600,
+                                              overflow: TextOverflow.clip,
                                             ),
+                                            textAlign: TextAlign.left,
+                                            overflow: TextOverflow.clip,
+                                            maxLines: 3,
                                           ),
-                                          child: Text(NavigationService.listItemsTmp[index].salePrice ?? " ",
-                                              style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500),
+                                          const Gap(18),
+                                          Text(getPrice(NavigationService.listItemsTmp[index].salePrice ?? " "),
+                                              style: TextStyle(fontSize: small, color: black,fontWeight: FontWeight.w400),
                                               textAlign: TextAlign.center
                                           ),
-                                        ),
-                                        Text("*  ",
-                                            style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500),
-                                            textAlign: TextAlign.center
-                                        ),
-                                        Container(
-                                          height: 40,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(kContainerCornerRadius),
-                                            border: Border.all(color: grayDividerDetail, width: 0.8),
-                                          ),
-                                          alignment: Alignment.center,
-                                          child: Row(
-                                            children: [
-                                              IconButton(
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      if (isOnline)
-                                                      {
-                                                        if (NavigationService.listItemsTmp[index].quantity == 1) {
-                                                          removeItem(index);
-                                                        } else {
-                                                          NavigationService.listItemsTmp[index].quantity = NavigationService.listItemsTmp[index].quantity! - 1;
-                                                        }
-
-                                                        var total = num.parse(NavigationService.listItemsTmp[index].salePrice.toString()) * num.parse(NavigationService.listItemsTmp[index].quantity.toString());
-                                                        NavigationService.listItemsTmp[index].amount = total;
-                                                        getPriceCalculated();
-                                                      }
-                                                      else
-                                                      {
-                                                        noInternetSnackBar(context);
-                                                      }
-                                                    });
-
-                                                  },
-                                                  icon:const Icon(Icons.remove)//Image.asset('assets/images/ic_blue_minus.png', height: 24, width: 24),
-                                              ),
-                                              Text(NavigationService.listItemsTmp[index].quantity.toString(),
-                                                  style: TextStyle(fontWeight: FontWeight.w400, color: black, fontSize: small)),
-                                              IconButton(
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      if (isOnline)
-                                                      {
-                                                        NavigationService.listItemsTmp[index].quantity = (NavigationService.listItemsTmp[index].quantity! + 1);
-                                                        var total = num.parse(NavigationService.listItemsTmp[index].salePrice.toString()) * num.parse(NavigationService.listItemsTmp[index].quantity.toString());
-                                                        NavigationService.listItemsTmp[index].amount = total;
-
-                                                        getPriceCalculated();
-                                                      }
-                                                      else
-                                                      {
-                                                        noInternetSnackBar(context);
-                                                      }
-                                                    });
-
-                                                  },
-                                                  icon: const Icon(Icons.add)//Image.asset('assets/images/ic_blue_add.png', height: 24, width: 24),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        Text("/${NavigationService.listItemsTmp[index].unit ?? " "}",
-                                            style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500),textAlign: TextAlign.left
-                                        ),
-                                        const Gap(20),
-                                      ],
-                                    ),
-                                    const Gap(5),
-                                    Text(getPrice(NavigationService.listItemsTmp[index].amount?.toStringAsFixed(2) ?? "") ,
-                                      style: TextStyle(fontSize: description, color: black,
-                                        fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),
-                                      textAlign: TextAlign.right,
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
                               const Gap(10),
-                              GestureDetector(
-                                behavior: HitTestBehavior.opaque,
-                                onTap: () {
-                                  if (isOnline)
-                                  {
-                                    setState(() {
-                                      removeItem(index);
-                                    });
-                                  }
-                                  else
-                                  {
-                                    noInternetSnackBar(context);
-                                  }
-                                },
-                                child: const Icon(Icons.delete_outline, color: black, size: 26,),
+                              Column(
+                                children: [
+                                  const Gap(12),
+                                  Container(
+                                    height: 35 ,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(color: primaryColor, width: 0.8),
+                                      color: primaryColor,
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: Row(
+                                      children: [
+                                        IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                if (isOnline)
+                                                {
+                                                  if (NavigationService.listItemsTmp[index].quantity == 1) {
+                                                    removeItem(index);
+                                                  } else {
+                                                    NavigationService.listItemsTmp[index].quantity = NavigationService.listItemsTmp[index].quantity! - 1;
+                                                  }
+
+                                                  var total = num.parse(NavigationService.listItemsTmp[index].salePrice.toString()) * num.parse(NavigationService.listItemsTmp[index].quantity.toString());
+                                                  NavigationService.listItemsTmp[index].amount = total;
+                                                  getPriceCalculated();
+                                                }
+                                                else
+                                                {
+                                                  noInternetSnackBar(context);
+                                                }
+                                              });
+
+                                            },
+                                            icon:const Icon(Icons.remove, color: white,size: 20,)//Image.asset('assets/images/ic_blue_minus.png', height: 24, width: 24),
+                                        ),
+                                        Text(NavigationService.listItemsTmp[index].quantity.toString(),
+                                            style: TextStyle(fontWeight: FontWeight.w600, color: white, fontSize: description)),
+                                        IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                if (isOnline)
+                                                {
+                                                  NavigationService.listItemsTmp[index].quantity = (NavigationService.listItemsTmp[index].quantity! + 1);
+                                                  var total = num.parse(NavigationService.listItemsTmp[index].salePrice.toString()) * num.parse(NavigationService.listItemsTmp[index].quantity.toString());
+                                                  NavigationService.listItemsTmp[index].amount = total;
+
+                                                  getPriceCalculated();
+                                                }
+                                                else
+                                                {
+                                                  noInternetSnackBar(context);
+                                                }
+                                              });
+
+                                            },
+                                            icon: const Icon(Icons.add,color: white,size: 20,)//Image.asset('assets/images/ic_blue_add.png', height: 24, width: 24),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  const Gap(12),
+                                  Text(getPrice(NavigationService.listItemsTmp[index].amount?.toStringAsFixed(2) ?? "") ,
+                                    style: TextStyle(fontSize: description, color: black,
+                                      fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),
+                                    textAlign: TextAlign.right,
+                                  ),
+                                ],
                               ),
+                              // GestureDetector(
+                              //   behavior: HitTestBehavior.opaque,
+                              //   onTap: () {
+                              //     if (isOnline)
+                              //     {
+                              //       setState(() {
+                              //         removeItem(index);
+                              //       });
+                              //     }
+                              //     else
+                              //     {
+                              //       noInternetSnackBar(context);
+                              //     }
+                              //   },
+                              //   child: const Icon(Icons.delete_outline, color: black, size: 26,),
+                              // ),
                             ],
                           ),
                         );

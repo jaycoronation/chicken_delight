@@ -11,6 +11,8 @@ import '../model/StoreMenuModel.dart';
 import '../utils/base_class.dart';
 import '../utils/session_manager.dart';
 import '../utils/session_manager_methods.dart';
+import 'ChangePasswordScreen.dart';
+import 'ForgotPasswordScreen.dart';
 import 'MyProfileScreen.dart';
 
 
@@ -135,6 +137,41 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
                     ),
                   ),
 
+                  Container(
+                    margin: const EdgeInsets.only(top: 18),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(kContainerCornerRadius),
+                      color: white,
+                      border: Border.all(
+                        color: white,
+                        width: 0.8,
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          onTap: (){
+                            startActivity(context,  ForgotPasswordScreen());
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Image.asset('assets/images/ic_logout.png', height: 22, width: 22, color: black),
+                              const Gap(12),
+                              Expanded(
+                                child: Text("Change Password",
+                                    style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
+                                ),
+                              ),
+                              Image.asset('assets/images/ic_right_arrow_new.png', height: 14, width: 14, color: black)
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   Container(
                     margin: const EdgeInsets.only(top: 18),
                     padding: const EdgeInsets.all(12),

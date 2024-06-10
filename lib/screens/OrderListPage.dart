@@ -26,7 +26,7 @@ import '../widget/no_internet.dart';
 import 'OrderDetailScreen.dart';
 
 class OrderListPage extends StatefulWidget {
-  const OrderListPage({Key? key}) : super(key: key);
+  const OrderListPage({super.key});
 
   @override
   _OrderListPageState createState() => _OrderListPageState();

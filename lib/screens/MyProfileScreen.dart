@@ -1373,7 +1373,7 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
 
     final url = Uri.parse(MAIN_URL + updateProfile);
 
-    Map<String, String> headers = {"Access-Token": sessionManager.getToken() ?? ""};
+    Map<String, String> headers = {"Authorization": sessionManager.getToken() ?? ""};
 
     http.MultipartRequest request = http.MultipartRequest('POST', url,);
     request.headers.addAll(headers);

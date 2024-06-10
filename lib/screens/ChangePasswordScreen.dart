@@ -8,6 +8,7 @@ import '../common_widget/common_widget.dart';
 import '../constant/api_end_point.dart';
 import '../constant/colors.dart';
 import '../model/common/CommonResponseModel.dart';
+import '../tabs/tabnavigation.dart';
 import '../utils/app_utils.dart';
 import '../utils/base_class.dart';
 import 'LoginScreen.dart';
@@ -217,7 +218,7 @@ class _ChangePasswordScreenState extends BaseState<ChangePasswordScreen> {
             isLoading = false;
           });
           showSnackBar(loginResponse.message, context);
-          startActivity(context,  LoginScreen());
+          startActivity(context,  TabNavigation(0));
 
         } else {
           setState(() {
