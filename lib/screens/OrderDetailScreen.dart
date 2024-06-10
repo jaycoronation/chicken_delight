@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import '../common_widget/common_widget.dart';
+import '../constant/ApiService.dart';
 import '../constant/api_end_point.dart';
 import '../constant/colors.dart';
 import '../model/OrderDetailResponseModel.dart';
@@ -42,6 +43,17 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
 
   @override
   void initState() {
+
+    ApiService.fetchData().then((response) {
+      var data = response as CommonResponseModel;
+      if (data.success == 1)
+      {
+      }
+      else
+      {
+        invalidTokenRedirection(context);
+      }
+    });
     orderId = (widget as OrderDetailScreen).orderId.toString();
 
     getOrderDetail();

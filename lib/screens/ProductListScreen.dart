@@ -11,9 +11,11 @@ import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:provider/provider.dart';
 
 import '../common_widget/common_widget.dart';
+import '../constant/ApiService.dart';
 import '../constant/api_end_point.dart';
 import '../constant/colors.dart';
 import '../model/ItemResponseModel.dart';
+import '../model/common/CommonResponseModel.dart';
 import '../utils/TextChanger.dart';
 import '../utils/app_utils.dart';
 import '../utils/base_class.dart';
@@ -52,6 +54,18 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
 
   @override
   void initState() {
+
+    ApiService.fetchData().then((response) {
+      var data = response as CommonResponseModel;
+      if (data.success == 1)
+      {
+      }
+      else
+      {
+        invalidTokenRedirection(context);
+      }
+    });
+
     _scrollViewController = ScrollController();
     _scrollViewController.addListener(() {
 

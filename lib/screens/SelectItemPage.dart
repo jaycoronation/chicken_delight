@@ -7,7 +7,9 @@ import '../../common_widget/CommonTextFiled.dart';
 import '../../common_widget/common_widget.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/base_class.dart';
+import '../constant/ApiService.dart';
 import '../model/ItemResponseModel.dart';
+import '../model/common/CommonResponseModel.dart';
 import '../widget/no_data.dart';
 
 class SelectItemPage extends StatefulWidget {
@@ -31,6 +33,17 @@ class _SelectItemPageState extends BaseState<SelectItemPage> {
 
   @override
   void initState() {
+    ApiService.fetchData().then((response) {
+      var data = response as CommonResponseModel;
+      if (data.success == 1)
+      {
+      }
+      else
+      {
+        invalidTokenRedirection(context);
+      }
+    });
+
     super.initState();
     _scrollController = ScrollController();
     listItems = (widget as SelectItemPage).listItems;

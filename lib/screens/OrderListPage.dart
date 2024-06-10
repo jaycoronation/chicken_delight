@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../common_widget/common_widget.dart';
+import '../constant/ApiService.dart';
 import '../constant/colors.dart';
 import '../model/common/CommonResponseModel.dart';
 import '../utils/TextChanger.dart';
@@ -76,6 +77,16 @@ class _OrderListPageState extends BaseState<OrderListPage> {
 
   @override
   void initState() {
+    ApiService.fetchData().then((response) {
+      var data = response as CommonResponseModel;
+      if (data.success == 1)
+      {
+      }
+      else
+      {
+        invalidTokenRedirection(context);
+      }
+    });
     orderFilterOption.add(CommonResponseModel(success: 0, message: 'All', isSelected: true));
     orderFilterOption.add(CommonResponseModel(message: "Accepted"));
     orderFilterOption.add(CommonResponseModel(message: "Processed"));

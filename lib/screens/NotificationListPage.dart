@@ -8,7 +8,9 @@ import 'package:lottie/lottie.dart';
 
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import '../common_widget/common_widget.dart';
+import '../constant/ApiService.dart';
 import '../constant/colors.dart';
+import '../model/common/CommonResponseModel.dart';
 import '../utils/app_utils.dart';
 import '../utils/base_class.dart';
 import '../widget/loading.dart';
@@ -233,7 +235,16 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
   @override
   void initState() {
     super.initState();
-
+    ApiService.fetchData().then((response) {
+      var data = response as CommonResponseModel;
+      if (data.success == 1)
+      {
+      }
+      else
+      {
+        invalidTokenRedirection(context);
+      }
+    });
     _scrollViewController = ScrollController();
     _scrollViewController.addListener(() {
 

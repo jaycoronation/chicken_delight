@@ -6,8 +6,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import '../common_widget/common_widget.dart';
+import '../constant/ApiService.dart';
 import '../constant/colors.dart';
 import '../model/StoreMenuModel.dart';
+import '../model/common/CommonResponseModel.dart';
 import '../utils/base_class.dart';
 import '../utils/session_manager.dart';
 import '../utils/session_manager_methods.dart';
@@ -36,6 +38,17 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
 
   @override
   void initState() {
+
+    ApiService.fetchData().then((response) {
+      var data = response as CommonResponseModel;
+      if (data.success == 1)
+      {
+      }
+      else
+      {
+        invalidTokenRedirection(context);
+      }
+    });
     super.initState();
   }
 
