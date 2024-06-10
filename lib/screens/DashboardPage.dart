@@ -3,7 +3,9 @@ import 'dart:core';
 import 'dart:io';
 
 import 'package:chicken_delight/constant/api_end_point.dart';
+import 'package:chicken_delight/constant/global_context.dart';
 import 'package:chicken_delight/model/DashboardResponseModel.dart';
+import 'package:chicken_delight/model/GetDeviceTokenResponseModel.dart';
 import 'package:chicken_delight/screens/OrderDetailScreen.dart';
 import 'package:chicken_delight/utils/app_utils.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -17,11 +19,15 @@ import 'package:provider/provider.dart';
 import '../common_widget/common_widget.dart';
 import '../constant/colors.dart';
 import '../model/HomePageMenuModel.dart';
+import '../model/ItemResponseModel.dart';
 import '../model/common/CommonResponseModel.dart';
 import '../utils/TextChanger.dart';
 import '../utils/base_class.dart';
+import '../utils/session_manager.dart';
+import '../utils/session_manager_methods.dart';
 import '../widget/loading.dart';
 import '../widget/no_internet.dart';
+import 'LoginScreen.dart';
 import 'NotificationListPage.dart';
 
 
@@ -41,13 +47,15 @@ class _DashboardPageState extends BaseState<DashboardPage> {
   List<Order> listOrders = [];
   List<HomePageMenuGetSet> analysisList = [];
   String deviceName = '';
+  String totalProducts = '';
 
 
   @override
   void initState() {
 
     getDeviceData();
-    getDashboardData();
+
+    getDeviceToken();
 
     isHomeLoad = false;
     super.initState();
@@ -414,6 +422,135 @@ class _DashboardPageState extends BaseState<DashboardPage> {
 
 
   // API call function...
+  void getDeviceToken() async {
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+
+    final url = Uri.parse(MAIN_URL + getDeviceTokenUrl);
+
+    Map<String, String> jsonBody = {'user_id': sessionManager.getUserId().toString()};
+
+    final response = await http.post(url, body: jsonBody, headers: {
+      "Authorization": sessionManager.getToken().toString(),
+    });
+
+    final statusCode = response.statusCode;
+    final body = response.body;
+    Map<String, dynamic> apiResponse = jsonDecode(body);
+    var dataResponse = GetDeviceTokenResponseModel.fromJson(apiResponse);
+
+    if (statusCode == 200 && dataResponse.success == 1) {
+      try {
+        if (dataResponse.deviceTokens != null) {
+          if (dataResponse.deviceTokens!.isNotEmpty) {
+            var listDeviceTokens = dataResponse.deviceTokens ?? [];
+            for (int i = 0; i < listDeviceTokens.length; i++) {
+              if (listDeviceTokens[i].deviceToken.toString().trim() == sessionManager.getToken().toString().trim()) {
+                if (listDeviceTokens[i].isForceLogout == "1") {
+                  removeDeviceTokenAndLogout();
+                  break;
+                }
+              }
+            }
+          }
+        }
+      } catch (e) {
+        print(e);
+      }
+    } else {
+      showSnackBar(dataResponse.message, context);
+    }
+    getProductListCount();
+
+  }
+
+  void removeDeviceTokenAndLogout() async {
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+
+    final url = Uri.parse(MAIN_URL + removeDeviceToken);
+
+    Map<String, String> jsonBody = {'device_token': sessionManager.getToken().toString().trim()};
+
+    final response = await http.post(url, body: jsonBody, headers: {
+      "Authorization": sessionManager.getToken().toString(),
+    });
+
+    final statusCode = response.statusCode;
+    final body = response.body;
+    Map<String, dynamic> apiResponse = jsonDecode(body);
+    var dataResponse = CommonResponseModel.fromJson(apiResponse);
+
+    if (statusCode == 200 && dataResponse.success == 1) {
+      SessionManagerMethods.clear();
+      await SessionManagerMethods.init();
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (Route<dynamic> route) => false);
+
+    } else {
+      print("_removeDeviceTokenAndLogout------" +dataResponse.message.toString() );
+      showSnackBar(dataResponse.message, context);
+    }
+
+  }
+
+  void getProductListCount() async {
+    if (isOnline)
+    {
+      setState(() {
+        _isLoading = true;
+      });
+
+      HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+        HttpLogger(logLevel: LogLevel.BODY),
+      ]);
+
+      final url = Uri.parse(MAIN_URL + itemList);
+      Map<String, String> jsonBody = {
+        'category_id': "",
+        'limit': "",
+        'page': "",
+        'search': ""
+      };
+
+      final response = await http.post(url, body: jsonBody, headers: {
+        "Authorization": sessionManager.getToken() ?? "",
+      });
+
+      final statusCode = response.statusCode;
+
+      final body = response.body;
+      Map<String, dynamic> items = jsonDecode(body);
+      var dataResponse = ItemResponseModel.fromJson(items);
+      totalProducts = dataResponse.totalRecords ?? "";
+
+      if (statusCode == 200 && dataResponse.success == 1) {
+        var records = dataResponse.records;
+
+        setState(() {
+          _isLoading = false;
+        });
+
+      } else {
+        showSnackBar(dataResponse.message, context);
+
+        setState(() {
+          _isLoading = false;
+        });
+      }
+
+    }
+    else
+    {
+      setState(() {
+        _isLoading = false;
+      });
+      noInternetSnackBar(context);
+    }
+    getDashboardData();
+  }
+
   void getDashboardData() async {
     if (isOnline)
     {
@@ -455,7 +592,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
               titleColorStatic: "#ff95b5ad",
               bgColorStatic: "#ffedf2f4",
               itemIconStatic: "assets/images/slicing-24.png",
-              countStatic: "1",
+              countStatic: totalProducts,
               arrowColorStatic: "#ff95b5ad"),
           HomePageMenuGetSet(
               nameStatic: "Orders",
@@ -542,8 +679,6 @@ class _DashboardPageState extends BaseState<DashboardPage> {
     } else {
       noInternetSnackBar(context);
     }
-
   }
-
 
 }

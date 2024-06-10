@@ -249,7 +249,6 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
                                 Navigator.pop(context);
                                 SessionManagerMethods.clear();
                                 await SessionManagerMethods.init();
-                                var sessionManager = SessionManager();
                                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (Route<dynamic> route) => false);
                               },
                               child: Text('Logout', style: TextStyle(fontSize: subTitle, fontWeight: FontWeight.w600, color: white)),

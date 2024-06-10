@@ -117,7 +117,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                               Text(listItems[index].category ?? "",
                                   style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
                               ),
-                              Gap(12),
+                              const Gap(12),
                               ListView.builder(
                                   scrollDirection: Axis.vertical,
                                   shrinkWrap: true,
@@ -131,16 +131,19 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                                       children: [
                                         Row(
                                           children: [
-                                            ClipRRect(
-                                              borderRadius: BorderRadius.circular(12),
-                                              child: Image.network(
-                                                getSetInner.image ?? "",
-                                                fit: BoxFit.cover,
-                                                height: 70,
-                                                width:70,
+                                            Visibility(
+                                              visible: getSetInner.image!.isNotEmpty,
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.circular(12),
+                                                child: Image.network(
+                                                  getSetInner.image ?? "",
+                                                  fit: BoxFit.cover,
+                                                  height: 70,
+                                                  width:70,
+                                                ),
                                               ),
                                             ),
-                                            Gap(12),
+                                            const Gap(12),
                                             Flexible(
                                               child: Column(
                                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -150,15 +153,21 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                                                       style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
                                                       overflow: TextOverflow.clip
                                                   ),
-                                                  Gap(4),
-                                                   Row(
+                                                  const Gap(4),
+                                                  Row(
                                                     children: [
-                                                      Text("${getSetInner.quantity ?? " "}/${getSetInner.unit ?? " "}  x  CA\$${getSetInner.basePrice ?? " "}",
-                                                          style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500),textAlign: TextAlign.left
+                                                      Text(getSetInner.quantity ?? " ",
+                                                          style: TextStyle(fontSize: description, color: gray_dark,fontWeight: FontWeight.w500),
+                                                          textAlign: TextAlign.left
                                                       ),
-                                                      Spacer(),
+                                                      Text(" x ${getPrice(getSetInner.basePrice ?? " ")}",
+                                                          style: TextStyle(fontSize: description, color: gray_dark,fontWeight: FontWeight.w500),
+                                                          textAlign: TextAlign.left
+                                                      ),
+                                                      const Spacer(),
                                                       Text(getPrice(getSetInner.amount.toString()) ?? "",
-                                                          style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
+                                                          style: TextStyle(fontSize: description, color: gray_dark,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,),
+                                                          textAlign: TextAlign.left,
                                                           overflow: TextOverflow.clip
                                                       ),
                                                     ],
@@ -168,7 +177,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                                             ),
                                           ],
                                         ),
-                                        Gap(10),
+                                        const Gap(10),
                                       ],
                                     );
                                   }
@@ -264,7 +273,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                           Text("Shipping From",
                               style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
                           ),
-                          Gap(10),
+                          const Gap(10),
                           Text(warehouseName,
                               style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
                           ),
