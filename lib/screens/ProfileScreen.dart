@@ -78,7 +78,7 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
                             GestureDetector(
                               behavior: HitTestBehavior.opaque,
                               onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => MyProfileScreen()));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => const MyProfileScreen()));
                               },
                               child: Row(
                                 children: [
@@ -151,7 +151,7 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
                       children: [
                         GestureDetector(
                           onTap: (){
-                            startActivity(context,  ForgotPasswordScreen());
+                            startActivity(context,  const ForgotPasswordScreen());
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

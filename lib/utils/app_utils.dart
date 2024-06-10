@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:chicken_delight/screens/LoginScreen.dart';
 import 'package:chicken_delight/utils/session_manager.dart';
 import 'package:chicken_delight/utils/session_manager_methods.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -47,8 +48,8 @@ String greetUser() {
 
 void invalidTokenRedirection(BuildContext? context){
   // showSnackBar('Access Token is expired please login again', context);
-  // SessionManagerMethods.clear();
- // Navigator.of(context!).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const LoginWithEmpCodeScreen()), (Route<dynamic> route) => false);
+  SessionManagerMethods.clear();
+  Navigator.of(context!).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const LoginScreen()), (Route<dynamic> route) => false);
 }
 
 /*show message to user*/

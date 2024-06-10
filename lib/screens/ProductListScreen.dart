@@ -527,7 +527,6 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                                                   noInternetSnackBar(context);
                                                                 }
                                                               });
-
                                                             },
                                                             icon: const Icon(Icons.add,color: white,)//Image.asset('assets/images/ic_blue_add.png', height: 24, width: 24),
                                                         )
