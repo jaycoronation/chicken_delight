@@ -149,8 +149,8 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                     height: 35 ,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8),
-                                      border: Border.all(color: primaryColor, width: 0.8),
-                                      color: primaryColor,
+                                      border: Border.all(color: black, width: 0.8),
+                                      color: black,
                                     ),
                                     alignment: Alignment.center,
                                     child: Row(

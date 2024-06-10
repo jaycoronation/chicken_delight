@@ -468,11 +468,11 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                                       width: 100,
                                                       decoration: BoxDecoration(
                                                         borderRadius: BorderRadius.circular(8),
-                                                        border: Border.all(color: primaryColor, width: 0.8),
+                                                        border: Border.all(color: black, width: 0.8),
                                                       ),
                                                       alignment: Alignment.center,
                                                       child: Text("ADD",
-                                                          style: TextStyle(fontWeight: FontWeight.w600, color: primaryColor, fontSize: description)),
+                                                          style: TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: description)),
                                                     ),
                                                   ),
                                                 ),
@@ -482,8 +482,8 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                                     height: 40,
                                                     decoration: BoxDecoration(
                                                       borderRadius: BorderRadius.circular(8),
-                                                      border: Border.all(color: primaryColor, width: 0.8),
-                                                      color: primaryColor,
+                                                      border: Border.all(color: black, width: 0.8),
+                                                      color: black,
                                                     ),
                                                     alignment: Alignment.center,
                                                     child: Row(
