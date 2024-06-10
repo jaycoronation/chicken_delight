@@ -136,7 +136,6 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
                       ),
                     ),
                   ),
-
                   Container(
                     margin: const EdgeInsets.only(top: 18),
                     padding: const EdgeInsets.all(12),
@@ -158,7 +157,7 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Image.asset('assets/images/ic_logout.png', height: 22, width: 22, color: black),
+                              Image.asset('assets/images/ic_lock.png', height: 22, width: 22, color: black),
                               const Gap(12),
                               Expanded(
                                 child: Text("Change Password",
@@ -186,7 +185,7 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
                     child: Column(
                       children: [
                         GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             logoutFromApp(context);
                           },
                           child: Row(

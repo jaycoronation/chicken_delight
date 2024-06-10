@@ -31,18 +31,23 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Chicken delight app wants to use your Camera for update your profile picture.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Chicken delight App wants your location to add Address and use for placing the orders.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Chicken delight App wants your location to add Address and use for placing the orders.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Chicken delight App wants your location to add Address and use for placing the orders.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Chicken delight app wants to use your Photos for update your profile picture.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-    <key>NSCameraUsageDescription</key>
-    <string>Chicken delight app wants to use your Camera for update your profile picture.</string>
-    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>Chicken delight App wants your location to add Address and use for placing the orders.</string>
-    <key>NSLocationAlwaysUsageDescription</key>
-    <string>Chicken delight App wants your location to add Address and use for placing the orders.</string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Chicken delight App wants your location to add Address and use for placing the orders.</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>Chicken delight app wants to use your Photos for update your profile picture.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

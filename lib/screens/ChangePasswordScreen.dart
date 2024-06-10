@@ -184,7 +184,6 @@ class _ChangePasswordScreenState extends BaseState<ChangePasswordScreen> {
     widget is ChangePasswordScreen;
   }
 
-
   resetPasswordApi() async {
     if (isOnline)
       {
@@ -204,9 +203,7 @@ class _ChangePasswordScreenState extends BaseState<ChangePasswordScreen> {
           'confirm_password': confirmController.value.text,
         };
 
-
         final response = await http.post(url, body: jsonBody);
-
         final statusCode = response.statusCode;
 
         final body = response.body;
