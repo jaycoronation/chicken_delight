@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import '../common_widget/common_widget.dart';
+import '../constant/ApiService.dart';
 import '../constant/api_end_point.dart';
 import '../constant/colors.dart';
 import '../model/common/CommonResponseModel.dart';
@@ -34,6 +35,16 @@ class _ChangePasswordScreenState extends BaseState<ChangePasswordScreen> {
 
   @override
   void initState(){
+    ApiService.fetchData().then((response) {
+      var data = response as CommonResponseModel;
+      if (data.success == 1)
+      {
+      }
+      else
+      {
+        invalidTokenRedirection(context);
+      }
+    });
     email = (widget as ChangePasswordScreen).email;
     otp = (widget as ChangePasswordScreen).otp;
     super.initState();

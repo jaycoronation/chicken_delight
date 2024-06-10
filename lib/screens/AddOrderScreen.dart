@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:provider/provider.dart';
 import '../common_widget/common_widget.dart';
+import '../constant/ApiService.dart';
 import '../constant/api_end_point.dart';
 import '../constant/colors.dart';
 import '../constant/global_context.dart';
@@ -33,7 +34,16 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
 
   @override
   void initState() {
-    super.initState();
+    ApiService.fetchData().then((response) {
+      var data = response as CommonResponseModel;
+      if (data.success == 1)
+      {
+      }
+      else
+      {
+        invalidTokenRedirection(context);
+      }
+    });
 
     for (int i = 0; i < NavigationService.listItemsTmp.length; i++)
       {
@@ -42,6 +52,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
       }
 
     getPriceCalculated();
+    super.initState();
   }
 
   @override

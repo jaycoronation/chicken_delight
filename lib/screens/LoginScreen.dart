@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import '../common_widget/common_widget.dart';
+import '../constant/ApiService.dart';
 import '../constant/api_end_point.dart';
 import '../constant/colors.dart';
 import '../model/LoginResponseModel.dart';
+import '../model/common/CommonResponseModel.dart';
 import '../utils/app_utils.dart';
 import '../utils/base_class.dart';
 import 'ForgotPasswordScreen.dart';
@@ -26,6 +28,23 @@ class _LoginScreenState extends BaseState<LoginScreen> {
 
   bool isLoading = false;
   bool _passwordVisible = true;
+
+  @override
+  void initState(){
+    ApiService.fetchData().then((response) {
+      var data = response as CommonResponseModel;
+      if (data.success == 1)
+      {
+      }
+      else
+      {
+        invalidTokenRedirection(context);
+      }
+    });
+
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {

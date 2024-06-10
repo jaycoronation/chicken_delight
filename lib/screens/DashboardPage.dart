@@ -17,6 +17,7 @@ import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:provider/provider.dart';
 
 import '../common_widget/common_widget.dart';
+import '../constant/ApiService.dart';
 import '../constant/colors.dart';
 import '../model/HomePageMenuModel.dart';
 import '../model/ItemResponseModel.dart';
@@ -52,7 +53,16 @@ class _DashboardPageState extends BaseState<DashboardPage> {
 
   @override
   void initState() {
-
+    ApiService.fetchData().then((response) {
+      var data = response as CommonResponseModel;
+      if (data.success == 1)
+      {
+      }
+      else
+      {
+        invalidTokenRedirection(context);
+      }
+    });
     getDeviceData();
 
     getDeviceToken();
