@@ -3,7 +3,6 @@ import 'dart:core';
 import 'dart:io';
 
 import 'package:chicken_delight/constant/api_end_point.dart';
-import 'package:chicken_delight/constant/global_context.dart';
 import 'package:chicken_delight/model/DashboardResponseModel.dart';
 import 'package:chicken_delight/model/GetDeviceTokenResponseModel.dart';
 import 'package:chicken_delight/screens/OrderDetailScreen.dart';
@@ -24,7 +23,6 @@ import '../model/ItemResponseModel.dart';
 import '../model/common/CommonResponseModel.dart';
 import '../utils/TextChanger.dart';
 import '../utils/base_class.dart';
-import '../utils/session_manager.dart';
 import '../utils/session_manager_methods.dart';
 import '../widget/loading.dart';
 import '../widget/no_internet.dart';

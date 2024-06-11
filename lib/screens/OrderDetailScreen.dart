@@ -16,7 +16,7 @@ import '../utils/base_class.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   final String orderId;
-  const OrderDetailScreen(this.orderId, {super.key});
+  const OrderDetailScreen(this.orderId, {Key? key}) : super(key: key);
 
   @override
   BaseState<OrderDetailScreen> createState() => _OrderDetailScreenState();

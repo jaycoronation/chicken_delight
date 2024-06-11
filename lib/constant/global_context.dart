@@ -8,9 +8,9 @@ class NavigationService {
   static GlobalKey<NavigatorState> navigatorKeyHome = GlobalKey<NavigatorState>();
   static  List<Records> listItems = [];
   static  List<Records> listItemsTmp = [];
-  static String notif_type = "";
-  static String notif_id = "";
-  static String orderID = "";
+  static String? notif_type = "";
+  static String? notif_id = "";
+  static String? orderID = "";
   static bool isBottomSheetOpen = false;
   static bool isDataDownloading = false;
   static bool isNoInternetOpen = false;

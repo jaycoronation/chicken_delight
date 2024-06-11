@@ -65,16 +65,16 @@ class PushNotificationService {
         }
       });
 
-      if(contentType == "order") {
+      if(contentType == "order_details") {
 
-        NavigationService.navigatorKey.currentState!.push(
+        NavigationService.navigatorKey.currentState?.push(
           MaterialPageRoute(
               builder: (context) => OrderDetailScreen(orderId)),
         );
 
 
       } else {
-        NavigationService.navigatorKey.currentState!.push(
+        NavigationService.navigatorKey.currentState?.push(
           MaterialPageRoute(
               builder: (context) => const TabNavigation(0)),
         );
@@ -107,18 +107,17 @@ class PushNotificationService {
         print('<><> TAP onMessage :' + payload.toString() + "  <><>");
         var data = payload.toString().split("|");
         var orderId = data[0];
-        var customerId = data[1];
-        var content_type = data[2];
+        var contentType = data[1];
 
-        if(content_type == "order") {
+        if(contentType == "order_details") {
 
-          NavigationService.navigatorKey.currentState!.push(
+          NavigationService.navigatorKey.currentState?.push(
             MaterialPageRoute(
                 builder: (context) => OrderDetailScreen(orderId)),
           );
 
         }else {
-          NavigationService.navigatorKey.currentState!.push(
+          NavigationService.navigatorKey.currentState?.push(
             MaterialPageRoute(
                 builder: (context) => const TabNavigation(0)),
           );
@@ -130,7 +129,7 @@ class PushNotificationService {
     });
     // onMessage is called when the app is in foreground and a notification is received
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
-      print('Notification Payload:${message?.notification!.toMap().toString()}');
+      print('Notification Payload:${message?.notification?.toMap().toString()}');
       print('Data Payload:${message?.data.toString()}');
       RemoteNotification? notification = message?.notification;
       AndroidNotification? android = message?.notification?.android;
@@ -141,21 +140,20 @@ class PushNotificationService {
       if (notification != null && isLoggedIn && android !=null)
       {
         var orderId = "";
-        var content_type = "";
-        var customerId = "";
+        var contentType = "";
          message?.data.forEach((key, value)
          {
-          //print("KEY=== " +  key);
+          print("KEY=== " +  key);
             if (key == "content_id")
             {
               orderId = value;
             }
 
             if (key == "content_type") {
-              content_type = value;
+              contentType = value;
             }
 
-            NavigationService.notif_type = content_type;
+            NavigationService.notif_type = contentType;
             NavigationService.orderID = orderId;
 
         });
@@ -178,7 +176,7 @@ class PushNotificationService {
               priority: Priority.high
             ),
               iOS: iOSPlatformChannelSpecifics),
-          payload: "$orderId|$customerId|$content_type",
+          payload: "$orderId|$contentType",
 
         );
       }
