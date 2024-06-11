@@ -27,16 +27,6 @@ class _ForgotPasswordScreenState extends BaseState<ForgotPasswordScreen> {
 
   @override
   void initState() {
-    ApiService.fetchData().then((response) {
-      var data = response as CommonResponseModel;
-      if (data.success == 1)
-      {
-      }
-      else
-      {
-        invalidTokenRedirection(context);
-      }
-    });
     super.initState();
   }
 

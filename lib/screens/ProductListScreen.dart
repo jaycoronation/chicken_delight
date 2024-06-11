@@ -107,10 +107,9 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
     var textRefresh = context.watch<TextChanger>().refreshProductList;
     print("Chart data<<><><><><><>>$textRefresh}");
 
-    if (textRefresh != null && textRefresh.isNotEmpty) {
+    if (textRefresh.isNotEmpty) {
       getItemListData(true);
     }
-
   }
 
   Future<bool> _refresh() {
@@ -161,19 +160,13 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
               GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () async {
-                    print("************");
-
-
                       NavigationService.listItemsTmp = [];
 
                       setState(() {
                         for (int i = 0; i < NavigationService.listItems.length; i++)
                         {
-                          print("##########");
-
                           if (NavigationService.listItems[i].isSelected == true)
                           {
-                            print("=============");
                             Records getSet = Records();
 
                             getSet = Records(
@@ -200,9 +193,6 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
 
                           }
                         }
-                        // print("NavigationService.listItemsTmp.length====");
-                        // print(NavigationService.listItemsTmp.length);
-
                       });
 
                     if (NavigationService.listItemsTmp.isNotEmpty)
@@ -215,7 +205,6 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                           {
                             if (NavigationService.listItems[n].id == NavigationService.listItemsTmp[i].id)
                               {
-
                                 if (NavigationService.listItems[n].isSelected == true)
                                 {
                                       Records getSet = Records();
@@ -427,7 +416,6 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                                       style: TextStyle(fontSize: small, color: gray_dark,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,decoration: TextDecoration.lineThrough),
                                                       textAlign: TextAlign.left,
                                                       overflow: TextOverflow.clip,
-
                                                   ),
                                                 ],
                                               ),
@@ -554,7 +542,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                         ),
                                       ],
                                     ),
-                                    Gap(18),
+                                    const Gap(18),
                                     const Divider(
                                       color: kLightGray,
                                     ),

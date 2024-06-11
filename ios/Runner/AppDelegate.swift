@@ -33,7 +33,7 @@ import Firebase
   }
 
     @objc func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-//         print( "fcmToken ==== " , fcmToken)
+         print( "fcmToken ==== " , fcmToken)
     }
 
     override func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {

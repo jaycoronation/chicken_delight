@@ -28,16 +28,6 @@ class _ForgotPwOtpScreenState extends BaseState<ForgotPwOtpScreen> {
 
   @override
   void initState(){
-    ApiService.fetchData().then((response) {
-      var data = response as CommonResponseModel;
-      if (data.success == 1)
-      {
-      }
-      else
-      {
-        invalidTokenRedirection(context);
-      }
-    });
     super.initState();
     email = (widget as ForgotPwOtpScreen).email;
     super.initState();

@@ -11,9 +11,7 @@ import '../constant/colors.dart';
 import '../model/StoreMenuModel.dart';
 import '../model/common/CommonResponseModel.dart';
 import '../utils/base_class.dart';
-import '../utils/session_manager.dart';
 import '../utils/session_manager_methods.dart';
-import 'ChangePasswordScreen.dart';
 import 'ForgotPasswordScreen.dart';
 import 'MyProfileScreen.dart';
 
@@ -35,6 +33,7 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
 
   List<StoreMenuGetSet> useFullLinks = [];
   List<StoreMenuGetSet> listLogout = [];
+
 
   @override
   void initState() {
@@ -118,7 +117,6 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
                                   Expanded(child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-
                                       sessionManager.getName().toString().isNotEmpty
                                           ? Container(
                                             margin: const EdgeInsets.only(top: 6),
@@ -163,7 +161,7 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
                     child: Column(
                       children: [
                         GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             startActivity(context,  const ForgotPasswordScreen());
                           },
                           child: Row(
@@ -174,7 +172,8 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
                               const Gap(12),
                               Expanded(
                                 child: Text("Change Password",
-                                    style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
+                                    style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),
+                                    textAlign: TextAlign.left
                                 ),
                               ),
                               Image.asset('assets/images/ic_right_arrow_new.png', height: 14, width: 14, color: black)
@@ -398,7 +397,5 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
       },
     );
   }
-
-  //API call function...
 
 }

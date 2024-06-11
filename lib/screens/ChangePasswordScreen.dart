@@ -35,7 +35,7 @@ class _ChangePasswordScreenState extends BaseState<ChangePasswordScreen> {
 
   @override
   void initState(){
-    ApiService.fetchData().then((response) {
+    /*ApiService.fetchData().then((response) {
       var data = response as CommonResponseModel;
       if (data.success == 1)
       {
@@ -44,7 +44,7 @@ class _ChangePasswordScreenState extends BaseState<ChangePasswordScreen> {
       {
         invalidTokenRedirection(context);
       }
-    });
+    });*/
     email = (widget as ChangePasswordScreen).email;
     otp = (widget as ChangePasswordScreen).otp;
     super.initState();

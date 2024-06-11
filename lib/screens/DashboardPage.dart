@@ -65,7 +65,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
     });
     getDeviceData();
 
-    getDeviceToken();
+    getProductListCount();
 
     isHomeLoad = false;
     super.initState();
@@ -471,7 +471,6 @@ class _DashboardPageState extends BaseState<DashboardPage> {
     } else {
       showSnackBar(dataResponse.message, context);
     }
-    getProductListCount();
 
   }
 

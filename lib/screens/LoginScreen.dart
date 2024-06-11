@@ -31,18 +31,7 @@ class _LoginScreenState extends BaseState<LoginScreen> {
 
   @override
   void initState(){
-    ApiService.fetchData().then((response) {
-      var data = response as CommonResponseModel;
-      if (data.success == 1)
-      {
-      }
-      else
-      {
-        invalidTokenRedirection(context);
-      }
-    });
-
-    super.initState();
+     super.initState();
   }
 
 
