@@ -901,7 +901,6 @@ class _OrderListPageState extends BaseState<OrderListPage> {
     }
   }
 
-
   //API call function...
   void getOrderListData(bool isFirstTime, [bool isFromSearch = false]) async {
     if (isOnline) {

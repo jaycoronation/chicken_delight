@@ -113,7 +113,10 @@ class _DashboardPageState extends BaseState<DashboardPage> {
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () {
-                startActivity(context,  const NotificationListPage(true));
+                // setState(() {
+                //   sessionManager.setUnreadNotificationCount(0);
+                // });
+                notificationPage(context);
               },
               child:
               Stack(
@@ -130,7 +133,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                     child: Image.asset('assets/images/ic_notifications.png', color: white, height: 17, width: 17),
                   ),
                   Visibility(
-                    //visible: sessionManager.getUnreadNotificationCount()! > 0,
+                    visible: sessionManager.getUnreadNotificationCount()! > 0,
                     child: Positioned(
                       right: 2,
                       top: 4,
@@ -144,7 +147,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                         alignment: Alignment.centerRight,
                         margin: const EdgeInsets.only(left: 20),
                         child: Center(
-                          child: Text("0",
+                          child: Text(sessionManager.getUnreadNotificationCount()?.toString() ?? "0",
                               style: TextStyle(fontWeight: FontWeight.w400, color: black, fontSize: small)),
                         ),
                       ),
@@ -318,7 +321,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
               orderDetailPage(context, checkValidString(listOrders[index].id));
             },
             child: Container(
-                width:listOrders.length > 1 ? MediaQuery.of(context).size.width * 0.85 : MediaQuery.of(context).size.width * 0.9,
+                width:listOrders.length > 1 ? MediaQuery.of(context).size.width * 0.75 : MediaQuery.of(context).size.width * 0.9,
                 margin: EdgeInsets.only(right: 6, left: index == 0 ? 22.0 : 0.0),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
@@ -339,10 +342,10 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                         children: [
                           Text("Order Number", textAlign: TextAlign.start,
                               style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: small)),
-                          Gap(6),
+                          const Gap(6),
                           Text("Grand Total", textAlign: TextAlign.start,
                               style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: small)),
-                          Gap(6),
+                          const Gap(6),
                           Text("Remark", textAlign: TextAlign.start,
                               style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: small)),
                           Gap(6),
@@ -390,10 +393,10 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                                   style: TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: small)),
                               const Gap(6),
                               Text(getDateFromTimestamp(checkValidString(listOrders[index].timestamp)), textAlign: TextAlign.start, maxLines: 1,
-                                  style:  TextStyle(color: black, fontWeight: FontWeight.w600, fontSize: small)),
+                                  style: TextStyle(color: black, fontWeight: FontWeight.w600, fontSize: small)),
                               const Gap(6),
                               Text(checkValidString(listOrders[index].status), textAlign: TextAlign.start, maxLines: 1,
-                                  style:  TextStyle(color: black, fontWeight: FontWeight.w600, fontSize: small)),
+                                  style: TextStyle(color: black, fontWeight: FontWeight.w600, fontSize: small)),
     
                             ],
                           ),
@@ -413,6 +416,18 @@ class _DashboardPageState extends BaseState<DashboardPage> {
       MaterialPageRoute(builder: (context) => OrderDetailScreen(orderId)),
     );
     print("result ===== $result");
+    if (result == "success") {
+      getDashboardData();
+    }
+  }
+
+  Future<void> notificationPage(BuildContext context) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const NotificationListPage(true)),
+    );
+    print("result ===== $result");
+
     if (result == "success") {
       getDashboardData();
     }
@@ -496,7 +511,6 @@ class _DashboardPageState extends BaseState<DashboardPage> {
       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (Route<dynamic> route) => false);
 
     } else {
-      print("_removeDeviceTokenAndLogout------" +dataResponse.message.toString() );
       showSnackBar(dataResponse.message, context);
     }
 
@@ -586,7 +600,6 @@ class _DashboardPageState extends BaseState<DashboardPage> {
 
       if (statusCode == 200 && dataResponse.success == 1) {
         var records = dataResponse.dashboardRecords;
-
         listOrders = records?.order ?? [];
 
         setState(() {
@@ -616,6 +629,10 @@ class _DashboardPageState extends BaseState<DashboardPage> {
               countStatic:records?.totalValue?.toStringAsFixed(2) ?? "" ,
               arrowColorStatic: "#ffedab7e"),
         ];
+
+        if (records?.totalNotifications != null) {
+          sessionManager.setUnreadNotificationCount(records?.totalNotifications ?? 0);
+        }
 
       } else {
         showSnackBar(dataResponse.message, context);

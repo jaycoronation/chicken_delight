@@ -81,4 +81,15 @@ class SessionManager {
     return SessionManagerMethods.getString(profilePicture);
   }
 
+  final String unreadNotificationCount = "unread_notification_count";
+  Future<void> setUnreadNotificationCount(int apiUnreadNotificationCount)
+  async {
+    await SessionManagerMethods.setInt(unreadNotificationCount, apiUnreadNotificationCount);
+  }
+
+  int? getUnreadNotificationCount() {
+    return SessionManagerMethods.getInt(unreadNotificationCount);
+  }
+
+
 }

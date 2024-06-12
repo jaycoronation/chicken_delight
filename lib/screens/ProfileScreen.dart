@@ -90,7 +90,7 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
                             GestureDetector(
                               behavior: HitTestBehavior.opaque,
                               onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => const MyProfileScreen()));
+                                startActivity(context, const MyProfileScreen());
                               },
                               child: Row(
                                 children: [
@@ -148,7 +148,7 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.only(top: 18),
+                    margin: const EdgeInsets.only(top: 18, left: 5, right: 5),
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(kContainerCornerRadius),
@@ -161,8 +161,9 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
                     child: Column(
                       children: [
                         GestureDetector(
+                          behavior: HitTestBehavior.opaque,
                           onTap: () {
-                            startActivity(context,  const ForgotPasswordScreen());
+                            startActivity(context, const ForgotPasswordScreen());
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -184,19 +185,17 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.only(top: 18),
+                    margin: const EdgeInsets.only(top: 18, left: 5, right: 5),
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(kContainerCornerRadius),
                       color: white,
-                      border: Border.all(
-                        color: white,
-                        width: 0.8,
-                      ),
+                      border: Border.all(color: white, width: 0.8),
                     ),
                     child: Column(
                       children: [
                         GestureDetector(
+                          behavior: HitTestBehavior.opaque,
                           onTap: () {
                             logoutFromApp(context);
                           },

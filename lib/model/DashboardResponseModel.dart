@@ -86,7 +86,8 @@ class DashboardRecords {
       String? countryCode, 
       List<Order>? order, 
       String? totalOrders, 
-      num? totalValue, 
+      int? totalNotifications,
+      num? totalValue,
       String? profilePicture, 
       String? businessLogo,}){
     _id = id;
@@ -105,6 +106,7 @@ class DashboardRecords {
     _countryCode = countryCode;
     _order = order;
     _totalOrders = totalOrders;
+    _totalNotifications = totalNotifications;
     _totalValue = totalValue;
     _profilePicture = profilePicture;
     _businessLogo = businessLogo;
@@ -132,6 +134,7 @@ class DashboardRecords {
       });
     }
     _totalOrders = json['total_orders'];
+    _totalNotifications = json['total_notifications'];
     _totalValue = json['total_value'];
     _profilePicture = json['profile_picture'];
     _businessLogo = json['business_logo'];
@@ -152,6 +155,7 @@ class DashboardRecords {
   String? _countryCode;
   List<Order>? _order;
   String? _totalOrders;
+  int? _totalNotifications;
   num? _totalValue;
   String? _profilePicture;
   String? _businessLogo;
@@ -171,6 +175,7 @@ DashboardRecords copyWith({  String? id,
   String? countryCode,
   List<Order>? order,
   String? totalOrders,
+  int? totalNotifications,
   num? totalValue,
   String? profilePicture,
   String? businessLogo,
@@ -190,6 +195,7 @@ DashboardRecords copyWith({  String? id,
   countryCode: countryCode ?? _countryCode,
   order: order ?? _order,
   totalOrders: totalOrders ?? _totalOrders,
+  totalNotifications: totalNotifications ?? _totalNotifications,
   totalValue: totalValue ?? _totalValue,
   profilePicture: profilePicture ?? _profilePicture,
   businessLogo: businessLogo ?? _businessLogo,
@@ -210,6 +216,7 @@ DashboardRecords copyWith({  String? id,
   String? get countryCode => _countryCode;
   List<Order>? get order => _order;
   String? get totalOrders => _totalOrders;
+  int? get totalNotifications => _totalNotifications;
   num? get totalValue => _totalValue;
   String? get profilePicture => _profilePicture;
   String? get businessLogo => _businessLogo;
@@ -234,6 +241,7 @@ DashboardRecords copyWith({  String? id,
       map['order'] = _order?.map((v) => v.toJson()).toList();
     }
     map['total_orders'] = _totalOrders;
+    map['total_notifications'] = _totalNotifications;
     map['total_value'] = _totalValue;
     map['profile_picture'] = _profilePicture;
     map['business_logo'] = _businessLogo;

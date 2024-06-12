@@ -50,7 +50,7 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
         leading: GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () {
-              Navigator.pop(context);
+              Navigator.pop(context, "success");
             },
             child:getBackArrowBlack()),
         centerTitle: true,
@@ -60,37 +60,7 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
         body: isOnline
           ? _isLoading
           ? const LoadingWidget()
-          : _setData()/*listNotification.isEmpty
-          ? MyNoDataWidget(msg: 'No notices yet!', imageName: "ic-no-notification.png", colorCode: const Color(0xFF5586aa),
-        subMsg:"You have currently no notifications.\nWe'll notify you when something\nnew arrives!", onTap: refreshData, btnTitle: "Back to Home",)
-          : Padding(
-            padding: const EdgeInsets.only(left: 12, right: 12),
-            child: Column(
-              children: [
-                Expanded(
-                    child: SingleChildScrollView(
-                      controller: _scrollViewController,
-                      child: _listLayout(),
-                    )
-                ),
-                if (_isLoadingMore == true)
-                  Container(
-                    padding: const EdgeInsets.only(top: 10, bottom: 10),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(width: 30, height: 30,
-                            child: Lottie.asset('assets/images/loader_new.json', repeat: true, animate: true, frameRate: FrameRate.max)),
-                        const Text(' Loading more...',
-                            style: TextStyle(color: black, fontWeight: FontWeight.w400, fontSize: 16)
-                        )
-                      ],
-                    ),
-                  ),
-              ],
-            ),
-          )*/
+          : _setData()
           : const NoInternetWidget()
     );
   }
@@ -173,7 +143,7 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () {
-                      startActivity(context, OrderDetailScreen(listNotification[index].link ?? ""));
+                      notificationRead(listNotification[index].id ?? "", listNotification[index].link ?? "");
                     },
                     child: Column(
                       children: [
@@ -284,7 +254,7 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
   }
 
   //API call func...
-  getNotificationList(bool isFirstTime) async {
+  void getNotificationList(bool isFirstTime) async {
     if (isOnline)
     {
       if (isFirstTime) {
@@ -365,6 +335,32 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
         _isLoadingMore = false;
       });
     }
+  }
+
+  void notificationRead(String notificationId, String orderID) async {
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+
+    final url = Uri.parse(MAIN_URL + notificationSave);
+
+    Map<String, String> jsonBody = {'id': notificationId};
+
+    final response = await http.post(url, body: jsonBody, headers: {
+      "Authorization": sessionManager.getToken().toString(),
+    });
+
+    final statusCode = response.statusCode;
+    final body = response.body;
+    Map<String, dynamic> apiResponse = jsonDecode(body);
+    var dataResponse = CommonResponseModel.fromJson(apiResponse);
+
+    if (statusCode == 200 && dataResponse.success == 1) {
+      startActivity(context, OrderDetailScreen(orderID));
+    } else {
+      showSnackBar(dataResponse.message, context);
+    }
+
   }
 
 }
