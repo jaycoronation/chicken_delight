@@ -41,27 +41,36 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: appBG,
-      appBar: AppBar(
-        toolbarHeight: kToolbarHeight,
-        automaticallyImplyLeading: false,
-        title: getTitle("Notifications"),
-        leading: GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () {
-              Navigator.pop(context, "success");
-            },
-            child:getBackArrowBlack()),
-        centerTitle: true,
-        elevation: 0,
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop){
+        if(didPop){
+          return;
+        }
+        Navigator.pop(context, "success");
+      },
+      child: Scaffold(
         backgroundColor: appBG,
+        appBar: AppBar(
+          toolbarHeight: kToolbarHeight,
+          automaticallyImplyLeading: false,
+          title: getTitle("Notifications"),
+          leading: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                Navigator.pop(context, "success");
+              },
+              child:getBackArrowBlack()),
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor: appBG,
+        ),
+          body: isOnline
+            ? _isLoading
+            ? const LoadingWidget()
+            : _setData()
+            : const NoInternetWidget()
       ),
-        body: isOnline
-          ? _isLoading
-          ? const LoadingWidget()
-          : _setData()
-          : const NoInternetWidget()
     );
   }
 

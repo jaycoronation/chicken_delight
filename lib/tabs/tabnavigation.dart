@@ -32,18 +32,21 @@ class _TabNavigationPageState extends State<TabNavigation> {
   ];
 
   SessionManager sessionManager = SessionManager();
+  bool canPop = false;
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: (){
+    return PopScope(
+      canPop: canPop,
+
+      onPopInvoked: (didPop) async{
           if (_currentIndex != 0)
           {
             print("Is running if condition");
             setState(() {
               _currentIndex = 0;
             });
-            return Future.value(false);
+            //return Future.value(false);
           }
           else
           {
@@ -53,13 +56,16 @@ class _TabNavigationPageState extends State<TabNavigation> {
             preBackPressTime = DateTime.now();
             if (cantExit)
             {
+              setState(() {
+                canPop = true;
+              });
               showSnackBar('Press back button again to exit', context);
-              return Future.value(false);
+              // return Future.value(false);
             }
             else
             {
               SystemNavigator.pop();
-              return Future.value(true);
+              // return Future.value(true);
             }
           }
         },

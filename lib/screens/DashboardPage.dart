@@ -266,7 +266,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
             } else if (analysisList[index].name == "Orders") {
              // _orderList(context);
               final BottomNavigationBar bar = bottomWidgetKey.currentWidget as BottomNavigationBar;
-              bar.onTap!(3);
+              bar.onTap!(2);
             }
           },
           child: Container(

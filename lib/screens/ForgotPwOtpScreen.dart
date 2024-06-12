@@ -35,10 +35,13 @@ class _ForgotPwOtpScreenState extends BaseState<ForgotPwOtpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop){
+        if(didPop){
+          return;
+        }
         Navigator.pop(context);
-        return Future.value(true);
       },
       child: Scaffold(
         backgroundColor: chicken_bg,

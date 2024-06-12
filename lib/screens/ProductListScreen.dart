@@ -119,7 +119,14 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop){
+        if(didPop){
+          return;
+        }
+        Navigator.pop(context);
+      },
       child: Scaffold(
           backgroundColor: chicken_bg,
           appBar: AppBar(
@@ -344,10 +351,6 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
               : setData()
               : const NoInternetWidget()
         ),
-      onWillPop: () {
-        Navigator.pop(context);
-        return Future.value(true);
-      },
     );
   }
 

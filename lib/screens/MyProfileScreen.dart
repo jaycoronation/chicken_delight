@@ -123,480 +123,483 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-   return WillPopScope(
-       child: Scaffold(
-         backgroundColor: chicken_bg,
-         appBar:AppBar(
-           toolbarHeight: kToolbarHeight,
-           automaticallyImplyLeading: false,
-           title: getTitle("Profile"),
-           leading: GestureDetector(
-               behavior: HitTestBehavior.opaque,
-               onTap: () {
-                 Navigator.pop(context);
-               },
-               child:getBackArrowBlack()
-           ),
-           centerTitle: true,
-           elevation: 0,
-           backgroundColor: chicken_bg,
-         ),
-         body: SingleChildScrollView(
-           child: Container(
-             margin: const EdgeInsets.all(12),
-             padding: const EdgeInsets.all(12),
-             decoration: BoxDecoration(
-               borderRadius: BorderRadius.circular(kContainerCornerRadius),
-               color: white,
-             ),
-             child: Column(
-               mainAxisAlignment: MainAxisAlignment.start,
-               crossAxisAlignment: CrossAxisAlignment.start,
-               children: [
-                 const Gap(22),
-                 Center(
-                   child: GestureDetector(
-                       behavior: HitTestBehavior.opaque,
-                       onTap: () {
-                         _showBottomSheetForImagePicker("Profile Pic");
-                       },
-                       child: Stack(
-                         alignment: Alignment.bottomRight,
-                         children: [
-                           profilePicFile.path.isNotEmpty
-                               ? Container(
-                               width: 120,
-                               height: 120,
-                               alignment: Alignment.center,
-                               decoration: BoxDecoration(
-                                   border: Border.all(color: black, width: 1),
-                                   shape: BoxShape.circle
-                               ),
-                               child: ClipOval(
-                                 child: SizedBox.fromSize(
-                                   size: const Size.fromRadius(120), // Image radius
-                                   child: Image.file(profilePicFile, fit: BoxFit.cover,width: 120, height: 120,),
-                                 ),
-                               )
-                           )
-                               : Container(
-                               width: 120,
-                               height: 120,
-                               alignment: Alignment.center,
-                               decoration: BoxDecoration(
-                                   border: Border.all(color: black, width: 1),
-                                   shape: BoxShape.circle
-                               ),
-                               child: profilePic.isEmpty
-                                   ? Padding(
-                                 padding: const EdgeInsets.all(0.0),
-                                 child: Image.asset('assets/images/ic_user.png',fit: BoxFit.cover,color: black,),
-                               )
-                                   : ClipOval(
-                                 child: SizedBox.fromSize(
-                                   size: const Size.fromRadius(120), // Image radius
-                                   child: Image.network(profilePic, fit: BoxFit.cover,width: 120, height: 120,),
-                                 ),
-                               )
-                           ),
-                           Container(
-                               padding: const EdgeInsets.all(6),
-                               decoration: const BoxDecoration(
-                                 color: white,
-                                 borderRadius: BorderRadius.all(Radius.circular(16),),
-                               ),
-                               child: Image.asset('assets/images/ic_edit.png',height: 14,width: 14, fit: BoxFit.contain,)
-                           ),
-                         ],)),
-                 ),
-                 const Gap(22),
-                 TextField(
-                   readOnly: false,
-                   keyboardType: TextInputType.text,
-                   textInputAction: TextInputAction.next,
-                   textCapitalization: TextCapitalization.words,
-                   cursorColor: black,
-                   controller: nameController,
-                   style: TextStyle(
-                     fontWeight: FontWeight.w500,
-                     fontSize: subTitle,
-                     color: black,
-                   ),
-                   decoration: InputDecoration(
-                     // fillColor: grayForDetail,
-                     // filled: true,
-                     labelText: 'Name',
-                     contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
-                     counterText: "",
-                     labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                   ),
-                 ),
-                 const Gap(16),
-                 TextField(
-                   readOnly: true,
-                   keyboardType: TextInputType.text,
-                   textInputAction: TextInputAction.next,
-                   textCapitalization: TextCapitalization.words,
-                   cursorColor: black,
-                   controller: userNameController,
-                   style: TextStyle(
-                     fontWeight: FontWeight.w500,
-                     fontSize: subTitle,
-                     color: black,
-                   ),
-                   decoration: InputDecoration(
-                     labelText: 'User Name',
-                     contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
-                     counterText: "",
-                     labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                   ),
-                 ),
-                 const Gap(16),
-                 TextField(
-                   readOnly: true,
-                   keyboardType: TextInputType.emailAddress,
-                   textInputAction: TextInputAction.next,
-                   cursorColor: black,
-                   controller:emailController,
-                   style: TextStyle(
-                     fontWeight: FontWeight.w500,
-                     fontSize: subTitle,
-                     color: black,
-                   ),
-                   decoration: InputDecoration(
-                     labelText: 'Email Address',
-                     contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
-                     counterText: "",
-                     labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                   ),
-                 ),
-                 const Gap(16),
-                 TextField(
-                   readOnly: false,
-                   keyboardType: TextInputType.phone,
-                   textInputAction: TextInputAction.next,
-                   cursorColor: black,
-                   maxLength: 10,
-                   controller:mobileController,
-                   style: TextStyle(
-                     fontWeight: FontWeight.w500,
-                     fontSize: subTitle,
-                     color: black,
-                   ),
-                   decoration: InputDecoration(
-                     labelText: 'Mobile Number',
-                     contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14),
-                     counterText: "",
-                     labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                   ),
-                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                 ),
-                 const Gap(16),
-                 TextField(
-                   readOnly: false,
-                   keyboardType: TextInputType.text,
-                   textInputAction: TextInputAction.next,
-                   textCapitalization: TextCapitalization.words,
-                   cursorColor: black,
-                   maxLength: 10,
-                   controller: businessNameController,
-                   style: TextStyle(
-                     fontWeight: FontWeight.w500,
-                     fontSize: subTitle,
-                     color: black,
-                   ),
-                   decoration: InputDecoration(
-                     labelText: 'Business Name',
-                     contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
-                     counterText: "",
-                     labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                   ),
-                 ),
-                 const Gap(16),
-                 TextField(
-                   readOnly: false,
-                   keyboardType: TextInputType.text,
-                   textInputAction: TextInputAction.next,
-                   cursorColor: black,
-                   maxLength: 10,
-                   controller: websiteController,
-                   style: TextStyle(
-                     fontWeight: FontWeight.w500,
-                     fontSize: subTitle,
-                     color: black,
-                   ),
-                   decoration: InputDecoration(
-                     labelText: 'Website',
-                     contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
-                     counterText: "",
-                     labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                   ),
-                 ),
-                 const Gap(16),
-                 TextField(
-                   readOnly: false,
-                   keyboardType: TextInputType.text,
-                   textInputAction: TextInputAction.next,
-                   textCapitalization: TextCapitalization.words,
-                   cursorColor: black,
-                   controller: addressLine1Controller,
-                   style: TextStyle(
-                     fontWeight: FontWeight.w500,
-                     fontSize: subTitle,
-                     color: black,
-                   ),
-                   decoration: InputDecoration(
-                     labelText: 'Address Line - 1 ',
-                     contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
-                     counterText: "",
-                     labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                   ),
-                 ),
-                 const Gap(16),
-                 TextField(
-                   readOnly: false,
-                   keyboardType: TextInputType.text,
-                   textInputAction: TextInputAction.next,
-                   textCapitalization: TextCapitalization.words,
-                   cursorColor: black,
-                   controller: addressLine2Controller,
-                   style: TextStyle(
-                     fontWeight: FontWeight.w500,
-                     fontSize: subTitle,
-                     color: black,
-                   ),
-                   decoration: InputDecoration(
-                     labelText: 'Address Line - 2 ',
-                     contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
-                     counterText: "",
-                     labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                   ),
-                 ),
-                 const Gap(16),
-                 TextField(
-                   readOnly: false,
-                   keyboardType: TextInputType.text,
-                   textInputAction: TextInputAction.next,
-                   textCapitalization: TextCapitalization.words,
-                   cursorColor: black,
-                   controller: addressLine3Controller,
-                   style: TextStyle(
-                     fontWeight: FontWeight.w500,
-                     fontSize: subTitle,
-                     color: black,
-                   ),
-                   decoration: InputDecoration(
-                     labelText: 'Address Line - 3 ',
-                     contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
-                     counterText: "",
-                     labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                   ),
-                 ),
-                 const Gap(16),
-                 TextField(
-                   readOnly: false,
-                   keyboardType: TextInputType.text,
-                   textInputAction: TextInputAction.next,
-                   textCapitalization: TextCapitalization.words,
-                   cursorColor: black,
-                   controller: addressLine4Controller,
-                   style: TextStyle(
-                     fontWeight: FontWeight.w500,
-                     fontSize: subTitle,
-                     color: black,
-                   ),
-                   decoration: InputDecoration(
-                     labelText: 'Address Line - 4 ',
-                     contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
-                     counterText: "",
-                     labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                   ),
-                 ),
-                 const Gap(16),
-                 TextField(
-                   readOnly: true,
-                   textInputAction: TextInputAction.next,
-                   cursorColor: black,
-                   controller: countryController,
-                   style: TextStyle(
-                     fontWeight: FontWeight.w500,
-                     fontSize: subTitle,
-                     color: black,
-                   ),
-                   onTap: (){
-                     openCountryBottomSheet();
-                   },
-                   decoration: InputDecoration(
-                     labelText: 'Country',
-                     contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
-                     counterText: "",
-                     labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                   ),
-                 ),
-                 const Gap(16),
-                 TextField(
-                   readOnly: true,
-                   keyboardType: TextInputType.text,
-                   cursorColor: black,
-                   controller: stateController,
-                   style: TextStyle(
-                     fontWeight: FontWeight.normal,
-                     fontSize: subTitle,
-                     color: black,
-                   ),
-                   decoration: InputDecoration(
-                     labelText: 'State',
-                     contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
-                     counterText: "",
-                     labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                   ),
-                   onTap: () {
-                     if(countryId.isEmpty){
-                       showSnackBar("Please select country", context);
-                     }
-                     else{
-                       openSateBottomSheet();
-                     }
-                   },
-                 ),
-                 const Gap(16),
-                 TextField(
-                   readOnly: true,
-                   keyboardType: TextInputType.text,
-                   cursorColor: black,
-                   controller: cityController,
-                   style: TextStyle(
-                     fontWeight: FontWeight.normal,
-                     fontSize: subTitle,
-                     color: black,
-                   ),
-                   decoration: InputDecoration(
-                     labelText: 'City',
-                     contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
-                     counterText: "",
-                     labelStyle:  TextStyle(fontSize: description, color:gray_dark),
-                   ),
-                   onTap: () {
-                     if(stateId.isEmpty) {
-                       showSnackBar("Please Select State", context);
-                     }
-                     else if(_cityList.isEmpty) {
-                       showSnackBar("No Cities Found", context);
-                     }
-                     else{
-                       openCityBottomSheet();
-                     }
-                   },
-                 ),
-                 const Gap(16),
-                 Text('Upload Business Logo',
-                   style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),
-                 ),
-                 const Gap(16),
-                 GestureDetector(
-                     behavior: HitTestBehavior.opaque,
-                     onTap: (){
-                       _showBottomSheetForImagePicker("Upload Logo");
-                     },
-                     child: logoFile.path.isNotEmpty
-                         ? Container(
-                           width: 120,
-                           height: 120,
-                           alignment: Alignment.center,
-                           decoration: BoxDecoration(
-                               borderRadius: BorderRadius.circular(12),
-                               border: Border.all(
-                                   color: grayDividerDetail,
-                                   width: 1
-                               ),
-                               shape: BoxShape.rectangle
-                               ),
-                               child: SizedBox.fromSize(
-                                 size: const Size.fromRadius(50), // Image radius
-                                 child: Image.file(logoFile, fit: BoxFit.cover,width: 70, height: 70,),
-                               )
-                           )
-                         : Container(
-                             width: 120,
-                             height: 120,
-                             alignment: Alignment.center,
-                             decoration: BoxDecoration(
-                                 borderRadius: BorderRadius.circular(12), // if you need this
-                                 border: Border.all(
-                                     color: grayDividerDetail,
-                                     width: 1
-                                 ),
-                                 shape: BoxShape.rectangle
-                             ),
-                         child: logoPic.isEmpty
-                             ? Padding(
-                               padding: const EdgeInsets.all(0.0),
-                               child: Image.asset('assets/images/ic_user.png',fit: BoxFit.cover, color: grayDividerDetail, width: 70, height: 70,),
-                             )
-                             : SizedBox.fromSize(
-                               size: const Size.fromRadius(50), // Image radius
-                               child: Image.network(logoPic, fit: BoxFit.cover,width: 70, height: 70,),
-                             )
-                     )
-                 ),
-                 const Gap(16),
-                 Container(
-                   margin: const EdgeInsets.only(top: 30, bottom: 10),
-                   width: MediaQuery.of(context).size.width,
-                   child: getCommonButtonLoad("Save", isLoading,  () {
-                     {
-                       if (nameController.text.isEmpty)
-                       {
-                         showSnackBar("Please enter your name", context);
-                       }
-                       else if(emailController.text.isEmpty)
-                       {
-                         showSnackBar("Please enter your email address", context);
-                       }
-                       else if (!isValidEmail(emailController.text))
-                       {
-                         showSnackBar("Please enter valid email address", context);
-                       }
-                       else if(mobileController.text.isEmpty)
-                       {
-                         showSnackBar("Please enter your mobile number", context);
-                       }
-                       else if (mobileController.text.length != 10) {
-                         showSnackBar('Please enter valid phone number',context);
-                       }
-                       else if(businessNameController.text.isEmpty)
-                       {
-                         showSnackBar("Please enter your business name", context);
-                       }
-                       else if(countryController.text.isEmpty)
-                       {
-                         showSnackBar("Please select country", context);
-                       }
-                       else if(stateController.text.isEmpty)
-                       {
-                         showSnackBar("Please select state", context);
-                       }
-                       else if(cityController.text.isEmpty)
-                       {
-                         showSnackBar("Please select city", context);
-                       }
-                       else
-                       {
-                         _profileSaveApi();
-                       }
-                     }
-                   }),
-                 ),
-               ],
-             ),
-           )
-         ),
-       ),
-     onWillPop: () {
-       Navigator.pop(context);
-       return Future.value(true);
-     },
-   );
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        if(didPop){
+          return;
+        }
+        Navigator.pop(context);
+      },
+      child: Scaffold(
+        backgroundColor: chicken_bg,
+        appBar:AppBar(
+          toolbarHeight: kToolbarHeight,
+          automaticallyImplyLeading: false,
+          title: getTitle("Profile"),
+          leading: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child:getBackArrowBlack()
+          ),
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor: chicken_bg,
+        ),
+        body: SingleChildScrollView(
+            child: Container(
+              margin: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(kContainerCornerRadius),
+                color: white,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Gap(22),
+                  Center(
+                    child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () {
+                          _showBottomSheetForImagePicker("Profile Pic");
+                        },
+                        child: Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            profilePicFile.path.isNotEmpty
+                                ? Container(
+                                width: 120,
+                                height: 120,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: black, width: 1),
+                                    shape: BoxShape.circle
+                                ),
+                                child: ClipOval(
+                                  child: SizedBox.fromSize(
+                                    size: const Size.fromRadius(120), // Image radius
+                                    child: Image.file(profilePicFile, fit: BoxFit.cover,width: 120, height: 120,),
+                                  ),
+                                )
+                            )
+                                : Container(
+                                width: 120,
+                                height: 120,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: black, width: 1),
+                                    shape: BoxShape.circle
+                                ),
+                                child: profilePic.isEmpty
+                                    ? Padding(
+                                  padding: const EdgeInsets.all(0.0),
+                                  child: Image.asset('assets/images/ic_user.png',fit: BoxFit.cover,color: black,),
+                                )
+                                    : ClipOval(
+                                  child: SizedBox.fromSize(
+                                    size: const Size.fromRadius(120), // Image radius
+                                    child: Image.network(profilePic, fit: BoxFit.cover,width: 120, height: 120,),
+                                  ),
+                                )
+                            ),
+                            Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: const BoxDecoration(
+                                  color: white,
+                                  borderRadius: BorderRadius.all(Radius.circular(16),),
+                                ),
+                                child: Image.asset('assets/images/ic_edit.png',height: 14,width: 14, fit: BoxFit.contain,)
+                            ),
+                          ],)),
+                  ),
+                  const Gap(22),
+                  TextField(
+                    readOnly: false,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    textCapitalization: TextCapitalization.words,
+                    cursorColor: black,
+                    controller: nameController,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: subTitle,
+                      color: black,
+                    ),
+                    decoration: InputDecoration(
+                      // fillColor: grayForDetail,
+                      // filled: true,
+                      labelText: 'Name',
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
+                      counterText: "",
+                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
+                    ),
+                  ),
+                  const Gap(16),
+                  TextField(
+                    readOnly: true,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    textCapitalization: TextCapitalization.words,
+                    cursorColor: black,
+                    controller: userNameController,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: subTitle,
+                      color: black,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: 'User Name',
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
+                      counterText: "",
+                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
+                    ),
+                  ),
+                  const Gap(16),
+                  TextField(
+                    readOnly: true,
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
+                    cursorColor: black,
+                    controller:emailController,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: subTitle,
+                      color: black,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: 'Email Address',
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
+                      counterText: "",
+                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
+                    ),
+                  ),
+                  const Gap(16),
+                  TextField(
+                    readOnly: false,
+                    keyboardType: TextInputType.phone,
+                    textInputAction: TextInputAction.next,
+                    cursorColor: black,
+                    maxLength: 10,
+                    controller:mobileController,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: subTitle,
+                      color: black,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: 'Mobile Number',
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14),
+                      counterText: "",
+                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
+                    ),
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  ),
+                  const Gap(16),
+                  TextField(
+                    readOnly: false,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    textCapitalization: TextCapitalization.words,
+                    cursorColor: black,
+                    maxLength: 10,
+                    controller: businessNameController,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: subTitle,
+                      color: black,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: 'Business Name',
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
+                      counterText: "",
+                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
+                    ),
+                  ),
+                  const Gap(16),
+                  TextField(
+                    readOnly: false,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    cursorColor: black,
+                    maxLength: 10,
+                    controller: websiteController,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: subTitle,
+                      color: black,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: 'Website',
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
+                      counterText: "",
+                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
+                    ),
+                  ),
+                  const Gap(16),
+                  TextField(
+                    readOnly: false,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    textCapitalization: TextCapitalization.words,
+                    cursorColor: black,
+                    controller: addressLine1Controller,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: subTitle,
+                      color: black,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: 'Address Line - 1 ',
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
+                      counterText: "",
+                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
+                    ),
+                  ),
+                  const Gap(16),
+                  TextField(
+                    readOnly: false,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    textCapitalization: TextCapitalization.words,
+                    cursorColor: black,
+                    controller: addressLine2Controller,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: subTitle,
+                      color: black,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: 'Address Line - 2 ',
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
+                      counterText: "",
+                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
+                    ),
+                  ),
+                  const Gap(16),
+                  TextField(
+                    readOnly: false,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    textCapitalization: TextCapitalization.words,
+                    cursorColor: black,
+                    controller: addressLine3Controller,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: subTitle,
+                      color: black,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: 'Address Line - 3 ',
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
+                      counterText: "",
+                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
+                    ),
+                  ),
+                  const Gap(16),
+                  TextField(
+                    readOnly: false,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    textCapitalization: TextCapitalization.words,
+                    cursorColor: black,
+                    controller: addressLine4Controller,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: subTitle,
+                      color: black,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: 'Address Line - 4 ',
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
+                      counterText: "",
+                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
+                    ),
+                  ),
+                  const Gap(16),
+                  TextField(
+                    readOnly: true,
+                    textInputAction: TextInputAction.next,
+                    cursorColor: black,
+                    controller: countryController,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: subTitle,
+                      color: black,
+                    ),
+                    onTap: (){
+                      openCountryBottomSheet();
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Country',
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
+                      counterText: "",
+                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
+                    ),
+                  ),
+                  const Gap(16),
+                  TextField(
+                    readOnly: true,
+                    keyboardType: TextInputType.text,
+                    cursorColor: black,
+                    controller: stateController,
+                    style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      fontSize: subTitle,
+                      color: black,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: 'State',
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
+                      counterText: "",
+                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
+                    ),
+                    onTap: () {
+                      if(countryId.isEmpty){
+                        showSnackBar("Please select country", context);
+                      }
+                      else{
+                        openSateBottomSheet();
+                      }
+                    },
+                  ),
+                  const Gap(16),
+                  TextField(
+                    readOnly: true,
+                    keyboardType: TextInputType.text,
+                    cursorColor: black,
+                    controller: cityController,
+                    style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      fontSize: subTitle,
+                      color: black,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: 'City',
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
+                      counterText: "",
+                      labelStyle:  TextStyle(fontSize: description, color:gray_dark),
+                    ),
+                    onTap: () {
+                      if(stateId.isEmpty) {
+                        showSnackBar("Please Select State", context);
+                      }
+                      else if(_cityList.isEmpty) {
+                        showSnackBar("No Cities Found", context);
+                      }
+                      else{
+                        openCityBottomSheet();
+                      }
+                    },
+                  ),
+                  const Gap(16),
+                  Text('Upload Business Logo',
+                    style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),
+                  ),
+                  const Gap(16),
+                  GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: (){
+                        _showBottomSheetForImagePicker("Upload Logo");
+                      },
+                      child: logoFile.path.isNotEmpty
+                          ? Container(
+                          width: 120,
+                          height: 120,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                  color: grayDividerDetail,
+                                  width: 1
+                              ),
+                              shape: BoxShape.rectangle
+                          ),
+                          child: SizedBox.fromSize(
+                            size: const Size.fromRadius(50), // Image radius
+                            child: Image.file(logoFile, fit: BoxFit.cover,width: 70, height: 70,),
+                          )
+                      )
+                          : Container(
+                          width: 120,
+                          height: 120,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12), // if you need this
+                              border: Border.all(
+                                  color: grayDividerDetail,
+                                  width: 1
+                              ),
+                              shape: BoxShape.rectangle
+                          ),
+                          child: logoPic.isEmpty
+                              ? Padding(
+                            padding: const EdgeInsets.all(0.0),
+                            child: Image.asset('assets/images/ic_user.png',fit: BoxFit.cover, color: grayDividerDetail, width: 70, height: 70,),
+                          )
+                              : SizedBox.fromSize(
+                            size: const Size.fromRadius(50), // Image radius
+                            child: Image.network(logoPic, fit: BoxFit.cover,width: 70, height: 70,),
+                          )
+                      )
+                  ),
+                  const Gap(16),
+                  Container(
+                    margin: const EdgeInsets.only(top: 30, bottom: 10),
+                    width: MediaQuery.of(context).size.width,
+                    child: getCommonButtonLoad("Save", isLoading,  () {
+                      {
+                        if (nameController.text.isEmpty)
+                        {
+                          showSnackBar("Please enter your name", context);
+                        }
+                        else if(emailController.text.isEmpty)
+                        {
+                          showSnackBar("Please enter your email address", context);
+                        }
+                        else if (!isValidEmail(emailController.text))
+                        {
+                          showSnackBar("Please enter valid email address", context);
+                        }
+                        else if(mobileController.text.isEmpty)
+                        {
+                          showSnackBar("Please enter your mobile number", context);
+                        }
+                        else if (mobileController.text.length != 10) {
+                          showSnackBar('Please enter valid phone number',context);
+                        }
+                        else if(businessNameController.text.isEmpty)
+                        {
+                          showSnackBar("Please enter your business name", context);
+                        }
+                        else if(countryController.text.isEmpty)
+                        {
+                          showSnackBar("Please select country", context);
+                        }
+                        else if(stateController.text.isEmpty)
+                        {
+                          showSnackBar("Please select state", context);
+                        }
+                        else if(cityController.text.isEmpty)
+                        {
+                          showSnackBar("Please select city", context);
+                        }
+                        else
+                        {
+                          _profileSaveApi();
+                        }
+                      }
+                    }),
+                  ),
+                ],
+              ),
+            )
+        ),
+      ),
+    );
   }
 
   @override

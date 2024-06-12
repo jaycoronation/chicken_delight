@@ -38,11 +38,18 @@ class _FullScreenImageZoom extends BaseState<FullScreenImageZoom> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () {
+    return PopScope(
+        canPop: true,
+        onPopInvoked: (didPop){
+          if(didPop){
+            return;
+          }
+          Navigator.pop(context);
+        },
+        /*onWillPop: () {
           Navigator.pop(context);
           return Future.value(true);
-        },
+        },*/
       child: Scaffold(
           backgroundColor: appBG,
           body: Container(
