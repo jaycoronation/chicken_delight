@@ -143,7 +143,7 @@ class PushNotificationService {
         var contentType = "";
          message?.data.forEach((key, value)
          {
-          print("KEY=== " +  key);
+          print("KEY=== " +  value);
             if (key == "content_id")
             {
               orderId = value;

@@ -29,3 +29,5 @@ String userProfile = "manageuser/userprofile";
 String updateDeviceToken = "update_device_token";
 String getDeviceTokenUrl = "get_device_token";
 String removeDeviceToken = "remove_device_token";
+
+String notificationList = "notification/list";

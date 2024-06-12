@@ -1,9 +1,7 @@
 import 'dart:convert';
 
 import 'package:chicken_delight/model/common/CommonResponseModel.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import '../common_widget/common_widget.dart';

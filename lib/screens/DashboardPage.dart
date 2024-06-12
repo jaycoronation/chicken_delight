@@ -315,7 +315,6 @@ class _DashboardPageState extends BaseState<DashboardPage> {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () async {
-              print(checkValidString(listOrders[index].id));
               orderDetailPage(context, checkValidString(listOrders[index].id));
             },
             child: Container(
@@ -374,7 +373,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                     const Gap(4),
                     Expanded(
                         child: Container(
-                          margin: EdgeInsets.only(top: 2),
+                          margin: const EdgeInsets.only(top: 2),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -386,7 +385,8 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                                   textAlign: TextAlign.start,maxLines: 1,
                                   style:  TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: small)),
                               const Gap(6),
-                              Text(checkValidString(listOrders[index].remarks), textAlign: TextAlign.start, maxLines: 1,
+                              Text(listOrders[index].remarks!.isNotEmpty ? checkValidString(listOrders[index].remarks) : "-",
+                                  textAlign: TextAlign.start, maxLines: 1,
                                   style: TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: small)),
                               const Gap(6),
                               Text(getDateFromTimestamp(checkValidString(listOrders[index].timestamp)), textAlign: TextAlign.start, maxLines: 1,
