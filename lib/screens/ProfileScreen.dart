@@ -103,14 +103,14 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(kTextFieldCornerRadius),
                                         ),
-                                        child: sessionManager.getImagePic().toString().isNotEmpty ? FadeInImage.assetNetwork(
+                                        child: sessionManager.getImagePic().toString().isNotEmpty
+                                            ? FadeInImage.assetNetwork(
                                           image: sessionManager.getImagePic().toString(),
                                           fit: BoxFit.cover,
                                           width: 60,
                                           height: 60,
                                           placeholder: 'assets/images/ic_placeholder.png',
-                                        ) : Image.asset('assets/images/ic_placeholder.png',  width: 60,
-                                            height: 60)
+                                        ) : Image.asset('assets/images/ic_placeholder.png', width: 60, height: 60)
                                     ),
                                   ),
                                   const Gap(4),

@@ -1,5 +1,5 @@
 import 'dart:convert';
-/// record : {"id":"2","order_number":"IN06240000002","sub_total":"5855","grand_total":"5930","status":"Cancelled","created_for":"5","created_by":"5","remarks":"","timestamp":"03-06-2024","payment_status":"Pending","order_stages":[{"status_id":"2","order_id":"2","status":"Accepted","remarks":null,"timestamp":"03-06-2024 ,11:12 AM"},{"status_id":"3","order_id":"2","status":"Processed","remarks":"","timestamp":"03-06-2024 ,11:16 AM"},{"status_id":"7","order_id":"2","status":"Cancelled","remarks":"","timestamp":"03-06-2024 ,04:13 PM"}],"franchise_name":"Portage Ave","address_line_1":"1855a Portage Ave","address_line_2":"MB R3J 0G8","address_line_3":"","address_line_4":"","warehouse_name":"Alberta","ware_address_line_1":"21 adam street","ware_address_line_2":"","ware_address_line_3":"","ware_address_line_4":"","items_list":[{"category":"Chicken","items":[{"id":"5","order_id":"2","item_id":"502","item":"chicken-24","category_id":"32","category":"Chicken","base_price":"77","amount":"385","sku_code":"741258","unit":"pieces","quantity":"5","timestamp":"1717393328","image_name":null,"image":"https://chickendelight.saltpixels.in/api/assets/upload/items/default.png"},{"id":"6","order_id":"2","item_id":"503","item":"test -Variation","category_id":"32","category":"Chicken","base_price":"110","amount":"1430","sku_code":"skucode","unit":"kg","quantity":"13","timestamp":"1717393328","image_name":null,"image":"https://chickendelight.saltpixels.in/api/assets/upload/items/default.png"}]},{"category":"Food","items_category":[{"id":"7","order_id":"2","item_id":"504","item":"test-variation material","category_id":"1","category":"Food","base_price":"1010","amount":"4040","sku_code":"sku","unit":"lt","quantity":"4","timestamp":"1717393328","image_name":null,"image":"https://chickendelight.saltpixels.in/api/assets/upload/items/default.png"}]}]}
+/// order_detail_record : {"id":"18","order_number":"IN06240000018","sub_total":"133.92","grand_total":"208.92","status":"Delivered","created_for":"12","created_by":"12","remarks":"TEST","timestamp":"Jun 10, 2024 07:59 PM","payment_status":"Completed","order_stages":[{"status_id":"40","order_id":"18","status":"Delivered","remarks":"","timestamp":"Jun 10, 2024, 07:59 PM"}],"franchise_name":"Portage Ave","address_line_1":"1855a Portage Ave","address_line_2":"MB R3J 0G8","address_line_3":"New Road","address_line_4":"Near Highway","franchise_email":"john@chickendelight.com","franchise_mobile":"9825589659","country":"Canada","state_id":"868","city_id":"16441","state":"New Brunswick","city":"Fredericton","warehouse_name":"Alberta","ware_address_line_1":"21 adam street","ware_address_line_2":"","ware_address_line_3":"","ware_address_line_4":"","total_items":"2","items_main_list":[{"category":"Food","items_inner_list":[{"id":"29","order_id":"18","item_id":"11","item":"BAG SHREDDED MOZZA CHEESE 20 LB / 9.07 KG.-BAG SHREDDED MOZZA CHEESE 10 LB / 4.55 KG.","category_id":"1","category":"Food","base_price":"33.48","amount":"66.96","sku_code":"MOZCHS10LB","unit":"lb","quantity":"2","timestamp":"1718029770","stock":10,"image":"https://chickendelight.saltpixels.in/api/assets/upload/items/default.png"}]}]}
 /// message : "order details found"
 /// success : 1
 
@@ -7,37 +7,37 @@ OrderDetailResponseModel orderDetailResponseModelFromJson(String str) => OrderDe
 String orderDetailResponseModelToJson(OrderDetailResponseModel data) => json.encode(data.toJson());
 class OrderDetailResponseModel {
   OrderDetailResponseModel({
-      Record? record, 
+      OrderDetailRecord? orderDetailRecord, 
       String? message, 
       num? success,}){
-    _record = record;
+    _orderDetailRecord = orderDetailRecord;
     _message = message;
     _success = success;
 }
 
   OrderDetailResponseModel.fromJson(dynamic json) {
-    _record = json['record'] != null ? Record.fromJson(json['record']) : null;
+    _orderDetailRecord = json['record'] != null ? OrderDetailRecord.fromJson(json['record']) : null;
     _message = json['message'];
     _success = json['success'];
   }
-  Record? _record;
+  OrderDetailRecord? _orderDetailRecord;
   String? _message;
   num? _success;
-OrderDetailResponseModel copyWith({  Record? record,
+OrderDetailResponseModel copyWith({  OrderDetailRecord? orderDetailRecord,
   String? message,
   num? success,
-}) => OrderDetailResponseModel(  record: record ?? _record,
+}) => OrderDetailResponseModel(  orderDetailRecord: orderDetailRecord ?? _orderDetailRecord,
   message: message ?? _message,
   success: success ?? _success,
 );
-  Record? get record => _record;
+  OrderDetailRecord? get orderDetailRecord => _orderDetailRecord;
   String? get message => _message;
   num? get success => _success;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    if (_record != null) {
-      map['record'] = _record?.toJson();
+    if (_orderDetailRecord != null) {
+      map['record'] = _orderDetailRecord?.toJson();
     }
     map['message'] = _message;
     map['success'] = _success;
@@ -46,33 +46,41 @@ OrderDetailResponseModel copyWith({  Record? record,
 
 }
 
-/// id : "2"
-/// order_number : "IN06240000002"
-/// sub_total : "5855"
-/// grand_total : "5930"
-/// status : "Cancelled"
-/// created_for : "5"
-/// created_by : "5"
-/// remarks : ""
-/// timestamp : "03-06-2024"
-/// payment_status : "Pending"
-/// order_stages : [{"status_id":"2","order_id":"2","status":"Accepted","remarks":null,"timestamp":"03-06-2024 ,11:12 AM"},{"status_id":"3","order_id":"2","status":"Processed","remarks":"","timestamp":"03-06-2024 ,11:16 AM"},{"status_id":"7","order_id":"2","status":"Cancelled","remarks":"","timestamp":"03-06-2024 ,04:13 PM"}]
+/// id : "18"
+/// order_number : "IN06240000018"
+/// sub_total : "133.92"
+/// grand_total : "208.92"
+/// status : "Delivered"
+/// created_for : "12"
+/// created_by : "12"
+/// remarks : "TEST"
+/// timestamp : "Jun 10, 2024 07:59 PM"
+/// payment_status : "Completed"
+/// order_stages : [{"status_id":"40","order_id":"18","status":"Delivered","remarks":"","timestamp":"Jun 10, 2024, 07:59 PM"}]
 /// franchise_name : "Portage Ave"
 /// address_line_1 : "1855a Portage Ave"
 /// address_line_2 : "MB R3J 0G8"
-/// address_line_3 : ""
-/// address_line_4 : ""
+/// address_line_3 : "New Road"
+/// address_line_4 : "Near Highway"
+/// franchise_email : "john@chickendelight.com"
+/// franchise_mobile : "9825589659"
+/// country : "Canada"
+/// state_id : "868"
+/// city_id : "16441"
+/// state : "New Brunswick"
+/// city : "Fredericton"
 /// warehouse_name : "Alberta"
 /// ware_address_line_1 : "21 adam street"
 /// ware_address_line_2 : ""
 /// ware_address_line_3 : ""
 /// ware_address_line_4 : ""
-/// items_list : [{"category":"Chicken","items":[{"id":"5","order_id":"2","item_id":"502","item":"chicken-24","category_id":"32","category":"Chicken","base_price":"77","amount":"385","sku_code":"741258","unit":"pieces","quantity":"5","timestamp":"1717393328","image_name":null,"image":"https://chickendelight.saltpixels.in/api/assets/upload/items/default.png"},{"id":"6","order_id":"2","item_id":"503","item":"test -Variation","category_id":"32","category":"Chicken","base_price":"110","amount":"1430","sku_code":"skucode","unit":"kg","quantity":"13","timestamp":"1717393328","image_name":null,"image":"https://chickendelight.saltpixels.in/api/assets/upload/items/default.png"}]},{"category":"Food","items_category":[{"id":"7","order_id":"2","item_id":"504","item":"test-variation material","category_id":"1","category":"Food","base_price":"1010","amount":"4040","sku_code":"sku","unit":"lt","quantity":"4","timestamp":"1717393328","image_name":null,"image":"https://chickendelight.saltpixels.in/api/assets/upload/items/default.png"}]}]
+/// total_items : "2"
+/// items_main_list : [{"category":"Food","items_inner_list":[{"id":"29","order_id":"18","item_id":"11","item":"BAG SHREDDED MOZZA CHEESE 20 LB / 9.07 KG.-BAG SHREDDED MOZZA CHEESE 10 LB / 4.55 KG.","category_id":"1","category":"Food","base_price":"33.48","amount":"66.96","sku_code":"MOZCHS10LB","unit":"lb","quantity":"2","timestamp":"1718029770","stock":10,"image":"https://chickendelight.saltpixels.in/api/assets/upload/items/default.png"}]}]
 
-Record recordFromJson(String str) => Record.fromJson(json.decode(str));
-String recordToJson(Record data) => json.encode(data.toJson());
-class Record {
-  Record({
+OrderDetailRecord orderDetailRecordFromJson(String str) => OrderDetailRecord.fromJson(json.decode(str));
+String orderDetailRecordToJson(OrderDetailRecord data) => json.encode(data.toJson());
+class OrderDetailRecord {
+  OrderDetailRecord({
       String? id, 
       String? orderNumber, 
       String? subTotal, 
@@ -89,12 +97,20 @@ class Record {
       String? addressLine2, 
       String? addressLine3, 
       String? addressLine4, 
+      String? franchiseEmail, 
+      String? franchiseMobile, 
+      String? country, 
+      String? stateId, 
+      String? cityId, 
+      String? state, 
+      String? city, 
       String? warehouseName, 
       String? wareAddressLine1, 
       String? wareAddressLine2, 
       String? wareAddressLine3, 
       String? wareAddressLine4, 
-      List<ItemsList>? itemsList,}){
+      String? totalItems, 
+      List<ItemsMainList>? itemsMainList,}){
     _id = id;
     _orderNumber = orderNumber;
     _subTotal = subTotal;
@@ -111,15 +127,23 @@ class Record {
     _addressLine2 = addressLine2;
     _addressLine3 = addressLine3;
     _addressLine4 = addressLine4;
+    _franchiseEmail = franchiseEmail;
+    _franchiseMobile = franchiseMobile;
+    _country = country;
+    _stateId = stateId;
+    _cityId = cityId;
+    _state = state;
+    _city = city;
     _warehouseName = warehouseName;
     _wareAddressLine1 = wareAddressLine1;
     _wareAddressLine2 = wareAddressLine2;
     _wareAddressLine3 = wareAddressLine3;
     _wareAddressLine4 = wareAddressLine4;
-    _itemsList = itemsList;
+    _totalItems = totalItems;
+    _itemsMainList = itemsMainList;
 }
 
-  Record.fromJson(dynamic json) {
+  OrderDetailRecord.fromJson(dynamic json) {
     _id = json['id'];
     _orderNumber = json['order_number'];
     _subTotal = json['sub_total'];
@@ -141,15 +165,23 @@ class Record {
     _addressLine2 = json['address_line_2'];
     _addressLine3 = json['address_line_3'];
     _addressLine4 = json['address_line_4'];
+    _franchiseEmail = json['franchise_email'];
+    _franchiseMobile = json['franchise_mobile'];
+    _country = json['country'];
+    _stateId = json['state_id'];
+    _cityId = json['city_id'];
+    _state = json['state'];
+    _city = json['city'];
     _warehouseName = json['warehouse_name'];
     _wareAddressLine1 = json['ware_address_line_1'];
     _wareAddressLine2 = json['ware_address_line_2'];
     _wareAddressLine3 = json['ware_address_line_3'];
     _wareAddressLine4 = json['ware_address_line_4'];
+    _totalItems = json['total_items'];
     if (json['items'] != null) {
-      _itemsList = [];
+      _itemsMainList = [];
       json['items'].forEach((v) {
-        _itemsList?.add(ItemsList.fromJson(v));
+        _itemsMainList?.add(ItemsMainList.fromJson(v));
       });
     }
   }
@@ -169,13 +201,21 @@ class Record {
   String? _addressLine2;
   String? _addressLine3;
   String? _addressLine4;
+  String? _franchiseEmail;
+  String? _franchiseMobile;
+  String? _country;
+  String? _stateId;
+  String? _cityId;
+  String? _state;
+  String? _city;
   String? _warehouseName;
   String? _wareAddressLine1;
   String? _wareAddressLine2;
   String? _wareAddressLine3;
   String? _wareAddressLine4;
-  List<ItemsList>? _itemsList;
-Record copyWith({  String? id,
+  String? _totalItems;
+  List<ItemsMainList>? _itemsMainList;
+OrderDetailRecord copyWith({  String? id,
   String? orderNumber,
   String? subTotal,
   String? grandTotal,
@@ -191,13 +231,21 @@ Record copyWith({  String? id,
   String? addressLine2,
   String? addressLine3,
   String? addressLine4,
+  String? franchiseEmail,
+  String? franchiseMobile,
+  String? country,
+  String? stateId,
+  String? cityId,
+  String? state,
+  String? city,
   String? warehouseName,
   String? wareAddressLine1,
   String? wareAddressLine2,
   String? wareAddressLine3,
   String? wareAddressLine4,
-  List<ItemsList>? itemsList,
-}) => Record(  id: id ?? _id,
+  String? totalItems,
+  List<ItemsMainList>? itemsMainList,
+}) => OrderDetailRecord(  id: id ?? _id,
   orderNumber: orderNumber ?? _orderNumber,
   subTotal: subTotal ?? _subTotal,
   grandTotal: grandTotal ?? _grandTotal,
@@ -213,12 +261,20 @@ Record copyWith({  String? id,
   addressLine2: addressLine2 ?? _addressLine2,
   addressLine3: addressLine3 ?? _addressLine3,
   addressLine4: addressLine4 ?? _addressLine4,
+  franchiseEmail: franchiseEmail ?? _franchiseEmail,
+  franchiseMobile: franchiseMobile ?? _franchiseMobile,
+  country: country ?? _country,
+  stateId: stateId ?? _stateId,
+  cityId: cityId ?? _cityId,
+  state: state ?? _state,
+  city: city ?? _city,
   warehouseName: warehouseName ?? _warehouseName,
   wareAddressLine1: wareAddressLine1 ?? _wareAddressLine1,
   wareAddressLine2: wareAddressLine2 ?? _wareAddressLine2,
   wareAddressLine3: wareAddressLine3 ?? _wareAddressLine3,
   wareAddressLine4: wareAddressLine4 ?? _wareAddressLine4,
-  itemsList: itemsList ?? _itemsList,
+  totalItems: totalItems ?? _totalItems,
+  itemsMainList: itemsMainList ?? _itemsMainList,
 );
   String? get id => _id;
   String? get orderNumber => _orderNumber;
@@ -236,12 +292,20 @@ Record copyWith({  String? id,
   String? get addressLine2 => _addressLine2;
   String? get addressLine3 => _addressLine3;
   String? get addressLine4 => _addressLine4;
+  String? get franchiseEmail => _franchiseEmail;
+  String? get franchiseMobile => _franchiseMobile;
+  String? get country => _country;
+  String? get stateId => _stateId;
+  String? get cityId => _cityId;
+  String? get state => _state;
+  String? get city => _city;
   String? get warehouseName => _warehouseName;
   String? get wareAddressLine1 => _wareAddressLine1;
   String? get wareAddressLine2 => _wareAddressLine2;
   String? get wareAddressLine3 => _wareAddressLine3;
   String? get wareAddressLine4 => _wareAddressLine4;
-  List<ItemsList>? get itemsList => _itemsList;
+  String? get totalItems => _totalItems;
+  List<ItemsMainList>? get itemsMainList => _itemsMainList;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -263,81 +327,89 @@ Record copyWith({  String? id,
     map['address_line_2'] = _addressLine2;
     map['address_line_3'] = _addressLine3;
     map['address_line_4'] = _addressLine4;
+    map['franchise_email'] = _franchiseEmail;
+    map['franchise_mobile'] = _franchiseMobile;
+    map['country'] = _country;
+    map['state_id'] = _stateId;
+    map['city_id'] = _cityId;
+    map['state'] = _state;
+    map['city'] = _city;
     map['warehouse_name'] = _warehouseName;
     map['ware_address_line_1'] = _wareAddressLine1;
     map['ware_address_line_2'] = _wareAddressLine2;
     map['ware_address_line_3'] = _wareAddressLine3;
     map['ware_address_line_4'] = _wareAddressLine4;
-    if (_itemsList != null) {
-      map['items_list'] = _itemsList?.map((v) => v.toJson()).toList();
+    map['total_items'] = _totalItems;
+    if (_itemsMainList != null) {
+      map['items'] = _itemsMainList?.map((v) => v.toJson()).toList();
     }
     return map;
   }
 
 }
 
-/// category : "Chicken"
-/// items : [{"id":"5","order_id":"2","item_id":"502","item":"chicken-24","category_id":"32","category":"Chicken","base_price":"77","amount":"385","sku_code":"741258","unit":"pieces","quantity":"5","timestamp":"1717393328","image_name":null,"image":"https://chickendelight.saltpixels.in/api/assets/upload/items/default.png"},{"id":"6","order_id":"2","item_id":"503","item":"test -Variation","category_id":"32","category":"Chicken","base_price":"110","amount":"1430","sku_code":"skucode","unit":"kg","quantity":"13","timestamp":"1717393328","image_name":null,"image":"https://chickendelight.saltpixels.in/api/assets/upload/items/default.png"}]
+/// category : "Food"
+/// items_inner_list : [{"id":"29","order_id":"18","item_id":"11","item":"BAG SHREDDED MOZZA CHEESE 20 LB / 9.07 KG.-BAG SHREDDED MOZZA CHEESE 10 LB / 4.55 KG.","category_id":"1","category":"Food","base_price":"33.48","amount":"66.96","sku_code":"MOZCHS10LB","unit":"lb","quantity":"2","timestamp":"1718029770","stock":10,"image":"https://chickendelight.saltpixels.in/api/assets/upload/items/default.png"}]
 
-ItemsList itemsListFromJson(String str) => ItemsList.fromJson(json.decode(str));
-String itemsListToJson(ItemsList data) => json.encode(data.toJson());
-class ItemsList {
-  ItemsList({
+ItemsMainList itemsMainListFromJson(String str) => ItemsMainList.fromJson(json.decode(str));
+String itemsMainListToJson(ItemsMainList data) => json.encode(data.toJson());
+class ItemsMainList {
+  ItemsMainList({
       String? category, 
-      List<Items>? items,}){
+      List<ItemsInnerList>? itemsInnerList,}){
     _category = category;
-    _items = items;
+    _itemsInnerList = itemsInnerList;
 }
 
-  ItemsList.fromJson(dynamic json) {
+  ItemsMainList.fromJson(dynamic json) {
     _category = json['category'];
     if (json['items'] != null) {
-      _items = [];
+      _itemsInnerList = [];
       json['items'].forEach((v) {
-        _items?.add(Items.fromJson(v));
+        _itemsInnerList?.add(ItemsInnerList.fromJson(v));
       });
     }
   }
   String? _category;
-  List<Items>? _items;
-ItemsList copyWith({  String? category,
-  List<Items>? items,
-}) => ItemsList(  category: category ?? _category,
-  items: items ?? _items,
+  List<ItemsInnerList>? _itemsInnerList;
+ItemsMainList copyWith({  String? category,
+  List<ItemsInnerList>? itemsInnerList,
+}) => ItemsMainList(  category: category ?? _category,
+  itemsInnerList: itemsInnerList ?? _itemsInnerList,
 );
   String? get category => _category;
-  List<Items>? get items => _items;
+  List<ItemsInnerList>? get itemsInnerList => _itemsInnerList;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['category'] = _category;
-    if (_items != null) {
-      map['items'] = _items?.map((v) => v.toJson()).toList();
+    if (_itemsInnerList != null) {
+      map['items'] = _itemsInnerList?.map((v) => v.toJson()).toList();
     }
     return map;
   }
 
 }
 
-/// id : "5"
-/// order_id : "2"
-/// item_id : "502"
-/// item : "chicken-24"
-/// category_id : "32"
-/// category : "Chicken"
-/// base_price : "77"
-/// amount : "385"
-/// sku_code : "741258"
-/// unit : "pieces"
-/// quantity : "5"
-/// timestamp : "1717393328"
-/// image_name : null
+/// id : "29"
+/// order_id : "18"
+/// item_id : "11"
+/// item : "BAG SHREDDED MOZZA CHEESE 20 LB / 9.07 KG.-BAG SHREDDED MOZZA CHEESE 10 LB / 4.55 KG."
+/// category_id : "1"
+/// category : "Food"
+/// base_price : "33.48"
+/// amount : "66.96"
+/// sku_code : "MOZCHS10LB"
+/// unit : "lb"
+/// quantity : "2"
+/// timestamp : "1718029770"
+/// stock : 10
 /// image : "https://chickendelight.saltpixels.in/api/assets/upload/items/default.png"
 
-Items itemsFromJson(String str) => Items.fromJson(json.decode(str));
-String itemsToJson(Items data) => json.encode(data.toJson());
-class Items {
-  Items({
+ItemsInnerList itemsInnerListFromJson(String str) => ItemsInnerList.fromJson(json.decode(str));
+String itemsInnerListToJson(ItemsInnerList data) => json.encode(data.toJson());
+class ItemsInnerList {
+  ItemsInnerList({
       String? id, 
       String? orderId, 
       String? itemId, 
@@ -350,7 +422,7 @@ class Items {
       String? unit, 
       String? quantity, 
       String? timestamp, 
-      dynamic imageName, 
+      num? stock, 
       String? image,}){
     _id = id;
     _orderId = orderId;
@@ -364,11 +436,11 @@ class Items {
     _unit = unit;
     _quantity = quantity;
     _timestamp = timestamp;
-    _imageName = imageName;
+    _stock = stock;
     _image = image;
 }
 
-  Items.fromJson(dynamic json) {
+  ItemsInnerList.fromJson(dynamic json) {
     _id = json['id'];
     _orderId = json['order_id'];
     _itemId = json['item_id'];
@@ -381,7 +453,7 @@ class Items {
     _unit = json['unit'];
     _quantity = json['quantity'];
     _timestamp = json['timestamp'];
-    _imageName = json['image_name'];
+    _stock = json['stock'];
     _image = json['image'];
   }
   String? _id;
@@ -396,9 +468,9 @@ class Items {
   String? _unit;
   String? _quantity;
   String? _timestamp;
-  dynamic _imageName;
+  num? _stock;
   String? _image;
-Items copyWith({  String? id,
+ItemsInnerList copyWith({  String? id,
   String? orderId,
   String? itemId,
   String? item,
@@ -410,9 +482,9 @@ Items copyWith({  String? id,
   String? unit,
   String? quantity,
   String? timestamp,
-  dynamic imageName,
+  num? stock,
   String? image,
-}) => Items(  id: id ?? _id,
+}) => ItemsInnerList(  id: id ?? _id,
   orderId: orderId ?? _orderId,
   itemId: itemId ?? _itemId,
   item: item ?? _item,
@@ -424,7 +496,7 @@ Items copyWith({  String? id,
   unit: unit ?? _unit,
   quantity: quantity ?? _quantity,
   timestamp: timestamp ?? _timestamp,
-  imageName: imageName ?? _imageName,
+  stock: stock ?? _stock,
   image: image ?? _image,
 );
   String? get id => _id;
@@ -439,7 +511,7 @@ Items copyWith({  String? id,
   String? get unit => _unit;
   String? get quantity => _quantity;
   String? get timestamp => _timestamp;
-  dynamic get imageName => _imageName;
+  num? get stock => _stock;
   String? get image => _image;
 
   Map<String, dynamic> toJson() {
@@ -456,18 +528,18 @@ Items copyWith({  String? id,
     map['unit'] = _unit;
     map['quantity'] = _quantity;
     map['timestamp'] = _timestamp;
-    map['image_name'] = _imageName;
+    map['stock'] = _stock;
     map['image'] = _image;
     return map;
   }
 
 }
 
-/// status_id : "2"
-/// order_id : "2"
-/// status : "Accepted"
-/// remarks : null
-/// timestamp : "03-06-2024 ,11:12 AM"
+/// status_id : "40"
+/// order_id : "18"
+/// status : "Delivered"
+/// remarks : ""
+/// timestamp : "Jun 10, 2024, 07:59 PM"
 
 OrderStages orderStagesFromJson(String str) => OrderStages.fromJson(json.decode(str));
 String orderStagesToJson(OrderStages data) => json.encode(data.toJson());
@@ -476,7 +548,7 @@ class OrderStages {
       String? statusId, 
       String? orderId, 
       String? status, 
-      dynamic remarks, 
+      String? remarks, 
       String? timestamp,}){
     _statusId = statusId;
     _orderId = orderId;
@@ -495,12 +567,12 @@ class OrderStages {
   String? _statusId;
   String? _orderId;
   String? _status;
-  dynamic _remarks;
+  String? _remarks;
   String? _timestamp;
 OrderStages copyWith({  String? statusId,
   String? orderId,
   String? status,
-  dynamic remarks,
+  String? remarks,
   String? timestamp,
 }) => OrderStages(  statusId: statusId ?? _statusId,
   orderId: orderId ?? _orderId,
@@ -511,7 +583,7 @@ OrderStages copyWith({  String? statusId,
   String? get statusId => _statusId;
   String? get orderId => _orderId;
   String? get status => _status;
-  dynamic get remarks => _remarks;
+  String? get remarks => _remarks;
   String? get timestamp => _timestamp;
 
   Map<String, dynamic> toJson() {

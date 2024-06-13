@@ -1,10 +1,8 @@
 import 'dart:io';
-import 'package:chicken_delight/constant/global_context.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import '../constant/colors.dart';
-import '../screens/AddOrderScreen.dart';
 import '../screens/DashboardPage.dart';
 import '../screens/OrderListPage.dart';
 import '../screens/ProductListScreen.dart';
@@ -38,8 +36,7 @@ class _TabNavigationPageState extends State<TabNavigation> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: canPop,
-
-      onPopInvoked: (didPop) async{
+      onPopInvoked: (didPop) async {
           if (_currentIndex != 0)
           {
             print("Is running if condition");
@@ -187,7 +184,7 @@ class _TabNavigationPageState extends State<TabNavigation> {
                                 ),
                               ),
                               BottomNavigationBarItem(
-                                label: 'Products',
+                                label: 'Items',
                                 icon: ImageIcon(
                                   AssetImage("assets/images/product_gray.png"),
                                 ),

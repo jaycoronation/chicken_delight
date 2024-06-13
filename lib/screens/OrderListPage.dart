@@ -423,7 +423,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                   child: GestureDetector(
                                     behavior: HitTestBehavior.opaque,
                                     onTap: () async {
-                                      showOrderSummery(context, checkValidString(listOrders[index].id), false);
+                                      showOrderSummery(context, checkValidString(listOrders[index].id));
                                       setState(() {
                                         isOrderListSearch = false;
                                       });
@@ -889,10 +889,10 @@ class _OrderListPageState extends BaseState<OrderListPage> {
     widget is OrderListPage;
   }
 
-  Future<void> showOrderSummery(BuildContext context, String orderID, bool isFromList) async {
+  Future<void> showOrderSummery(BuildContext context, String orderID) async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => OrderDetailScreen(orderID)),
+      MaterialPageRoute(builder: (context) => OrderDetailScreen(orderID, false)),
     );
     print("result ===== $result");
 

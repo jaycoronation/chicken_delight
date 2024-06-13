@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:chicken_delight/common_widget/CommonTextFiled.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:chicken_delight/model/OrderAddResponseModel.dart';
+import 'package:chicken_delight/screens/OrderDetailScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
@@ -46,10 +47,10 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
     });
 
     for (int i = 0; i < NavigationService.listItemsTmp.length; i++)
-      {
-        var total = num.parse(NavigationService.listItemsTmp[i].salePrice.toString()) * num.parse(NavigationService.listItemsTmp[i].quantity.toString());
-        NavigationService.listItemsTmp[i].amount = total;
-      }
+    {
+      var total = num.parse(NavigationService.listItemsTmp[i].salePrice.toString()) * num.parse(NavigationService.listItemsTmp[i].quantity.toString());
+      NavigationService.listItemsTmp[i].amount = total;
+    }
 
     getPriceCalculated();
     super.initState();
@@ -59,7 +60,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: true,
-      onPopInvoked: (didPop){
+      onPopInvoked: (didPop) {
         if(didPop){
           return;
         }
@@ -136,7 +137,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text(toDisplayCase(NavigationService.listItemsTmp[index].name ?? ""),
+                                          Text((NavigationService.listItemsTmp[index].name ?? ""),
                                             style: TextStyle(fontSize: small, color: black,fontWeight: FontWeight.w600,
                                               overflow: TextOverflow.clip,
                                             ),
@@ -569,7 +570,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
       print(response);
       final body = response.body;
       Map<String, dynamic> user = jsonDecode(body);
-      var dataResponse = CommonResponseModel.fromJson(user);
+      var dataResponse = OrderAddResponseModel.fromJson(user);
 
       if (statusCode == 200 && dataResponse.success == 1) {
         setState(() {
@@ -582,7 +583,8 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
         context.read<TextChanger>().setAddOrder("add");
         context.read<TextChanger>().refreshProduct("refreshProduct");
 
-        Navigator.pop(context);
+        startActivity(context, OrderDetailScreen(dataResponse.orderId?.toString() ?? "", true));
+      //  Navigator.pop(context);
 
         showSnackBar(dataResponse.message, context);
       } else {

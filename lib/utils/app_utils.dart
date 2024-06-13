@@ -86,11 +86,11 @@ showToast(String? message,BuildContext? context){
 }
 
 checkValidString (String? value) {
-  if (value == null || value == "null" || value == "<null>")
+  /*if (value == null || value == "null" || value == "<null>")
   {
     value = "";
-  }
-  return value.trim();
+  }*/
+  return value;
 }
 
 checkValidDouble (String? value) {

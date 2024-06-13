@@ -1,9 +1,7 @@
-
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:chicken_delight/model/GetProfileResponseModel.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
@@ -1174,14 +1172,19 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                                 itemBuilder: (BuildContext context, int i) {
                                   return InkWell(
                                     onTap: (){
+
                                       setState((){
                                         if(listCitySearch.isEmpty)
                                         {
                                           cityController.text = _cityList[i].name.toString();
+                                          cityId = "";
+                                          cityId = _cityList[i].id.toString();
                                         }
                                         else
                                         {
-                                          cityController.text = _cityList[i].name.toString();
+                                          cityController.text = listCitySearch[i].name.toString();
+                                          cityId = "";
+                                          cityId = listCitySearch[i].id.toString();
                                         }
                                       });
                                       Navigator.pop(context);
@@ -1376,13 +1379,14 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
     'address_line_4': addressLine4Controller.value.text,
     'country_id': countryId,
     'state_id': stateId,
-    'city_id': cityController.value.text,
+    'city_id': cityId,
     'mobile': mobileController.value.text,
     'type': sessionManager.getType() ?? "",
     'website': websiteController.value.text,
     'business_name': businessNameController.value.text,
     'country_code': "1",
     };
+    print("city id-----"+cityId.toString());
 
     final url = Uri.parse(MAIN_URL + updateProfile);
 

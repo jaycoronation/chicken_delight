@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:chicken_delight/model/ItemResponseModel.dart';
 import 'package:chicken_delight/model/common/CommonResponseModel.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -14,7 +15,8 @@ import '../utils/base_class.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   final String orderId;
-  const OrderDetailScreen(this.orderId, {Key? key}) : super(key: key);
+  final bool isFrom;
+  const OrderDetailScreen(this.orderId, this.isFrom, {Key? key}) : super(key: key);
 
   @override
   BaseState<OrderDetailScreen> createState() => _OrderDetailScreenState();
@@ -25,7 +27,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
   TextEditingController cancelRemarksController = TextEditingController();
 
   bool isLoading = false;
-  List<ItemsList> listItems = [];
+  List<ItemsMainList> listItems = [];
   String subTotal = "";
   String grandTotal = "";
   String wareAddressLine1 = "";
@@ -37,7 +39,9 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
   String orderNumber = "";
   String status = "";
   String orderId = "";
+  bool isFrom = false;
 
+  OrderDetailRecord orderDetailData = OrderDetailRecord();
 
   @override
   void initState() {
@@ -53,6 +57,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
       }
     });
     orderId = (widget as OrderDetailScreen).orderId.toString();
+    isFrom = (widget as OrderDetailScreen).isFrom;
 
     getOrderDetail();
     super.initState();
@@ -62,11 +67,21 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: true,
-      onPopInvoked: (didPop){
-        if(didPop){
+      onPopInvoked: (didPop) {
+        if(didPop) {
           return;
         }
-        Navigator.pop(context);
+        if (isFrom)
+        {
+          Navigator.pop(context);
+          Navigator.pop(context);
+          final BottomNavigationBar bar = bottomWidgetKey.currentWidget as BottomNavigationBar;
+          bar.onTap!(2);
+        }
+        else
+        {
+          Navigator.pop(context);
+        }
       },
         /*onWillPop: () {
          Navigator.pop(context);
@@ -74,16 +89,26 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
         },*/
         child: Scaffold(
           backgroundColor: chicken_bg,
-          appBar:AppBar(
+          appBar: AppBar(
             toolbarHeight: kToolbarHeight,
             automaticallyImplyLeading: false,
             title: getTitle("Order Detail"),
             leading: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  Navigator.pop(context);
+                  if (isFrom)
+                  {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    final BottomNavigationBar bar = bottomWidgetKey.currentWidget as BottomNavigationBar;
+                    bar.onTap!(2);
+                  }
+                  else
+                  {
+                    Navigator.pop(context);
+                  }
                 },
-                child:getBackArrowBlack()
+                child: getBackArrowBlack()
             ),
             centerTitle: true,
             elevation: 0,
@@ -138,10 +163,10 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                               ListView.builder(
                                   scrollDirection: Axis.vertical,
                                   shrinkWrap: true,
-                                  itemCount: listItems[index].items?.length,
+                                  itemCount: listItems[index].itemsInnerList?.length,
                                   physics: const ScrollPhysics(),
                                   itemBuilder: (context, indexInner) {
-                                    var getSetInner = listItems[index].items?[indexInner] ?? Items();
+                                    var getSetInner = listItems[index].itemsInnerList?[indexInner] ?? ItemsInnerList();
                                     return Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -302,7 +327,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                     ),
                   ),
                   Visibility(
-                    visible: franchiseName.isNotEmpty && addressLine1.isNotEmpty,
+                    //visible: franchiseName.isNotEmpty && addressLine1.isNotEmpty,
                     child: Container(
                       width: MediaQuery.of(context).size.width,
                       margin: const EdgeInsets.only(top: 10,bottom: 10),
@@ -315,10 +340,134 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Text(" Shipping To",
+                              style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
+                          ),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            margin: const EdgeInsets.only(left: 8, right: 8, top: 10, bottom: 5),
+                            child: const Text("Franchise Name",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                            child: Text(franchiseName,
+                              textAlign: TextAlign.start,
+                              style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            margin: const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
+                            child: const Text("Phone",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            margin: const EdgeInsets.only(left: 8, right: 8, bottom: 5),
+                            child: Text(orderDetailData.franchiseMobile?.toString() ?? "",
+                              textAlign: TextAlign.start,
+                              style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            margin: const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
+                            child: const Text("Address",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                            child: Text("${(orderDetailData.addressLine1?.toString() ?? "")}, ${(orderDetailData.addressLine2?.toString() ?? "")} "
+                                "${(orderDetailData.addressLine3?.toString() ?? "")}" "${(orderDetailData.addressLine4?.toString() ?? "")}",
+                              textAlign: TextAlign.start,
+                              overflow: TextOverflow.clip,
+                              style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            margin: const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
+                            child: const Text("Email",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                            child: Text(orderDetailData.franchiseMobile == "" ? "-" : orderDetailData.franchiseMobile?.toString() ?? "",
+                              textAlign: TextAlign.start,
+                              style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            margin: const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
+                            child: const Text("City",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                            child: Text(orderDetailData.city?.toString() ?? "",
+                              textAlign: TextAlign.start,
+                              style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                         /* Container(
+                            alignment: Alignment.topLeft,
+                            margin: const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
+                            child: const Text("Landmark/Pincode",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                            child: Text(orderDetailData.d?.toString() ?? "",
+                              textAlign: TextAlign.start,
+                              style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                            ),
+                          ),*/
+                          Container(
+                            alignment: Alignment.topLeft,
+                            margin: const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
+                            child: const Text("State",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                            child: Text(orderDetailData.state?.toString() ?? "",
+                              textAlign: TextAlign.start,
+                              style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      /*Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Text("Shipping To",
                               style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
                           ),
-                          Gap(10),
+                          const Gap(10),
                           Text(franchiseName,
                               style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
                           ),
@@ -326,7 +475,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                               style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
                           ),
                         ],
-                      ),
+                      ),*/
                     ),
                   ),
                   Visibility(
@@ -395,17 +544,19 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
       if (statusCode == 200 && dataResponse.success == 1)
       {
         isLoading = false;
-        listItems = dataResponse.record?.itemsList ?? [];
-        subTotal = dataResponse.record?.subTotal ?? "";
-        grandTotal = dataResponse.record?.grandTotal ?? "";
-        wareAddressLine1 = dataResponse.record?.wareAddressLine1 ?? "";
-        warehouseName = dataResponse.record?.warehouseName ?? "";
-        addressLine1 = dataResponse.record?.addressLine1 ?? "";
-        addressLine2 = dataResponse.record?.addressLine2 ?? "";
-        franchiseName = dataResponse.record?.franchiseName ?? "";
-        paymentStatus = dataResponse.record?.paymentStatus ?? "";
-        orderNumber = dataResponse.record?.orderNumber ?? "";
-        status = dataResponse.record?.status ?? "";
+        orderDetailData = dataResponse.orderDetailRecord ?? OrderDetailRecord();
+        listItems = dataResponse.orderDetailRecord?.itemsMainList ?? [];
+
+        subTotal = dataResponse.orderDetailRecord?.subTotal ?? "";
+        grandTotal = dataResponse.orderDetailRecord?.grandTotal ?? "";
+        wareAddressLine1 = dataResponse.orderDetailRecord?.wareAddressLine1 ?? "";
+        warehouseName = dataResponse.orderDetailRecord?.warehouseName ?? "";
+        addressLine1 = dataResponse.orderDetailRecord?.addressLine1 ?? "";
+        addressLine2 = dataResponse.orderDetailRecord?.addressLine2 ?? "";
+        franchiseName = dataResponse.orderDetailRecord?.franchiseName ?? "";
+        paymentStatus = dataResponse.orderDetailRecord?.paymentStatus ?? "";
+        orderNumber = dataResponse.orderDetailRecord?.orderNumber ?? "";
+        status = dataResponse.orderDetailRecord?.status ?? "";
       }
       else
       {

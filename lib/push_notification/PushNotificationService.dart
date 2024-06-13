@@ -69,7 +69,7 @@ class PushNotificationService {
 
         NavigationService.navigatorKey.currentState?.push(
           MaterialPageRoute(
-              builder: (context) => OrderDetailScreen(orderId)),
+              builder: (context) => OrderDetailScreen(orderId, true)),
         );
 
 
@@ -113,7 +113,7 @@ class PushNotificationService {
 
           NavigationService.navigatorKey.currentState?.push(
             MaterialPageRoute(
-                builder: (context) => OrderDetailScreen(orderId)),
+                builder: (context) => OrderDetailScreen(orderId, false)),
           );
 
         }else {

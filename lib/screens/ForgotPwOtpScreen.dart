@@ -1,11 +1,9 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import '../common_widget/common_widget.dart';
-import '../constant/ApiService.dart';
 import '../constant/api_end_point.dart';
 import '../constant/colors.dart';
 import '../model/common/CommonResponseModel.dart';

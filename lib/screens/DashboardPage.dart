@@ -96,7 +96,6 @@ class _DashboardPageState extends BaseState<DashboardPage> {
 
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,10 +112,14 @@ class _DashboardPageState extends BaseState<DashboardPage> {
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () {
-                // setState(() {
-                //   sessionManager.setUnreadNotificationCount(0);
-                // });
-                notificationPage(context);
+                if (isOnline)
+                {
+                  notificationPage(context);
+                }
+                else
+                {
+                  noInternetSnackBar(context);
+                }
               },
               child:
               Stack(
@@ -260,7 +263,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () async {
-            if (analysisList[index].name == "Products") {
+            if (analysisList[index].name == "Items") {
               final BottomNavigationBar bar = bottomWidgetKey.currentWidget as BottomNavigationBar;
               bar.onTap!(1);
             } else if (analysisList[index].name == "Orders") {
@@ -318,7 +321,14 @@ class _DashboardPageState extends BaseState<DashboardPage> {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () async {
-              orderDetailPage(context, checkValidString(listOrders[index].id));
+              if (isOnline)
+              {
+                orderDetailPage(context, checkValidString(listOrders[index].id));
+              }
+              else
+              {
+                noInternetSnackBar(context);
+              }
             },
             child: Container(
                 width:listOrders.length > 1 ? MediaQuery.of(context).size.width * 0.75 : MediaQuery.of(context).size.width * 0.9,
@@ -348,10 +358,10 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                           const Gap(6),
                           Text("Remark", textAlign: TextAlign.start,
                               style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: small)),
-                          Gap(6),
+                          const Gap(6),
                           Text("Order-Date", textAlign: TextAlign.start,
                               style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: small)),
-                          Gap(6),
+                          const Gap(6),
                           Text("Status", textAlign: TextAlign.start,
                               style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: small)),
                         ],
@@ -363,13 +373,13 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(":", textAlign: TextAlign.start, style: TextStyle(color: hintLight, fontWeight: FontWeight.w400, fontSize: small)),
-                        Gap(6),
+                        const Gap(6),
                         Text(":", textAlign: TextAlign.start, style: TextStyle(color: hintLight, fontWeight: FontWeight.w400, fontSize: small)),
-                        Gap(6),
+                        const Gap(6),
                         Text(":", textAlign: TextAlign.start, style: TextStyle(color: hintLight, fontWeight: FontWeight.w400, fontSize: small)),
-                        Gap(6),
+                        const Gap(6),
                         Text(":", textAlign: TextAlign.start, style: TextStyle(color: hintLight, fontWeight: FontWeight.w400, fontSize: small)),
-                        Gap(6),
+                        const Gap(6),
                         Text(":", textAlign: TextAlign.start, style: TextStyle(color: hintLight, fontWeight: FontWeight.w400, fontSize: small)),
                       ],
                     ),
@@ -413,7 +423,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
   Future<void> orderDetailPage(BuildContext context, String orderId) async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => OrderDetailScreen(orderId)),
+      MaterialPageRoute(builder: (context) => OrderDetailScreen(orderId, false)),
     );
     print("result ===== $result");
     if (result == "success") {
@@ -446,72 +456,89 @@ class _DashboardPageState extends BaseState<DashboardPage> {
 
   // API call function...
   void getDeviceToken() async {
-    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.BODY),
-    ]);
 
-    final url = Uri.parse(MAIN_URL + getDeviceTokenUrl);
+    if (isOnline)
+    {
+      HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+        HttpLogger(logLevel: LogLevel.BODY),
+      ]);
 
-    Map<String, String> jsonBody = {'user_id': sessionManager.getUserId().toString()};
+      final url = Uri.parse(MAIN_URL + getDeviceTokenUrl);
 
-    final response = await http.post(url, body: jsonBody, headers: {
-      "Authorization": sessionManager.getToken().toString(),
-    });
+      Map<String, String> jsonBody = {'user_id': sessionManager.getUserId().toString()};
 
-    final statusCode = response.statusCode;
-    final body = response.body;
-    Map<String, dynamic> apiResponse = jsonDecode(body);
-    var dataResponse = GetDeviceTokenResponseModel.fromJson(apiResponse);
+      final response = await http.post(url, body: jsonBody, headers: {
+        "Authorization": sessionManager.getToken().toString(),
+      });
 
-    if (statusCode == 200 && dataResponse.success == 1) {
-      try {
-        if (dataResponse.deviceTokens != null) {
-          if (dataResponse.deviceTokens!.isNotEmpty) {
-            var listDeviceTokens = dataResponse.deviceTokens ?? [];
-            for (int i = 0; i < listDeviceTokens.length; i++) {
-              if (listDeviceTokens[i].deviceToken.toString().trim() == sessionManager.getToken().toString().trim()) {
-                if (listDeviceTokens[i].isForceLogout == "1") {
-                  removeDeviceTokenAndLogout();
-                  break;
+      final statusCode = response.statusCode;
+      final body = response.body;
+      Map<String, dynamic> apiResponse = jsonDecode(body);
+      var dataResponse = GetDeviceTokenResponseModel.fromJson(apiResponse);
+
+      if (statusCode == 200 && dataResponse.success == 1) {
+        try {
+          if (dataResponse.deviceTokens != null) {
+            if (dataResponse.deviceTokens!.isNotEmpty) {
+              var listDeviceTokens = dataResponse.deviceTokens ?? [];
+              for (int i = 0; i < listDeviceTokens.length; i++) {
+                if (listDeviceTokens[i].deviceToken.toString().trim() == sessionManager.getToken().toString().trim()) {
+                  if (listDeviceTokens[i].isForceLogout == "1") {
+                    removeDeviceTokenAndLogout();
+                    break;
+                  }
                 }
               }
             }
           }
+        } catch (e) {
+          print(e);
         }
-      } catch (e) {
-        print(e);
+      } else {
+        showSnackBar(dataResponse.message, context);
       }
-    } else {
-      showSnackBar(dataResponse.message, context);
+
+    }
+    else
+    {
+      noInternetSnackBar(context);
     }
 
   }
 
   void removeDeviceTokenAndLogout() async {
-    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.BODY),
-    ]);
+    if (isOnline)
+    {
+      HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+        HttpLogger(logLevel: LogLevel.BODY),
+      ]);
 
-    final url = Uri.parse(MAIN_URL + removeDeviceToken);
+      final url = Uri.parse(MAIN_URL + removeDeviceToken);
 
-    Map<String, String> jsonBody = {'device_token': sessionManager.getToken().toString().trim()};
+      Map<String, String> jsonBody = {'device_token': sessionManager.getToken().toString().trim()};
 
-    final response = await http.post(url, body: jsonBody, headers: {
-      "Authorization": sessionManager.getToken().toString(),
-    });
+      final response = await http.post(url, body: jsonBody, headers: {
+        "Authorization": sessionManager.getToken().toString(),
+      });
 
-    final statusCode = response.statusCode;
-    final body = response.body;
-    Map<String, dynamic> apiResponse = jsonDecode(body);
-    var dataResponse = CommonResponseModel.fromJson(apiResponse);
+      final statusCode = response.statusCode;
+      final body = response.body;
+      Map<String, dynamic> apiResponse = jsonDecode(body);
+      var dataResponse = CommonResponseModel.fromJson(apiResponse);
 
-    if (statusCode == 200 && dataResponse.success == 1) {
-      SessionManagerMethods.clear();
-      await SessionManagerMethods.init();
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (Route<dynamic> route) => false);
+      if (statusCode == 200 && dataResponse.success == 1) {
+        SessionManagerMethods.clear();
+        await SessionManagerMethods.init();
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (Route<dynamic> route) => false);
 
-    } else {
-      showSnackBar(dataResponse.message, context);
+      } else {
+        showSnackBar(dataResponse.message, context);
+      }
+
+    }
+    else
+    {
+      noInternetSnackBar(context);
     }
 
   }
@@ -547,7 +574,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
       totalProducts = dataResponse.totalRecords ?? "";
 
       if (statusCode == 200 && dataResponse.success == 1) {
-        var records = dataResponse.records;
+        // var records = dataResponse.records;
 
         setState(() {
           _isLoading = false;
@@ -608,7 +635,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
 
         analysisList = [
           HomePageMenuGetSet(
-              nameStatic: "Products",
+              nameStatic: "Items",
               titleColorStatic: "#ff95b5ad",
               bgColorStatic: "#ffedf2f4",
               itemIconStatic: "assets/images/slicing-24.png",
@@ -631,7 +658,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
         ];
 
         if (records?.totalNotifications != null) {
-          sessionManager.setUnreadNotificationCount(records?.totalNotifications ?? 0);
+          sessionManager.setUnreadNotificationCount(int.parse(records?.totalNotifications.toString() ?? ""));
         }
 
       } else {

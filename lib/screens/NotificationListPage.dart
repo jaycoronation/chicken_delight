@@ -365,7 +365,7 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
     var dataResponse = CommonResponseModel.fromJson(apiResponse);
 
     if (statusCode == 200 && dataResponse.success == 1) {
-      startActivity(context, OrderDetailScreen(orderID));
+      startActivity(context, OrderDetailScreen(orderID, false));
     } else {
       showSnackBar(dataResponse.message, context);
     }

@@ -1,5 +1,5 @@
 import 'dart:convert';
-/// dashboard_records : {"id":"12","name":"John Doe","address_line_1":"1855a Portage Ave","address_line_2":"MB R3J 0G8","address_line_3":"","address_line_4":"","country_id":"39","state_id":"867","city_id":"17215","mobile":"9825589659","email":"john@chickendelight.com","business_name":"Portage Ave","website":"www.chickendelight.com","country_code":"1","order":[{"id":"3","order_number":"IN06240000003","grand_total":"2276","sub_total":"2201","discount":"","status":"Accepted","timestamp":"1717405982","is_cancelled":"","payment_status":"Pending","created_for":"12","created_by":"12","warehouse":"13","remarks":"fsddfsdf"}],"total_orders":"2","total_value":2368.33,"profile_picture":"http://192.168.1.91/chicken_delight/api/assets/upload/admin/user.png","business_logo":"http://192.168.1.91/chicken_delight/api/assets/upload/admin/user.png"}
+/// dashboard_records : {"id":"12","name":"John Doe","address_line_1":"1855a Portage Ave","address_line_2":"MB R3J 0G8","address_line_3":"New Road","address_line_4":"Near Highway","country_id":"39","state_id":"868","city_id":"0","mobile":"9825589659","email":"john@chickendelight.com","business_name":"Portage Ave","website":"www.chickendelight.com","country_code":"1","total_overdue":3181,"upcoming_payments":11609,"due_today":11609,"order":[{"id":"54","order_number":"IN06240000054","grand_total":"105","sub_total":"30","discount":"","status":"Accepted","timestamp":"1718255739","is_cancelled":"","payment_status":"Pending","payment_date":"","created_for":"12","created_by":"12","warehouse":"0","remarks":""}],"total_orders":"42","total_value":16146.659999999994,"profile_picture":"https://chickendelight.saltpixels.in/api/assets/upload/admin/1717427821_100_3685.JPG","business_logo":"https://chickendelight.saltpixels.in/api/assets/upload/admin/user.png","total_notifications":26}
 /// success : 1
 /// message : "franchise details found"
 
@@ -50,21 +50,25 @@ DashboardResponseModel copyWith({  DashboardRecords? dashboardRecords,
 /// name : "John Doe"
 /// address_line_1 : "1855a Portage Ave"
 /// address_line_2 : "MB R3J 0G8"
-/// address_line_3 : ""
-/// address_line_4 : ""
+/// address_line_3 : "New Road"
+/// address_line_4 : "Near Highway"
 /// country_id : "39"
-/// state_id : "867"
-/// city_id : "17215"
+/// state_id : "868"
+/// city_id : "0"
 /// mobile : "9825589659"
 /// email : "john@chickendelight.com"
 /// business_name : "Portage Ave"
 /// website : "www.chickendelight.com"
 /// country_code : "1"
-/// order : [{"id":"3","order_number":"IN06240000003","grand_total":"2276","sub_total":"2201","discount":"","status":"Accepted","timestamp":"1717405982","is_cancelled":"","payment_status":"Pending","created_for":"12","created_by":"12","warehouse":"13","remarks":"fsddfsdf"}]
-/// total_orders : "2"
-/// total_value : 2368.33
-/// profile_picture : "http://192.168.1.91/chicken_delight/api/assets/upload/admin/user.png"
-/// business_logo : "http://192.168.1.91/chicken_delight/api/assets/upload/admin/user.png"
+/// total_overdue : 3181
+/// upcoming_payments : 11609
+/// due_today : 11609
+/// order : [{"id":"54","order_number":"IN06240000054","grand_total":"105","sub_total":"30","discount":"","status":"Accepted","timestamp":"1718255739","is_cancelled":"","payment_status":"Pending","payment_date":"","created_for":"12","created_by":"12","warehouse":"0","remarks":""}]
+/// total_orders : "42"
+/// total_value : 16146.659999999994
+/// profile_picture : "https://chickendelight.saltpixels.in/api/assets/upload/admin/1717427821_100_3685.JPG"
+/// business_logo : "https://chickendelight.saltpixels.in/api/assets/upload/admin/user.png"
+/// total_notifications : 26
 
 DashboardRecords dashboardRecordsFromJson(String str) => DashboardRecords.fromJson(json.decode(str));
 String dashboardRecordsToJson(DashboardRecords data) => json.encode(data.toJson());
@@ -84,12 +88,15 @@ class DashboardRecords {
       String? businessName, 
       String? website, 
       String? countryCode, 
+      num? totalOverdue, 
+      num? upcomingPayments, 
+      num? dueToday, 
       List<Order>? order, 
       String? totalOrders, 
-      int? totalNotifications,
-      num? totalValue,
+      num? totalValue, 
       String? profilePicture, 
-      String? businessLogo,}){
+      String? businessLogo, 
+      num? totalNotifications,}){
     _id = id;
     _name = name;
     _addressLine1 = addressLine1;
@@ -104,12 +111,15 @@ class DashboardRecords {
     _businessName = businessName;
     _website = website;
     _countryCode = countryCode;
+    _totalOverdue = totalOverdue;
+    _upcomingPayments = upcomingPayments;
+    _dueToday = dueToday;
     _order = order;
     _totalOrders = totalOrders;
-    _totalNotifications = totalNotifications;
     _totalValue = totalValue;
     _profilePicture = profilePicture;
     _businessLogo = businessLogo;
+    _totalNotifications = totalNotifications;
 }
 
   DashboardRecords.fromJson(dynamic json) {
@@ -127,6 +137,9 @@ class DashboardRecords {
     _businessName = json['business_name'];
     _website = json['website'];
     _countryCode = json['country_code'];
+    _totalOverdue = json['total_overdue'];
+    _upcomingPayments = json['upcoming_payments'];
+    _dueToday = json['due_today'];
     if (json['order'] != null) {
       _order = [];
       json['order'].forEach((v) {
@@ -134,10 +147,10 @@ class DashboardRecords {
       });
     }
     _totalOrders = json['total_orders'];
-    _totalNotifications = json['total_notifications'];
     _totalValue = json['total_value'];
     _profilePicture = json['profile_picture'];
     _businessLogo = json['business_logo'];
+    _totalNotifications = json['total_notifications'];
   }
   String? _id;
   String? _name;
@@ -153,12 +166,15 @@ class DashboardRecords {
   String? _businessName;
   String? _website;
   String? _countryCode;
+  num? _totalOverdue;
+  num? _upcomingPayments;
+  num? _dueToday;
   List<Order>? _order;
   String? _totalOrders;
-  int? _totalNotifications;
   num? _totalValue;
   String? _profilePicture;
   String? _businessLogo;
+  num? _totalNotifications;
 DashboardRecords copyWith({  String? id,
   String? name,
   String? addressLine1,
@@ -173,12 +189,15 @@ DashboardRecords copyWith({  String? id,
   String? businessName,
   String? website,
   String? countryCode,
+  num? totalOverdue,
+  num? upcomingPayments,
+  num? dueToday,
   List<Order>? order,
   String? totalOrders,
-  int? totalNotifications,
   num? totalValue,
   String? profilePicture,
   String? businessLogo,
+  num? totalNotifications,
 }) => DashboardRecords(  id: id ?? _id,
   name: name ?? _name,
   addressLine1: addressLine1 ?? _addressLine1,
@@ -193,12 +212,15 @@ DashboardRecords copyWith({  String? id,
   businessName: businessName ?? _businessName,
   website: website ?? _website,
   countryCode: countryCode ?? _countryCode,
+  totalOverdue: totalOverdue ?? _totalOverdue,
+  upcomingPayments: upcomingPayments ?? _upcomingPayments,
+  dueToday: dueToday ?? _dueToday,
   order: order ?? _order,
   totalOrders: totalOrders ?? _totalOrders,
-  totalNotifications: totalNotifications ?? _totalNotifications,
   totalValue: totalValue ?? _totalValue,
   profilePicture: profilePicture ?? _profilePicture,
   businessLogo: businessLogo ?? _businessLogo,
+  totalNotifications: totalNotifications ?? _totalNotifications,
 );
   String? get id => _id;
   String? get name => _name;
@@ -214,12 +236,15 @@ DashboardRecords copyWith({  String? id,
   String? get businessName => _businessName;
   String? get website => _website;
   String? get countryCode => _countryCode;
+  num? get totalOverdue => _totalOverdue;
+  num? get upcomingPayments => _upcomingPayments;
+  num? get dueToday => _dueToday;
   List<Order>? get order => _order;
   String? get totalOrders => _totalOrders;
-  int? get totalNotifications => _totalNotifications;
   num? get totalValue => _totalValue;
   String? get profilePicture => _profilePicture;
   String? get businessLogo => _businessLogo;
+  num? get totalNotifications => _totalNotifications;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -237,32 +262,36 @@ DashboardRecords copyWith({  String? id,
     map['business_name'] = _businessName;
     map['website'] = _website;
     map['country_code'] = _countryCode;
+    map['total_overdue'] = _totalOverdue;
+    map['upcoming_payments'] = _upcomingPayments;
+    map['due_today'] = _dueToday;
     if (_order != null) {
       map['order'] = _order?.map((v) => v.toJson()).toList();
     }
     map['total_orders'] = _totalOrders;
-    map['total_notifications'] = _totalNotifications;
     map['total_value'] = _totalValue;
     map['profile_picture'] = _profilePicture;
     map['business_logo'] = _businessLogo;
+    map['total_notifications'] = _totalNotifications;
     return map;
   }
 
 }
 
-/// id : "3"
-/// order_number : "IN06240000003"
-/// grand_total : "2276"
-/// sub_total : "2201"
+/// id : "54"
+/// order_number : "IN06240000054"
+/// grand_total : "105"
+/// sub_total : "30"
 /// discount : ""
 /// status : "Accepted"
-/// timestamp : "1717405982"
+/// timestamp : "1718255739"
 /// is_cancelled : ""
 /// payment_status : "Pending"
+/// payment_date : ""
 /// created_for : "12"
 /// created_by : "12"
-/// warehouse : "13"
-/// remarks : "fsddfsdf"
+/// warehouse : "0"
+/// remarks : ""
 
 Order orderFromJson(String str) => Order.fromJson(json.decode(str));
 String orderToJson(Order data) => json.encode(data.toJson());
@@ -277,6 +306,7 @@ class Order {
       String? timestamp, 
       String? isCancelled, 
       String? paymentStatus, 
+      String? paymentDate, 
       String? createdFor, 
       String? createdBy, 
       String? warehouse, 
@@ -290,6 +320,7 @@ class Order {
     _timestamp = timestamp;
     _isCancelled = isCancelled;
     _paymentStatus = paymentStatus;
+    _paymentDate = paymentDate;
     _createdFor = createdFor;
     _createdBy = createdBy;
     _warehouse = warehouse;
@@ -306,6 +337,7 @@ class Order {
     _timestamp = json['timestamp'];
     _isCancelled = json['is_cancelled'];
     _paymentStatus = json['payment_status'];
+    _paymentDate = json['payment_date'];
     _createdFor = json['created_for'];
     _createdBy = json['created_by'];
     _warehouse = json['warehouse'];
@@ -320,6 +352,7 @@ class Order {
   String? _timestamp;
   String? _isCancelled;
   String? _paymentStatus;
+  String? _paymentDate;
   String? _createdFor;
   String? _createdBy;
   String? _warehouse;
@@ -333,6 +366,7 @@ Order copyWith({  String? id,
   String? timestamp,
   String? isCancelled,
   String? paymentStatus,
+  String? paymentDate,
   String? createdFor,
   String? createdBy,
   String? warehouse,
@@ -346,6 +380,7 @@ Order copyWith({  String? id,
   timestamp: timestamp ?? _timestamp,
   isCancelled: isCancelled ?? _isCancelled,
   paymentStatus: paymentStatus ?? _paymentStatus,
+  paymentDate: paymentDate ?? _paymentDate,
   createdFor: createdFor ?? _createdFor,
   createdBy: createdBy ?? _createdBy,
   warehouse: warehouse ?? _warehouse,
@@ -360,6 +395,7 @@ Order copyWith({  String? id,
   String? get timestamp => _timestamp;
   String? get isCancelled => _isCancelled;
   String? get paymentStatus => _paymentStatus;
+  String? get paymentDate => _paymentDate;
   String? get createdFor => _createdFor;
   String? get createdBy => _createdBy;
   String? get warehouse => _warehouse;
@@ -376,6 +412,7 @@ Order copyWith({  String? id,
     map['timestamp'] = _timestamp;
     map['is_cancelled'] = _isCancelled;
     map['payment_status'] = _paymentStatus;
+    map['payment_date'] = _paymentDate;
     map['created_for'] = _createdFor;
     map['created_by'] = _createdBy;
     map['warehouse'] = _warehouse;
