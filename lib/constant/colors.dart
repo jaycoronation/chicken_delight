@@ -143,7 +143,7 @@ getTitleTextStyle() {
 }
 
 getWhiteSmallTextStyle() {
-  return const TextStyle(fontWeight: FontWeight.w500, color: white, fontSize: 13);
+  return const TextStyle(fontWeight: FontWeight.w500, color: white, fontSize: 14);
 }
 
 getBottomSheetTitleTextStyle() {

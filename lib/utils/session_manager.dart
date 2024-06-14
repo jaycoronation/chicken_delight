@@ -17,6 +17,7 @@ class SessionManager {
   final String name = "name";
   final String profilePicture = "profile_picture";
 
+  final String cartCount = "0";
 
   bool? checkIsLoggedIn() {
     return SessionManagerMethods.getBool(isLoggedIn);
@@ -91,5 +92,13 @@ class SessionManager {
     return SessionManagerMethods.getInt(unreadNotificationCount);
   }
 
+  int? getCartCount() {
+    return SessionManagerMethods.getInt(cartCount) ?? 0;
+  }
+
+  Future<void> setCartCount(int cartCountParam)
+  async {
+    await SessionManagerMethods.setInt(cartCount, cartCountParam);
+  }
 
 }

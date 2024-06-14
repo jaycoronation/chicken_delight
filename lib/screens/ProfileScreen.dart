@@ -12,8 +12,10 @@ import '../model/StoreMenuModel.dart';
 import '../model/common/CommonResponseModel.dart';
 import '../utils/base_class.dart';
 import '../utils/session_manager_methods.dart';
+import 'ChangePasswordScreen.dart';
+import 'SetPasswordScreen.dart';
 import 'ForgotPasswordScreen.dart';
-import 'MyProfileScreen.dart';
+import 'ProfileViewPage.dart';
 
 
 class ProfileScreen extends StatefulWidget {
@@ -90,7 +92,7 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
                             GestureDetector(
                               behavior: HitTestBehavior.opaque,
                               onTap: () {
-                                startActivity(context, const MyProfileScreen());
+                                startActivity(context, const ProfileViewPage());
                               },
                               child: Row(
                                 children: [
@@ -163,7 +165,7 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
                         GestureDetector(
                           behavior: HitTestBehavior.opaque,
                           onTap: () {
-                            startActivity(context, const ForgotPasswordScreen());
+                            startActivity(context, const ChangePasswordScreen());
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

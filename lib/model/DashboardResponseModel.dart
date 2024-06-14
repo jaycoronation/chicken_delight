@@ -1,5 +1,5 @@
 import 'dart:convert';
-/// dashboard_records : {"id":"12","name":"John Doe","address_line_1":"1855a Portage Ave","address_line_2":"MB R3J 0G8","address_line_3":"New Road","address_line_4":"Near Highway","country_id":"39","state_id":"868","city_id":"0","mobile":"9825589659","email":"john@chickendelight.com","business_name":"Portage Ave","website":"www.chickendelight.com","country_code":"1","total_overdue":3181,"upcoming_payments":11609,"due_today":11609,"order":[{"id":"54","order_number":"IN06240000054","grand_total":"105","sub_total":"30","discount":"","status":"Accepted","timestamp":"1718255739","is_cancelled":"","payment_status":"Pending","payment_date":"","created_for":"12","created_by":"12","warehouse":"0","remarks":""}],"total_orders":"42","total_value":16146.659999999994,"profile_picture":"https://chickendelight.saltpixels.in/api/assets/upload/admin/1717427821_100_3685.JPG","business_logo":"https://chickendelight.saltpixels.in/api/assets/upload/admin/user.png","total_notifications":26}
+/// dashboard_records : {"id":"12","name":"John Doe","address_line_1":"1855a Portage Ave","address_line_2":"MB R3J 0G8","address_line_3":"New Road","address_line_4":"Near Highway","country_id":"39","state_id":"868","city_id":"16441","mobile":"9825589659","email":"john@chickendelight.com","business_name":"Portage Ave","website":"www.chickendelight.com","country_code":"1","total_overdue":14895,"upcoming_payments":1267,"due_today":1267,"today_order_count":"1","today_order_value":105,"last_seven_count":"49","last_seven_value":15414.979999999998,"last_thirty_count":"52","last_thirty_value":17413.379999999994,"order":[{"id":"64","order_number":"IN06240000064","grand_total":"105","sub_total":"30","discount":"","status":"Accepted","timestamp":"1718304957","is_cancelled":"","payment_status":"Pending","payment_date":"","created_for":"12","created_by":"12","warehouse":"0","remarks":""}],"total_orders":"52","total_value":17413.379999999997,"profile_picture":"https://chickendelight.saltpixels.in/api/assets/upload/admin/1717427821_100_3685.JPG","business_logo":"https://chickendelight.saltpixels.in/api/assets/upload/admin/user.png","total_notifications":30}
 /// success : 1
 /// message : "franchise details found"
 
@@ -54,21 +54,27 @@ DashboardResponseModel copyWith({  DashboardRecords? dashboardRecords,
 /// address_line_4 : "Near Highway"
 /// country_id : "39"
 /// state_id : "868"
-/// city_id : "0"
+/// city_id : "16441"
 /// mobile : "9825589659"
 /// email : "john@chickendelight.com"
 /// business_name : "Portage Ave"
 /// website : "www.chickendelight.com"
 /// country_code : "1"
-/// total_overdue : 3181
-/// upcoming_payments : 11609
-/// due_today : 11609
-/// order : [{"id":"54","order_number":"IN06240000054","grand_total":"105","sub_total":"30","discount":"","status":"Accepted","timestamp":"1718255739","is_cancelled":"","payment_status":"Pending","payment_date":"","created_for":"12","created_by":"12","warehouse":"0","remarks":""}]
-/// total_orders : "42"
-/// total_value : 16146.659999999994
+/// total_overdue : 14895
+/// upcoming_payments : 1267
+/// due_today : 1267
+/// today_order_count : "1"
+/// today_order_value : 105
+/// last_seven_count : "49"
+/// last_seven_value : 15414.979999999998
+/// last_thirty_count : "52"
+/// last_thirty_value : 17413.379999999994
+/// order : [{"id":"64","order_number":"IN06240000064","grand_total":"105","sub_total":"30","discount":"","status":"Accepted","timestamp":"1718304957","is_cancelled":"","payment_status":"Pending","payment_date":"","created_for":"12","created_by":"12","warehouse":"0","remarks":""}]
+/// total_orders : "52"
+/// total_value : 17413.379999999997
 /// profile_picture : "https://chickendelight.saltpixels.in/api/assets/upload/admin/1717427821_100_3685.JPG"
 /// business_logo : "https://chickendelight.saltpixels.in/api/assets/upload/admin/user.png"
-/// total_notifications : 26
+/// total_notifications : 30
 
 DashboardRecords dashboardRecordsFromJson(String str) => DashboardRecords.fromJson(json.decode(str));
 String dashboardRecordsToJson(DashboardRecords data) => json.encode(data.toJson());
@@ -91,6 +97,12 @@ class DashboardRecords {
       num? totalOverdue, 
       num? upcomingPayments, 
       num? dueToday, 
+      String? todayOrderCount, 
+      num? todayOrderValue, 
+      String? lastSevenCount, 
+      num? lastSevenValue, 
+      String? lastThirtyCount, 
+      num? lastThirtyValue, 
       List<Order>? order, 
       String? totalOrders, 
       num? totalValue, 
@@ -114,6 +126,12 @@ class DashboardRecords {
     _totalOverdue = totalOverdue;
     _upcomingPayments = upcomingPayments;
     _dueToday = dueToday;
+    _todayOrderCount = todayOrderCount;
+    _todayOrderValue = todayOrderValue;
+    _lastSevenCount = lastSevenCount;
+    _lastSevenValue = lastSevenValue;
+    _lastThirtyCount = lastThirtyCount;
+    _lastThirtyValue = lastThirtyValue;
     _order = order;
     _totalOrders = totalOrders;
     _totalValue = totalValue;
@@ -140,6 +158,12 @@ class DashboardRecords {
     _totalOverdue = json['total_overdue'];
     _upcomingPayments = json['upcoming_payments'];
     _dueToday = json['due_today'];
+    _todayOrderCount = json['today_order_count'];
+    _todayOrderValue = json['today_order_value'];
+    _lastSevenCount = json['last_seven_count'];
+    _lastSevenValue = json['last_seven_value'];
+    _lastThirtyCount = json['last_thirty_count'];
+    _lastThirtyValue = json['last_thirty_value'];
     if (json['order'] != null) {
       _order = [];
       json['order'].forEach((v) {
@@ -169,6 +193,12 @@ class DashboardRecords {
   num? _totalOverdue;
   num? _upcomingPayments;
   num? _dueToday;
+  String? _todayOrderCount;
+  num? _todayOrderValue;
+  String? _lastSevenCount;
+  num? _lastSevenValue;
+  String? _lastThirtyCount;
+  num? _lastThirtyValue;
   List<Order>? _order;
   String? _totalOrders;
   num? _totalValue;
@@ -192,6 +222,12 @@ DashboardRecords copyWith({  String? id,
   num? totalOverdue,
   num? upcomingPayments,
   num? dueToday,
+  String? todayOrderCount,
+  num? todayOrderValue,
+  String? lastSevenCount,
+  num? lastSevenValue,
+  String? lastThirtyCount,
+  num? lastThirtyValue,
   List<Order>? order,
   String? totalOrders,
   num? totalValue,
@@ -215,6 +251,12 @@ DashboardRecords copyWith({  String? id,
   totalOverdue: totalOverdue ?? _totalOverdue,
   upcomingPayments: upcomingPayments ?? _upcomingPayments,
   dueToday: dueToday ?? _dueToday,
+  todayOrderCount: todayOrderCount ?? _todayOrderCount,
+  todayOrderValue: todayOrderValue ?? _todayOrderValue,
+  lastSevenCount: lastSevenCount ?? _lastSevenCount,
+  lastSevenValue: lastSevenValue ?? _lastSevenValue,
+  lastThirtyCount: lastThirtyCount ?? _lastThirtyCount,
+  lastThirtyValue: lastThirtyValue ?? _lastThirtyValue,
   order: order ?? _order,
   totalOrders: totalOrders ?? _totalOrders,
   totalValue: totalValue ?? _totalValue,
@@ -239,6 +281,12 @@ DashboardRecords copyWith({  String? id,
   num? get totalOverdue => _totalOverdue;
   num? get upcomingPayments => _upcomingPayments;
   num? get dueToday => _dueToday;
+  String? get todayOrderCount => _todayOrderCount;
+  num? get todayOrderValue => _todayOrderValue;
+  String? get lastSevenCount => _lastSevenCount;
+  num? get lastSevenValue => _lastSevenValue;
+  String? get lastThirtyCount => _lastThirtyCount;
+  num? get lastThirtyValue => _lastThirtyValue;
   List<Order>? get order => _order;
   String? get totalOrders => _totalOrders;
   num? get totalValue => _totalValue;
@@ -265,6 +313,12 @@ DashboardRecords copyWith({  String? id,
     map['total_overdue'] = _totalOverdue;
     map['upcoming_payments'] = _upcomingPayments;
     map['due_today'] = _dueToday;
+    map['today_order_count'] = _todayOrderCount;
+    map['today_order_value'] = _todayOrderValue;
+    map['last_seven_count'] = _lastSevenCount;
+    map['last_seven_value'] = _lastSevenValue;
+    map['last_thirty_count'] = _lastThirtyCount;
+    map['last_thirty_value'] = _lastThirtyValue;
     if (_order != null) {
       map['order'] = _order?.map((v) => v.toJson()).toList();
     }
@@ -278,13 +332,13 @@ DashboardRecords copyWith({  String? id,
 
 }
 
-/// id : "54"
-/// order_number : "IN06240000054"
+/// id : "64"
+/// order_number : "IN06240000064"
 /// grand_total : "105"
 /// sub_total : "30"
 /// discount : ""
 /// status : "Accepted"
-/// timestamp : "1718255739"
+/// timestamp : "1718304957"
 /// is_cancelled : ""
 /// payment_status : "Pending"
 /// payment_date : ""

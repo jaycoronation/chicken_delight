@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:chicken_delight/constant/global_context.dart';
-import 'package:chicken_delight/model/OrderListResponseModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_shakemywidget/flutter_shakemywidget.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
@@ -55,8 +57,10 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
   late AutoScrollController controller;
   var _currentPosi = 0;
   List<CategoryMenu> listCategory = [];
+  int cartCount = 0;
+  final shakeKey = GlobalKey<ShakeWidgetState>();
 
-
+  String catId = "";
 
   @override
   void initState() {
@@ -72,10 +76,10 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
       }
     });
 
-   /* controller = AutoScrollController(
+    controller = AutoScrollController(
         viewportBoundaryGetter: () =>
             Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
-        axis: scrollDirection);*/
+        axis: scrollDirection);
 
     _scrollViewController = ScrollController();
     _scrollViewController.addListener(() {
@@ -148,12 +152,14 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                 if (NavigationService.listItems.isNotEmpty) {
                   if (isListLayout) {
                     isListLayout = false;
-                  }else {
+                  } else {
                     isListLayout = true;
                   }
+
                   setState(() {
                     _isSearchHideShow = false;
                   });
+
                 }else {
                   showSnackBar("Products not found.", context);
                 }
@@ -166,7 +172,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                     : Image.asset('assets/images/ic_list.png', height: 22, width: 22),
               ),
             ),
-            Gap(10),
+            const Gap(10),
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () {
@@ -194,100 +200,56 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
               ),
             ),
             const Gap(10),
-            GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () async {
-                    NavigationService.listItemsTmp = [];
-
-                    setState(() {
-                      for (int i = 0; i < NavigationService.listItems.length; i++)
-                      {
-                        if (NavigationService.listItems[i].isSelected == true)
-                        {
-                          Records getSet = Records();
-
-                          getSet = Records(
-                              id:  NavigationService.listItems[i].id,
-                              description:  NavigationService.listItems[i].description,
-                              name:  NavigationService.listItems[i].name,
-                              icon:  NavigationService.listItems[i].icon,
-                              productCode:  NavigationService.listItems[i].productCode,
-                              unit:  NavigationService.listItems[i].unit,
-                              variationName:  NavigationService.listItems[i].variationName,
-                              skuCode:  NavigationService.listItems[i].skuCode,
-                              salePrice:  NavigationService.listItems[i].salePrice,
-                              mrpPrice:  NavigationService.listItems[i].mrpPrice,
-                              dpPrice:  NavigationService.listItems[i].dpPrice,
-                              category:  NavigationService.listItems[i].category,
-                              variationId:  NavigationService.listItems[i].variationId,
-                              categoryId:  NavigationService.listItems[i].categoryId,
-                              isSelected :  NavigationService.listItems[i].isSelected,
-                              quantity: NavigationService.listItems[i].quantity,
-                              amount: num.parse( NavigationService.listItems[i].salePrice.toString())
-                          );
-
-                          NavigationService.listItemsTmp.add(getSet);
-
-                        }
-                      }
-                    });
-
-                  if (NavigationService.listItemsTmp.isNotEmpty)
-                  {
-                    await Navigator.push(context, MaterialPageRoute(builder: (context) => AddOrderScreen()));
-                    setState(() {
-                      for (int n = 0; n < NavigationService.listItems.length; n++)
-                      {
-                        for (int i = 0; i < NavigationService.listItemsTmp.length; i++)
-                        {
-                          if (NavigationService.listItems[n].id == NavigationService.listItemsTmp[i].id)
-                            {
-                              if (NavigationService.listItems[n].isSelected == true)
-                              {
-                                    Records getSet = Records();
-
-                                    getSet = Records(
-                                        id:  NavigationService.listItemsTmp[i].id,
-                                        description:  NavigationService.listItemsTmp[i].description,
-                                        name:  NavigationService.listItemsTmp[i].name,
-                                        icon:  NavigationService.listItemsTmp[i].icon,
-                                        productCode:  NavigationService.listItemsTmp[i].productCode,
-                                        unit:  NavigationService.listItemsTmp[i].unit,
-                                        variationName:  NavigationService.listItemsTmp[i].variationName,
-                                        skuCode:  NavigationService.listItemsTmp[i].skuCode,
-                                        salePrice:  NavigationService.listItemsTmp[i].salePrice,
-                                        mrpPrice:  NavigationService.listItemsTmp[i].mrpPrice,
-                                        dpPrice:  NavigationService.listItemsTmp[i].dpPrice,
-                                        category:  NavigationService.listItemsTmp[i].category,
-                                        variationId:  NavigationService.listItemsTmp[i].variationId,
-                                        categoryId:  NavigationService.listItemsTmp[i].categoryId,
-                                        isSelected :  NavigationService.listItemsTmp[i].isSelected,
-                                        quantity: NavigationService.listItemsTmp[i].quantity,
-                                        amount: num.parse( NavigationService.listItemsTmp[i].salePrice.toString())
-                                    );
-
-                                    NavigationService.listItems[n] = getSet;
-                                  }
-                            }
-                        }
-                      }
-                    });
-                  }
-                  else
-                  {
-                    showSnackBar("Please add at least one Product.", context);
-                  }
-
-                },
-                child: Image.asset("assets/images/ic_cart.png",width: 28,height: 28,),
+            ShakeMe(
+              key: shakeKey,
+              shakeCount: 2,
+              shakeOffset: 5,
+              shakeDuration: const Duration(milliseconds: 500),
+              child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    redirectToCart();
+                  },
+                  child: Stack(
+                    children: [
+                      Container(
+                        alignment: Alignment.center,
+                        margin: const EdgeInsets.only(right: 5, top: 10, bottom: 10),
+                        child: Image.asset('assets/images/ic_cart.png', height: 28, width: 28),
+                      ),
+                      Visibility(
+                        visible: cartCount > 0,
+                        child: Positioned(
+                          right: 2,
+                          top: 4,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25.0),
+                              color: lightPrimaryColor,
+                            ),
+                            height: 22,
+                            width: 22,
+                            alignment: Alignment.centerRight,
+                            margin: const EdgeInsets.only(left: 20),
+                            child: Center(
+                              child: Text(cartCount.toString(),
+                                  style: TextStyle(fontWeight: FontWeight.w400, color: black, fontSize: small)),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  //Image.asset("assets/images/ic_cart.png",width: 28,height: 28,),
+              ),
             ),
             const Gap(20)
           ],
           bottom: _isLoading ? null : PreferredSize(
-            preferredSize: const Size.fromHeight(0),
+            preferredSize: const Size.fromHeight(36),
             child:  Column(
               children: [
-               /* Container(
+                Container(
                   margin: const EdgeInsets.only(left: 10, right: 10),
                   height: 36,
                   width: double.infinity,
@@ -318,8 +280,23 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                             ),
                             onPressed: () {
                               setState(() {
-                                listCategory[index].isSelected = !listCategory[index].isSelected;
+                                for (var j = 0; j < listCategory.length; j++) {
+                                  if (index == j) {
+                                    listCategory[j].isSelected = true;
+                                  } else {
+                                    listCategory[j].isSelected = false;
+                                  }
+                                }
+
                               });
+
+                              if (listCategory[index].id == "all") {
+                                catId = "";
+                              } else {
+                                catId = checkValidString(listCategory[index].id);
+                              }
+                              print("catId-----" +catId);
+                              getItemListData(true);
                             },
                             child: Text(listCategory[index].name,
                                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400,
@@ -331,7 +308,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
 
                   ),
                 ) ,
-                const Gap(6),*/
+                const Gap(6),
                 Visibility(
                   visible: _isSearchHideShow,
                   child: Container(
@@ -428,7 +405,16 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
           subMsg:"You have currently no products.\nWe'll notify you when something\nnew arrives!",
           onTap: () {}, btnTitle: '')
             : setData()
-            : const NoInternetWidget()
+            : const NoInternetWidget(),
+      floatingActionButton: isCheckAny()
+          ? FloatingActionButton.extended(
+        onPressed: () {
+          redirectToCart();
+        },
+        backgroundColor: black,
+        label: Text("Proceed", style: getWhiteSmallTextStyle(),)
+        //child: const Icon(Icons.navigate_next_outlined, color: white,),
+      ) : null,
       );
   }
 
@@ -441,195 +427,6 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
               child: SingleChildScrollView(
                 controller: _scrollViewController,
                 child: isListLayout ? _listLayout() : _gridLayout(),
-
-                /*AnimationLimiter(
-                  child: ListView.builder(
-                    itemCount: NavigationService.listItems.length,
-                    scrollDirection: Axis.vertical,
-                    physics: const NeverScrollableScrollPhysics(),
-                    primary: false,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      var getSet = NavigationService.listItems[index];
-
-                      return AnimationConfiguration.staggeredList(
-                        position: index,
-                        duration: const Duration(milliseconds: 375),
-                        child: SlideAnimation(
-                          verticalOffset: 50.0,
-                          child: FadeInAnimation(
-                            child: Card(
-                              clipBehavior: Clip.antiAliasWithSaveLayer,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(kTextFieldCornerRadius),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Flexible(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          Text(getSet.name ?? "",
-                                              style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
-                                              overflow: TextOverflow.clip
-                                          ),
-                                          const Gap(8),
-                                          Text(getSet.productCode ?? "",
-                                              style: TextStyle(fontSize: small, color: black,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
-                                              overflow: TextOverflow.clip
-                                          ),
-                                          const Gap(8),
-                                          Row(
-                                            children: [
-                                              Text(getPrice(getSet.salePrice ?? ""),
-                                                  style: TextStyle(fontSize: small, color: black,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
-                                                  overflow: TextOverflow.clip
-                                              ),
-                                              const Gap(5),
-                                              Text(getPrice(getSet.mrpPrice ?? ""),
-                                                  style: TextStyle(fontSize: small, color: gray_dark,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,decoration: TextDecoration.lineThrough),
-                                                  textAlign: TextAlign.left,
-                                                  overflow: TextOverflow.clip,
-                                              ),
-                                            ],
-                                          ),
-                                          const Gap(5),
-                                          // Visibility(
-                                          //   visible:getSet.quantity != null && getSet.quantity.toString() != "0",
-                                          //   child: Text(getPrice(getSet.amount?.toStringAsFixed(2) ?? "") ,
-                                          //     style: TextStyle(fontSize: description, color: black,
-                                          //       fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),
-                                          //     textAlign: TextAlign.right,
-                                          //   ),
-                                          // ),
-                                        ],
-                                      ),
-                                    ),
-                                    const Gap(18),
-                                    Column(
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius: BorderRadius.circular(12),
-                                          child: Image.network(getSet.icon ?? "",
-                                            fit: BoxFit.cover,
-                                            height: 70,
-                                            width:70,
-                                          ),
-                                        ),
-                                        const Gap(18),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          children: [
-                                            Visibility(
-                                              visible:getSet.quantity == null || getSet.quantity.toString() == "0",
-                                              child: GestureDetector(
-                                                behavior: HitTestBehavior.opaque,
-                                                onTap: () {
-                                                  setState(() {
-                                                    getSet.quantity = 1;
-
-                                                    var total = num.parse(getSet.salePrice.toString()) * num.parse((getSet.quantity ?? "").toString());
-                                                    getSet.amount = total;
-
-                                                    if (NavigationService.listItems[index].isSelected ?? false) {
-                                                      NavigationService.listItems[index].isSelected = false;
-                                                    } else {
-                                                      NavigationService.listItems[index].isSelected = true;
-                                                    }
-                                                  });
-                                                },
-                                                child: Container(
-                                                  height: 40,
-                                                  width: 100,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(8),
-                                                    border: Border.all(color: black, width: 0.8),
-                                                  ),
-                                                  alignment: Alignment.center,
-                                                  child: Text("ADD",
-                                                      style: TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: description)),
-                                                ),
-                                              ),
-                                            ),
-                                            Visibility(
-                                              visible: getSet.quantity != null && getSet.quantity.toString() != "0",
-                                              child: Container(
-                                                height: 40,
-                                                decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(8),
-                                                  border: Border.all(color: black, width: 0.8),
-                                                  color: black,
-                                                ),
-                                                alignment: Alignment.center,
-                                                child: Row(
-                                                  children: [
-                                                    IconButton(
-                                                        onPressed: () {
-                                                          setState(() {
-                                                            if (isOnline)
-                                                            {
-                                                              if (getSet.quantity == 1) {
-                                                                removeItem(index);
-                                                              } else {
-                                                                getSet.quantity = getSet.quantity! - 1;
-                                                              }
-
-                                                              var total = num.parse(getSet.salePrice.toString()) * num.parse((getSet.quantity ?? "").toString());
-                                                              getSet.amount = total;
-                                                            }
-                                                            else
-                                                            {
-                                                              noInternetSnackBar(context);
-                                                            }
-                                                          });
-
-                                                        },
-                                                        icon:const Icon(Icons.remove, color: white,)//Image.asset('assets/images/ic_blue_minus.png', height: 24, width: 24),
-                                                    ),
-                                                    Text((getSet.quantity ?? 0).toString(),
-                                                        style: TextStyle(fontWeight: FontWeight.w600, color: white, fontSize: description)),
-                                                    IconButton(
-                                                        onPressed: () {
-                                                          setState(() {
-                                                            if (isOnline)
-                                                            {
-                                                              getSet.quantity = ((getSet.quantity ?? 0) + 1);
-                                                              var total = num.parse(getSet.salePrice.toString()) * num.parse(getSet.quantity.toString());
-                                                              getSet.amount = total;
-                                                            }
-                                                            else
-                                                            {
-                                                              noInternetSnackBar(context);
-                                                            }
-                                                          });
-                                                        },
-                                                        icon: const Icon(Icons.add,color: white,)//Image.asset('assets/images/ic_blue_add.png', height: 24, width: 24),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),*/
               )),
           if (_isLoadingMore == true)
             Container(
@@ -663,6 +460,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
           physics: const NeverScrollableScrollPhysics(),
           primary: false,
           shrinkWrap: true,
+          padding: const EdgeInsets.only(bottom: 80),
           itemBuilder: (context, index) {
             var getSet = NavigationService.listItems[index];
 
@@ -743,11 +541,21 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                 children: [
                                   Visibility(
                                     visible:getSet.quantity == null || getSet.quantity.toString() == "0",
-                                    child: GestureDetector(
-                                      behavior: HitTestBehavior.opaque,
+                                    child: InkWell(
+                                      //behavior: HitTestBehavior.opaque,
                                       onTap: () {
+                                        if (Platform.isAndroid)
+                                        {
+                                          HapticFeedback.vibrate();
+                                        }
+                                        else
+                                        {
+                                          HapticFeedback.lightImpact();
+                                        }
+
                                         setState(() {
                                           getSet.quantity = 1;
+                                          cartCount = 1;
 
                                           var total = num.parse(getSet.salePrice.toString()) * num.parse((getSet.quantity ?? "").toString());
                                           getSet.amount = total;
@@ -758,6 +566,8 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                             NavigationService.listItems[index].isSelected = true;
                                           }
                                         });
+                                        shakeKey.currentState?.shake();
+
                                       },
                                       child: Container(
                                         height: 40,
@@ -786,17 +596,31 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                         children: [
                                           IconButton(
                                               onPressed: () {
+                                                if (Platform.isAndroid)
+                                                {
+                                                  HapticFeedback.vibrate();
+                                                }
+                                                else
+                                                {
+                                                  HapticFeedback.lightImpact();
+                                                }
                                                 setState(() {
                                                   if (isOnline)
                                                   {
                                                     if (getSet.quantity == 1) {
                                                       removeItem(index);
+                                                      cartCount = 1;
+
                                                     } else {
                                                       getSet.quantity = getSet.quantity! - 1;
+                                                      cartCount = cartCount - 1;
+
                                                     }
 
                                                     var total = num.parse(getSet.salePrice.toString()) * num.parse((getSet.quantity ?? "").toString());
                                                     getSet.amount = total;
+                                                    shakeKey.currentState?.shake();
+
                                                   }
                                                   else
                                                   {
@@ -811,12 +635,25 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                               style: TextStyle(fontWeight: FontWeight.w600, color: white, fontSize: description)),
                                           IconButton(
                                               onPressed: () {
+                                                if (Platform.isAndroid)
+                                                {
+                                                  HapticFeedback.vibrate();
+                                                }
+                                                else
+                                                {
+                                                  HapticFeedback.lightImpact();
+                                                }
                                                 setState(() {
                                                   if (isOnline)
                                                   {
                                                     getSet.quantity = ((getSet.quantity ?? 0) + 1);
+                                                    cartCount = cartCount + 1;
+
                                                     var total = num.parse(getSet.salePrice.toString()) * num.parse(getSet.quantity.toString());
                                                     getSet.amount = total;
+
+                                                    shakeKey.currentState?.shake();
+
                                                   }
                                                   else
                                                   {
@@ -862,6 +699,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
           shrinkWrap: true,
           scrollDirection: Axis.vertical,
           physics: const NeverScrollableScrollPhysics(),
+          padding: const EdgeInsets.only(bottom: 100),
           itemCount: NavigationService.listItems.length,
           controller: _scrollViewController,
           itemBuilder: (BuildContext context, int index) {
@@ -877,7 +715,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                   child:Card(
                     shape: RoundedRectangleBorder(
                       borderRadius:
-                      BorderRadius.circular(kTextFieldCornerRadius), // if you need this
+                      BorderRadius.circular(kTextFieldCornerRadius),
                       side: const BorderSide(
                         color: white,
                         width: 0,
@@ -941,8 +779,17 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                 child: GestureDetector(
                                   behavior: HitTestBehavior.opaque,
                                   onTap: () {
+                                    if (Platform.isAndroid)
+                                    {
+                                      HapticFeedback.vibrate();
+                                    }
+                                    else
+                                    {
+                                      HapticFeedback.lightImpact();
+                                    }
                                     setState(() {
                                       getSet.quantity = 1;
+                                      cartCount = 1;
 
                                       var total = num.parse(getSet.salePrice.toString()) * num.parse((getSet.quantity ?? "").toString());
                                       getSet.amount = total;
@@ -953,6 +800,8 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                         NavigationService.listItems[index].isSelected = true;
                                       }
                                     });
+                                    shakeKey.currentState?.shake();
+
                                   },
                                   child: Container(
                                     height: 40,
@@ -981,17 +830,30 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                     children: [
                                       IconButton(
                                           onPressed: () {
+                                            if (Platform.isAndroid)
+                                            {
+                                              HapticFeedback.vibrate();
+                                            }
+                                            else
+                                            {
+                                              HapticFeedback.lightImpact();
+                                            }
                                             setState(() {
                                               if (isOnline)
                                               {
                                                 if (getSet.quantity == 1) {
                                                   removeItem(index);
+                                                  cartCount = 1;
+
                                                 } else {
                                                   getSet.quantity = getSet.quantity! - 1;
+                                                  cartCount = cartCount - 1;
                                                 }
 
                                                 var total = num.parse(getSet.salePrice.toString()) * num.parse((getSet.quantity ?? "").toString());
                                                 getSet.amount = total;
+                                                shakeKey.currentState?.shake();
+
                                               }
                                               else
                                               {
@@ -1006,18 +868,31 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                           style: TextStyle(fontWeight: FontWeight.w600, color: white, fontSize: description)),
                                       IconButton(
                                           onPressed: () {
+                                            if (Platform.isAndroid)
+                                            {
+                                              HapticFeedback.vibrate();
+                                            }
+                                            else
+                                            {
+                                              HapticFeedback.lightImpact();
+                                            }
                                             setState(() {
                                               if (isOnline)
                                               {
                                                 getSet.quantity = ((getSet.quantity ?? 0) + 1);
+                                                cartCount = cartCount + 1;
+
                                                 var total = num.parse(getSet.salePrice.toString()) * num.parse(getSet.quantity.toString());
                                                 getSet.amount = total;
+
+                                                shakeKey.currentState?.shake();
                                               }
                                               else
                                               {
                                                 noInternetSnackBar(context);
                                               }
                                             });
+
                                           },
                                           icon: const Icon(Icons.add,color: white,)//Image.asset('assets/images/ic_blue_add.png', height: 24, width: 24),
                                       )
@@ -1040,6 +915,101 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
     );
   }
 
+  isCheckAny() {
+    bool isAnySelected = false;
+    for (int i = 0; i < NavigationService.listItems.length; i++) {
+      if (NavigationService.listItems[i].isSelected == true) {
+        isAnySelected = true;
+        break;
+      }
+    }
+
+    return isAnySelected;
+  }
+
+  Future<void> redirectToCart()
+  async {
+    NavigationService.listItemsTmp = [];
+
+    setState(() {
+      for (int i = 0; i < NavigationService.listItems.length; i++)
+      {
+        if (NavigationService.listItems[i].isSelected == true)
+        {
+          Records getSet = Records();
+
+          getSet = Records(
+              id:  NavigationService.listItems[i].id,
+              description:  NavigationService.listItems[i].description,
+              name:  NavigationService.listItems[i].name,
+              icon:  NavigationService.listItems[i].icon,
+              productCode:  NavigationService.listItems[i].productCode,
+              unit:  NavigationService.listItems[i].unit,
+              variationName:  NavigationService.listItems[i].variationName,
+              skuCode:  NavigationService.listItems[i].skuCode,
+              salePrice:  NavigationService.listItems[i].salePrice,
+              mrpPrice:  NavigationService.listItems[i].mrpPrice,
+              dpPrice:  NavigationService.listItems[i].dpPrice,
+              category:  NavigationService.listItems[i].category,
+              variationId:  NavigationService.listItems[i].variationId,
+              categoryId:  NavigationService.listItems[i].categoryId,
+              isSelected :  NavigationService.listItems[i].isSelected,
+              quantity: NavigationService.listItems[i].quantity,
+              amount: num.parse( NavigationService.listItems[i].salePrice.toString())
+          );
+
+          NavigationService.listItemsTmp.add(getSet);
+
+        }
+      }
+    });
+
+    if (NavigationService.listItemsTmp.isNotEmpty)
+    {
+      await Navigator.push(context, MaterialPageRoute(builder: (context) => AddOrderScreen()));
+      setState(() {
+        for (int n = 0; n < NavigationService.listItems.length; n++)
+        {
+          for (int i = 0; i < NavigationService.listItemsTmp.length; i++)
+          {
+            if (NavigationService.listItems[n].id == NavigationService.listItemsTmp[i].id)
+            {
+              if (NavigationService.listItems[n].isSelected == true)
+              {
+                Records getSet = Records();
+
+                getSet = Records(
+                    id:  NavigationService.listItemsTmp[i].id,
+                    description:  NavigationService.listItemsTmp[i].description,
+                    name:  NavigationService.listItemsTmp[i].name,
+                    icon:  NavigationService.listItemsTmp[i].icon,
+                    productCode:  NavigationService.listItemsTmp[i].productCode,
+                    unit:  NavigationService.listItemsTmp[i].unit,
+                    variationName:  NavigationService.listItemsTmp[i].variationName,
+                    skuCode:  NavigationService.listItemsTmp[i].skuCode,
+                    salePrice:  NavigationService.listItemsTmp[i].salePrice,
+                    mrpPrice:  NavigationService.listItemsTmp[i].mrpPrice,
+                    dpPrice:  NavigationService.listItemsTmp[i].dpPrice,
+                    category:  NavigationService.listItemsTmp[i].category,
+                    variationId:  NavigationService.listItemsTmp[i].variationId,
+                    categoryId:  NavigationService.listItemsTmp[i].categoryId,
+                    isSelected :  NavigationService.listItemsTmp[i].isSelected,
+                    quantity: NavigationService.listItemsTmp[i].quantity,
+                    amount: num.parse( NavigationService.listItemsTmp[i].salePrice.toString())
+                );
+
+                NavigationService.listItems[n] = getSet;
+              }
+            }
+          }
+        }
+      });
+    }
+    else
+    {
+      showSnackBar("Please add at least one Product.", context);
+    }
+  }
 
   @override
   void castStatefulWidget() {
@@ -1105,6 +1075,8 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                             child: TextButton(
                               onPressed: () async {
                                 setState(() {
+                                  shakeKey.currentState?.shake();
+
                                   NavigationService.listItems[index].quantity = 0;
                                   NavigationService.listItems[index].isSelected = false;
 
@@ -1164,7 +1136,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
 
       final url = Uri.parse(MAIN_URL + itemList);
       Map<String, String> jsonBody = {
-        'category_id': "",
+        'category_id': catId,
         'limit': _pageResult.toString(),
         'page': _pageIndex.toString(),
         'search': searchText,
@@ -1197,26 +1169,22 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
           _tempList = dataResponse.records ?? [];
           NavigationService.listItems.addAll(_tempList);
 
-         /* listCategory = [];
-
-          List<CategoryMenu> listCategoryTmp = [];
-          for (int i = 0; i < NavigationService.listItems.length; i++)
+          if (listCategory.isEmpty)
           {
+            listCategory = [];
 
-            listCategoryTmp.add(CategoryMenu(idStatic: NavigationService.listItems[i].categoryId.toString(),
-                nameStatic: NavigationService.listItems[i].category.toString(), isSelectedStatic: false));
+            listCategory.add(CategoryMenu(idStatic: "all", nameStatic: "All", isSelectedStatic: true));
+            for (int i = 0; i < NavigationService.listItems.length; i++)
+            {
+              listCategory.add(CategoryMenu(idStatic: NavigationService.listItems[i].categoryId.toString(),
+                  nameStatic: NavigationService.listItems[i].category.toString(), isSelectedStatic: false));
+            }
+
+            final ids = listCategory.map((e) => e.id).toSet();
+            listCategory.retainWhere((x) => ids.remove(x.id));
+            print("listCategoryTmp.length====>" + listCategory.length.toString());
           }
-          print("listCategoryTmp.length====>" + listCategoryTmp.length.toString());
 
-              *//*listCategory[0].setId = "all";
-              listCategory[0].setName = "All";
-              listCategory[0].setIsSelected = true;*//*
-          final ids = listCategoryTmp.map((e) => e.id).toSet();
-          listCategory.retainWhere((x) => ids.remove(x.id));
-
-         // listCategory.add(CategoryMenu(idStatic: "all", nameStatic: "All", isSelectedStatic: true));
-
-          print("listCategory.length====>" + listCategory.length.toString());*/
 
           if (_tempList.isNotEmpty) {
             _pageIndex += 1;

@@ -9,7 +9,7 @@ import '../constant/colors.dart';
 import '../model/common/CommonResponseModel.dart';
 import '../utils/app_utils.dart';
 import '../utils/base_class.dart';
-import 'ChangePasswordScreen.dart';
+import 'SetPasswordScreen.dart';
 
 class ForgotPwOtpScreen extends StatefulWidget {
   final String email;
@@ -171,8 +171,7 @@ class _ForgotPwOtpScreenState extends BaseState<ForgotPwOtpScreen> {
           isLoading = false;
         });
         //showSnackBar(loginResponse.message, context);
-
-        startActivity(context, ChangePasswordScreen(email, otpController.value.text));
+        startActivity(context, SetPasswordScreen(email, otpController.value.text));
 
       } else {
         setState(() {

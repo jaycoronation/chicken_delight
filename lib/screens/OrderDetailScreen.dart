@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:chicken_delight/model/ItemResponseModel.dart';
 import 'package:chicken_delight/model/common/CommonResponseModel.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import '../common_widget/common_widget.dart';
@@ -121,18 +123,40 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Gap(8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Order #$orderNumber",
-                          style: TextStyle(fontSize: medium, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
+                  Card(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(kContainerCornerRadius),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text("Order #$orderNumber",
+                              style: TextStyle(fontSize: medium, color: black,fontWeight: FontWeight.w600),
+                              textAlign: TextAlign.left
+                          ),
+                          FittedBox(
+                            child: Container(
+                              alignment: Alignment.topRight,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(kButtonCornerRadius)),
+                                color:  appBG,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 6.0, bottom: 6, left: 8, right: 8),
+                                child: Text(status,
+                                    style: TextStyle(fontSize: 13, color: status == "Cancelled" ? Colors.red : Colors.green,fontWeight: FontWeight.w500),textAlign: TextAlign.left
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(status,
-                          style: TextStyle(fontSize: subTitle, color: status == "Cancelled" ? Colors.red : Colors.green,fontWeight: FontWeight.w600),textAlign: TextAlign.left
-                      ),
-                    ],
+                    ),
                   ),
                   const Gap(8),
                   MediaQuery.removePadding(
@@ -145,319 +169,326 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                       itemCount: listItems.length,
                       physics: const ScrollPhysics(),
                       itemBuilder: (context, index) {
-                        return Container(
-                          margin: const EdgeInsets.only(top: 10,bottom: 10),
-                          padding: const EdgeInsets.all(14),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(kContainerCornerRadius),
-                              color: white,
+                        return Card(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(kContainerCornerRadius),
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(listItems[index].category ?? "",
-                                  style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
-                              ),
-                              const Gap(12),
-                              ListView.builder(
-                                  scrollDirection: Axis.vertical,
-                                  shrinkWrap: true,
-                                  itemCount: listItems[index].itemsInnerList?.length,
-                                  physics: const ScrollPhysics(),
-                                  itemBuilder: (context, indexInner) {
-                                    var getSetInner = listItems[index].itemsInnerList?[indexInner] ?? ItemsInnerList();
-                                    return Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Visibility(
-                                              visible: getSetInner.image!.isNotEmpty,
-                                              child: ClipRRect(
-                                                borderRadius: BorderRadius.circular(12),
-                                                child: Image.network(
-                                                  getSetInner.image ?? "",
-                                                  fit: BoxFit.cover,
-                                                  height: 70,
-                                                  width:70,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(listItems[index].category ?? "",
+                                    style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
+                                ),
+                                const Gap(12),
+                                ListView.builder(
+                                    scrollDirection: Axis.vertical,
+                                    shrinkWrap: true,
+                                    itemCount: listItems[index].itemsInnerList?.length,
+                                    physics: const ScrollPhysics(),
+                                    itemBuilder: (context, indexInner) {
+                                      var getSetInner = listItems[index].itemsInnerList?[indexInner] ?? ItemsInnerList();
+                                      return Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Visibility(
+                                                visible: getSetInner.image!.isNotEmpty,
+                                                child: ClipRRect(
+                                                  borderRadius: BorderRadius.circular(12),
+                                                  child: Image.network(
+                                                    getSetInner.image ?? "",
+                                                    fit: BoxFit.cover,
+                                                    height: 70,
+                                                    width:70,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            const Gap(12),
-                                            Flexible(
-                                              child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(getSetInner.item ?? "",
-                                                      style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
-                                                      overflow: TextOverflow.clip
-                                                  ),
-                                                  const Gap(4),
-                                                  Row(
-                                                    children: [
-                                                      Text(getSetInner.quantity ?? " ",
-                                                          style: TextStyle(fontSize: description, color: gray_dark,fontWeight: FontWeight.w500),
-                                                          textAlign: TextAlign.left
-                                                      ),
-                                                      Text(" x ${getPrice(getSetInner.basePrice ?? " ")}",
-                                                          style: TextStyle(fontSize: description, color: gray_dark,fontWeight: FontWeight.w500),
-                                                          textAlign: TextAlign.left
-                                                      ),
-                                                      const Spacer(),
-                                                      Text(getPrice(getSetInner.amount.toString()) ?? "",
-                                                          style: TextStyle(fontSize: description, color: gray_dark,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,),
-                                                          textAlign: TextAlign.left,
-                                                          overflow: TextOverflow.clip
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
+                                              const Gap(12),
+                                              Flexible(
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(getSetInner.item ?? "",
+                                                        style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
+                                                        overflow: TextOverflow.clip
+                                                    ),
+                                                    const Gap(4),
+                                                    Row(
+                                                      children: [
+                                                        Text(getSetInner.quantity ?? " ",
+                                                            style: TextStyle(fontSize: description, color: gray_dark,fontWeight: FontWeight.w500),
+                                                            textAlign: TextAlign.left
+                                                        ),
+                                                        Text(" x ${getPrice(getSetInner.basePrice ?? " ")}",
+                                                            style: TextStyle(fontSize: description, color: gray_dark,fontWeight: FontWeight.w500),
+                                                            textAlign: TextAlign.left
+                                                        ),
+                                                        const Spacer(),
+                                                        Text(getPrice(getSetInner.amount.toString()) ?? "",
+                                                            style: TextStyle(fontSize: description, color: gray_dark,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,),
+                                                            textAlign: TextAlign.left,
+                                                            overflow: TextOverflow.clip
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                        const Gap(10),
-                                      ],
-                                    );
-                                  }
-                              ),
-                            ],
+                                            ],
+                                          ),
+                                          const Gap(10),
+                                        ],
+                                      );
+                                    }
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
                     ),
                   ),
-                  Container(
-                    margin: const EdgeInsets.only(top:10,bottom: 10),
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
+                  Card(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(kContainerCornerRadius),
-                      color: white,
                     ),
-                    child: Column(
-                      children: [
-                        Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Subtotal:",
-                                    style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
-                                ),
-                                Text(getPrice(subTotal),
-                                    style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
-                                ),
-                              ],
-                            ),
-                            Container(
-                                margin: const EdgeInsets.only(top: 12, bottom: 12),
-                                child: const Divider(indent: 0,height: 1,color: grayNew,)
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Shipping:",
-                                    style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
-                                ),
-                                Text(getPrice("75"),
-                                    style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
-                                ),
-                              ],
-                            ),
-                            Container(
-                                margin: const EdgeInsets.only(top: 12,bottom: 12),
-                                child: const Divider(indent: 0,height: 1,color: grayNew,)
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Total Price:",
-                                    style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
-                                ),
-                                Text(getPrice(grandTotal),
-                                    style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        children: [
+                          Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text("Subtotal:",
+                                      style: TextStyle(fontSize: 15, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
+                                  ),
+                                  Text(getPrice(subTotal),
+                                      style: const TextStyle(fontSize: 15, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                  margin: const EdgeInsets.only(top: 12, bottom: 12),
+                                  child: const Divider(indent: 0,height: 1,color: grayNew,)
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("Shipping:",
+                                      style: TextStyle(fontSize: 15, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
+                                  ),
+                                  Text(getPrice("75"),
+                                      style: TextStyle(fontSize: 15, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                  margin: const EdgeInsets.only(top: 12,bottom: 12),
+                                  child: const Divider(indent: 0,height: 1,color: grayNew,)
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("Total Price:",
+                                      style: TextStyle(fontSize: 15, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
+                                  ),
+                                  Text(getPrice(grandTotal),
+                                      style: TextStyle(fontSize: 15, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Visibility(
                     visible: warehouseName.isNotEmpty && wareAddressLine1.isNotEmpty,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.only(top: 10,bottom: 10),
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
+                    child: Card(
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(kContainerCornerRadius),
-                        color: white,
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Shipping From",
-                              style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
-                          ),
-                          const Gap(10),
-                          Text(warehouseName,
-                              style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
-                          ),
-                          Text(wareAddressLine1,
-                              style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
-                          ),
-                        ],
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Shipping From",
+                                style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
+                            ),
+                            const Gap(10),
+                            Text(warehouseName,
+                                style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
+                            ),
+                            Text(wareAddressLine1,
+                                style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                   Visibility(
                     //visible: franchiseName.isNotEmpty && addressLine1.isNotEmpty,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.only(top: 10,bottom: 10),
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
+                    child: Card(
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(kContainerCornerRadius),
-                        color: white,
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(" Shipping To",
-                              style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
-                          ),
-                          Container(
-                            alignment: Alignment.topLeft,
-                            margin: const EdgeInsets.only(left: 8, right: 8, top: 10, bottom: 5),
-                            child: const Text("Franchise Name",
-                              textAlign: TextAlign.start,
-                              style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(" Shipping To",
+                                style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
                             ),
-                          ),
-                          Container(
-                            alignment: Alignment.topLeft,
-                            margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                            child: Text(franchiseName,
-                              textAlign: TextAlign.start,
-                              style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                            Container(
+                              alignment: Alignment.topLeft,
+                              margin: const EdgeInsets.only(left: 8, right: 8, top: 10, bottom: 5),
+                              child: const Text("Franchise Name",
+                                textAlign: TextAlign.start,
+                                style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
+                              ),
                             ),
-                          ),
-                          Container(
-                            alignment: Alignment.topLeft,
-                            margin: const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
-                            child: const Text("Phone",
-                              textAlign: TextAlign.start,
-                              style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
+                            Container(
+                              alignment: Alignment.topLeft,
+                              margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                              child: Text(franchiseName,
+                                textAlign: TextAlign.start,
+                                style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                              ),
                             ),
-                          ),
-                          Container(
-                            alignment: Alignment.topLeft,
-                            margin: const EdgeInsets.only(left: 8, right: 8, bottom: 5),
-                            child: Text(orderDetailData.franchiseMobile?.toString() ?? "",
-                              textAlign: TextAlign.start,
-                              style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                            Container(
+                              alignment: Alignment.topLeft,
+                              margin: const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
+                              child: const Text("Phone",
+                                textAlign: TextAlign.start,
+                                style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
+                              ),
                             ),
-                          ),
-                          Container(
-                            alignment: Alignment.topLeft,
-                            margin: const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
-                            child: const Text("Address",
-                              textAlign: TextAlign.start,
-                              style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
+                            Container(
+                              alignment: Alignment.topLeft,
+                              margin: const EdgeInsets.only(left: 8, right: 8, bottom: 5),
+                              child: Text(orderDetailData.franchiseMobile?.toString() ?? "",
+                                textAlign: TextAlign.start,
+                                style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                              ),
                             ),
-                          ),
-                          Container(
-                            alignment: Alignment.topLeft,
-                            margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                            child: Text("${(orderDetailData.addressLine1?.toString() ?? "")}, ${(orderDetailData.addressLine2?.toString() ?? "")} "
-                                "${(orderDetailData.addressLine3?.toString() ?? "")}" "${(orderDetailData.addressLine4?.toString() ?? "")}",
-                              textAlign: TextAlign.start,
-                              overflow: TextOverflow.clip,
-                              style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                            Container(
+                              alignment: Alignment.topLeft,
+                              margin: const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
+                              child: const Text("Address",
+                                textAlign: TextAlign.start,
+                                style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
+                              ),
                             ),
-                          ),
-                          Container(
-                            alignment: Alignment.topLeft,
-                            margin: const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
-                            child: const Text("Email",
-                              textAlign: TextAlign.start,
-                              style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
+                            Container(
+                              alignment: Alignment.topLeft,
+                              margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                              child: Text("${(orderDetailData.addressLine1?.toString() ?? "")}, ${(orderDetailData.addressLine2?.toString() ?? "")} "
+                                  "${(orderDetailData.addressLine3?.toString() ?? "")}" "${(orderDetailData.addressLine4?.toString() ?? "")}",
+                                textAlign: TextAlign.start,
+                                overflow: TextOverflow.clip,
+                                style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                              ),
                             ),
-                          ),
-                          Container(
-                            alignment: Alignment.topLeft,
-                            margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                            child: Text(orderDetailData.franchiseMobile == "" ? "-" : orderDetailData.franchiseMobile?.toString() ?? "",
-                              textAlign: TextAlign.start,
-                              style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                            Container(
+                              alignment: Alignment.topLeft,
+                              margin: const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
+                              child: const Text("Email",
+                                textAlign: TextAlign.start,
+                                style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
+                              ),
                             ),
-                          ),
-                          Container(
-                            alignment: Alignment.topLeft,
-                            margin: const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
-                            child: const Text("City",
-                              textAlign: TextAlign.start,
-                              style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
+                            Container(
+                              alignment: Alignment.topLeft,
+                              margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                              child: Text(orderDetailData.franchiseMobile == "" ? "-" : orderDetailData.franchiseMobile?.toString() ?? "",
+                                textAlign: TextAlign.start,
+                                style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                              ),
                             ),
-                          ),
-                          Container(
-                            alignment: Alignment.topLeft,
-                            margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                            child: Text(orderDetailData.city?.toString() ?? "",
-                              textAlign: TextAlign.start,
-                              style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                            Container(
+                              alignment: Alignment.topLeft,
+                              margin: const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
+                              child: const Text("City",
+                                textAlign: TextAlign.start,
+                                style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
+                              ),
                             ),
-                          ),
-                         /* Container(
-                            alignment: Alignment.topLeft,
-                            margin: const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
-                            child: const Text("Landmark/Pincode",
-                              textAlign: TextAlign.start,
-                              style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
+                            Container(
+                              alignment: Alignment.topLeft,
+                              margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                              child: Text(orderDetailData.city?.toString() ?? "",
+                                textAlign: TextAlign.start,
+                                style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                              ),
                             ),
-                          ),
-                          Container(
-                            alignment: Alignment.topLeft,
-                            margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                            child: Text(orderDetailData.d?.toString() ?? "",
-                              textAlign: TextAlign.start,
-                              style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                           /* Container(
+                              alignment: Alignment.topLeft,
+                              margin: const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
+                              child: const Text("Landmark/Pincode",
+                                textAlign: TextAlign.start,
+                                style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
+                              ),
                             ),
-                          ),*/
-                          Container(
-                            alignment: Alignment.topLeft,
-                            margin: const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
-                            child: const Text("State",
-                              textAlign: TextAlign.start,
-                              style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
+                            Container(
+                              alignment: Alignment.topLeft,
+                              margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                              child: Text(orderDetailData.d?.toString() ?? "",
+                                textAlign: TextAlign.start,
+                                style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                              ),
+                            ),*/
+                            Container(
+                              alignment: Alignment.topLeft,
+                              margin: const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
+                              child: const Text("State",
+                                textAlign: TextAlign.start,
+                                style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
+                              ),
                             ),
-                          ),
-                          Container(
-                            alignment: Alignment.topLeft,
-                            margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                            child: Text(orderDetailData.state?.toString() ?? "",
-                              textAlign: TextAlign.start,
-                              style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                            Container(
+                              alignment: Alignment.topLeft,
+                              margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                              child: Text(orderDetailData.state?.toString() ?? "",
+                                textAlign: TextAlign.start,
+                                style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
 
                       /*Column(
@@ -480,29 +511,32 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                   ),
                   Visibility(
                     visible: paymentStatus.isNotEmpty,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.only(top: 10,bottom: 20),
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
+                    child: Card(
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(kContainerCornerRadius),
-                        color: white,
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Payment Status",
-                              style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
-                          ),
-                          Gap(10),
-                          Text(paymentStatus,
-                              style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
-                          ),
-                        ],
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Payment Status",
+                                style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
+                            ),
+                            Gap(10),
+                            Text(paymentStatus,
+                                style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
+                  Gap(40)
                 ],
               ),
             ),

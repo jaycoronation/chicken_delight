@@ -47,6 +47,8 @@ class _DashboardPageState extends BaseState<DashboardPage> {
   List<HomePageMenuGetSet> analysisList = [];
   String deviceName = '';
   String totalProducts = '';
+  String todaysOrder = '';
+  String todaysTotalAmount = '';
 
 
   @override
@@ -121,8 +123,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                   noInternetSnackBar(context);
                 }
               },
-              child:
-              Stack(
+              child: Stack(
                 children: [
                   Container(
                     decoration: BoxDecoration(
@@ -230,7 +231,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                                 ),
                                 SizedBox(
                                   width: double.infinity,
-                                  height: 280,
+                                  height: 410,
                                   child: Card(
                                       color: white,
                                       shape: RoundedRectangleBorder(
@@ -276,30 +277,26 @@ class _DashboardPageState extends BaseState<DashboardPage> {
             decoration: BoxDecoration(
                 color: Color(int.parse(analysisList[index].bgColor.replaceAll('#', '0x'))),
                 borderRadius: const BorderRadius.all(Radius.circular(22))),
-            padding: const EdgeInsets.only(left: 10, right: 6, bottom: 0,top: 10),
+            padding: const EdgeInsets.only(left: 10, right: 6, top: 10),
             width: MediaQuery.of(context).size.width,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Image.asset(analysisList[index].itemIcon, height: 32, width: 32,),
+                Image.asset(analysisList[index].itemIcon, height: 32, width: 32),
                 const Gap(12),
-                analysisList[index].name == "Total Amount"
-                ? Text(getPrice(analysisList[index].count ?? ""),
+               Text(analysisList[index].count ?? "",
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: black, fontWeight: FontWeight.w600, fontSize: subTitle))
-                : Text(analysisList[index].count ?? "",
-                    textAlign: TextAlign.center,
-                    style:  TextStyle(color: black, fontWeight: FontWeight.w600, fontSize: titleFont20)),
+                    style: TextStyle(color: black, fontWeight: FontWeight.w600, fontSize: titleFont20)),
                 const Gap(8),
                 Row(
                   children: [
                     Expanded(
-                        child: Text(analysisList[index].name ?? "", textAlign: TextAlign.start,
+                        child: Text(analysisList[index].name, textAlign: TextAlign.start,
                         style: TextStyle(color: black, fontWeight: FontWeight.w500, fontSize: small))
                     ),
                     Visibility(
-                        visible: analysisList[index].name != "Total Amount",
+                        visible: analysisList[index].name != "Total Amount" && analysisList[index].name != "Today's Total Amount",
                         child: Image.asset('assets/images/ic_right_arrow_new.png', height: 14, width: 14, color: black))
                   ],
                 )
@@ -635,14 +632,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
 
         analysisList = [
           HomePageMenuGetSet(
-              nameStatic: "Items",
-              titleColorStatic: "#ff95b5ad",
-              bgColorStatic: "#ffedf2f4",
-              itemIconStatic: "assets/images/slicing-24.png",
-              countStatic: totalProducts,
-              arrowColorStatic: "#ff95b5ad"),
-          HomePageMenuGetSet(
-              nameStatic: "Orders",
+              nameStatic: "Total Orders",
               titleColorStatic: "#ff809dd6",
               bgColorStatic: "#ffe7ebf7",
               itemIconStatic: "assets/images/slicing-27.png",
@@ -653,8 +643,29 @@ class _DashboardPageState extends BaseState<DashboardPage> {
               titleColorStatic: "#ffedab7e",
               bgColorStatic: "#fff7eae2",
               itemIconStatic: "assets/images/slicing-28.png",
-              countStatic:records?.totalValue?.toStringAsFixed(2) ?? "" ,
+              countStatic: getPrice(records?.totalValue?.toStringAsFixed(2) ?? ""),
               arrowColorStatic: "#ffedab7e"),
+          HomePageMenuGetSet(
+              nameStatic: "Today's Order",
+              titleColorStatic: "#ff809dd6",
+              bgColorStatic: "#ffe7ebf7",
+              itemIconStatic: "assets/images/slicing-27.png",
+              countStatic: records?.todayOrderCount.toString() ?? "",
+              arrowColorStatic: "#ff95b5ad"),
+          HomePageMenuGetSet(
+              nameStatic: "Today's Total Amount",
+              titleColorStatic: "#ffedab7e",
+              bgColorStatic: "#fff7eae2",
+              itemIconStatic: "assets/images/slicing-28.png",
+              countStatic: getPrice(records?.todayOrderValue?.toStringAsFixed(2) ?? ""),
+              arrowColorStatic: "#ff809dd6"),
+          HomePageMenuGetSet(
+              nameStatic: "Items",
+              titleColorStatic: "#ff95b5ad",
+              bgColorStatic: "#ffedf2f4",
+              itemIconStatic: "assets/images/slicing-24.png",
+              countStatic: totalProducts,
+              arrowColorStatic: "#ff95b5ad"),
         ];
 
         if (records?.totalNotifications != null) {

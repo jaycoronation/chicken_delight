@@ -6,6 +6,7 @@ String login = "manageuser/login";
 String forgotPw = "manageuser/forgot_password";
 String forgotPwOtp = "manageuser/check_code";
 String resetPw = "manageuser/reset_password";
+String changePw = "manageuser/changepassword";
 String checkToken = "checktoken";
 
 String orderDetail = "outwardorder/details";

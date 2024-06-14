@@ -32,7 +32,6 @@ class _LoginScreenState extends BaseState<LoginScreen> {
      super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
