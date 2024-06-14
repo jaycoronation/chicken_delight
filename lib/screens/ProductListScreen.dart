@@ -232,7 +232,8 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                             alignment: Alignment.centerRight,
                             margin: const EdgeInsets.only(left: 20),
                             child: Center(
-                              child: Text(cartCount.toString(),
+                              child: Text(
+                                  cartCount.toString(),
                                   style: TextStyle(fontWeight: FontWeight.w400, color: black, fontSize: small)),
                             ),
                           ),
@@ -406,7 +407,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
           onTap: () {}, btnTitle: '')
             : setData()
             : const NoInternetWidget(),
-      floatingActionButton: isCheckAny()
+    /*  floatingActionButton: isCheckAny()
           ? FloatingActionButton.extended(
         onPressed: () {
           redirectToCart();
@@ -414,7 +415,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
         backgroundColor: black,
         label: Text("Proceed", style: getWhiteSmallTextStyle(),)
         //child: const Icon(Icons.navigate_next_outlined, color: white,),
-      ) : null,
+      ) : null,*/
       );
   }
 
@@ -555,8 +556,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
 
                                         setState(() {
                                           getSet.quantity = 1;
-                                          cartCount = 1;
-
+                                          cartCount += 1;
                                           var total = num.parse(getSet.salePrice.toString()) * num.parse((getSet.quantity ?? "").toString());
                                           getSet.amount = total;
 
@@ -566,6 +566,9 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                             NavigationService.listItems[index].isSelected = true;
                                           }
                                         });
+
+                                        print("Count ==== ${cartCount}");
+
                                         shakeKey.currentState?.shake();
 
                                       },
@@ -609,16 +612,14 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                                   {
                                                     if (getSet.quantity == 1) {
                                                       removeItem(index);
-                                                      cartCount = 1;
-
                                                     } else {
                                                       getSet.quantity = getSet.quantity! - 1;
-                                                      cartCount = cartCount - 1;
-
                                                     }
 
                                                     var total = num.parse(getSet.salePrice.toString()) * num.parse((getSet.quantity ?? "").toString());
                                                     getSet.amount = total;
+                                                    cartCount -= 1;
+
                                                     shakeKey.currentState?.shake();
 
                                                   }
@@ -647,7 +648,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                                   if (isOnline)
                                                   {
                                                     getSet.quantity = ((getSet.quantity ?? 0) + 1);
-                                                    cartCount = cartCount + 1;
+                                                    cartCount += 1;
 
                                                     var total = num.parse(getSet.salePrice.toString()) * num.parse(getSet.quantity.toString());
                                                     getSet.amount = total;
@@ -789,8 +790,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                     }
                                     setState(() {
                                       getSet.quantity = 1;
-                                      cartCount = 1;
-
+                                      cartCount += 1;
                                       var total = num.parse(getSet.salePrice.toString()) * num.parse((getSet.quantity ?? "").toString());
                                       getSet.amount = total;
 
@@ -843,15 +843,15 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                               {
                                                 if (getSet.quantity == 1) {
                                                   removeItem(index);
-                                                  cartCount = 1;
 
                                                 } else {
                                                   getSet.quantity = getSet.quantity! - 1;
-                                                  cartCount = cartCount - 1;
                                                 }
 
                                                 var total = num.parse(getSet.salePrice.toString()) * num.parse((getSet.quantity ?? "").toString());
                                                 getSet.amount = total;
+                                                cartCount -= 1;
+
                                                 shakeKey.currentState?.shake();
 
                                               }
@@ -880,7 +880,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                               if (isOnline)
                                               {
                                                 getSet.quantity = ((getSet.quantity ?? 0) + 1);
-                                                cartCount = cartCount + 1;
+                                                cartCount += 1;
 
                                                 var total = num.parse(getSet.salePrice.toString()) * num.parse(getSet.quantity.toString());
                                                 getSet.amount = total;

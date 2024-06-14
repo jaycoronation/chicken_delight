@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:chicken_delight/push_notification/PushNotificationService.dart';
 import 'package:chicken_delight/screens/LoginScreen.dart';
+import 'package:chicken_delight/screens/OrderDetailScreen.dart';
 import 'package:chicken_delight/tabs/tabnavigation.dart';
 import 'package:chicken_delight/utils/TextChanger.dart';
 import 'package:chicken_delight/utils/app_utils.dart';
@@ -35,7 +36,7 @@ Future<void> main() async {
     // App received a notification when it was killed
     print("@@@@@@@@Main Dart@@@@@@@@" + initialMessage.data.toString());
     NavigationService.notif_type = initialMessage.data['content_type'];
-    NavigationService.orderID = initialMessage.data['content_id'];
+    NavigationService.notif_id = initialMessage.data['content_id'];
   }
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -112,14 +113,22 @@ class _MyHomePageState extends BaseState<MyHomePage> {
   void initState() {
     super.initState();
     Timer(const Duration(seconds: 3), () {
-      if (sessionManager.checkIsLoggedIn() ?? false)
-      {
-       startActivityAnimationRemove(context, const TabNavigation(0));
-      }
+      print("Notification ==== ${NavigationService.notif_type}");
+      if (NavigationService.notif_type == "order_details")
+        {
+          startActivityAnimationRemove(context, OrderDetailScreen(NavigationService.notif_id ?? '', false));
+        }
       else
-      {
-        startAndRemoveActivity(context, const LoginScreen());
-      }
+        {
+          if (sessionManager.checkIsLoggedIn() ?? false)
+          {
+            startActivityAnimationRemove(context, const TabNavigation(0));
+          }
+          else
+          {
+            startAndRemoveActivity(context, const LoginScreen());
+          }
+        }
     });
   }
 

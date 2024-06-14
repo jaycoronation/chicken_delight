@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:chicken_delight/constant/global_context.dart';
 import 'package:chicken_delight/model/ItemResponseModel.dart';
 import 'package:chicken_delight/model/common/CommonResponseModel.dart';
+import 'package:chicken_delight/tabs/tabnavigation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -47,7 +49,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
 
   @override
   void initState() {
-
+    NavigationService.notif_type = '';
     ApiService.fetchData().then((response) {
       var data = response as CommonResponseModel;
       if (data.success == 1)
@@ -75,14 +77,18 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
         }
         if (isFrom)
         {
-          Navigator.pop(context);
-          Navigator.pop(context);
-          final BottomNavigationBar bar = bottomWidgetKey.currentWidget as BottomNavigationBar;
-          bar.onTap!(2);
+          startAndRemoveActivity(context, const TabNavigation(0));
         }
         else
         {
-          Navigator.pop(context);
+          if (Navigator.canPop(context))
+          {
+            Navigator.pop(context);
+          }
+          else
+          {
+            startAndRemoveActivity(context, const TabNavigation(0));
+          }
         }
       },
         /*onWillPop: () {
@@ -98,16 +104,21 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
             leading: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
+                  //Navigator.canPop(context);
                   if (isFrom)
                   {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                    final BottomNavigationBar bar = bottomWidgetKey.currentWidget as BottomNavigationBar;
-                    bar.onTap!(2);
+                    startAndRemoveActivity(context, const TabNavigation(0));
                   }
                   else
                   {
-                    Navigator.pop(context);
+                    if (Navigator.canPop(context))
+                      {
+                        Navigator.pop(context);
+                      }
+                    else
+                      {
+                        startAndRemoveActivity(context, const TabNavigation(0));
+                      }
                   }
                 },
                 child: getBackArrowBlack()

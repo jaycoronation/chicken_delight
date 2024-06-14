@@ -3,6 +3,7 @@ import 'dart:core';
 import 'dart:io';
 
 import 'package:chicken_delight/constant/api_end_point.dart';
+import 'package:chicken_delight/constant/global_context.dart';
 import 'package:chicken_delight/model/DashboardResponseModel.dart';
 import 'package:chicken_delight/model/GetDeviceTokenResponseModel.dart';
 import 'package:chicken_delight/screens/OrderDetailScreen.dart';
@@ -101,7 +102,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: _key,
+        key: NavigationService.navigatorKey,
         backgroundColor: appBG,
         appBar: AppBar(
           toolbarHeight: kToolbarHeight,
