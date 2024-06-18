@@ -34,3 +34,4 @@ String removeDeviceToken = "remove_device_token";
 String notificationList = "notification/list";
 String counters = "counters";
 String notificationSave = "notification/save";
+String notificationClear = "notification/clear";

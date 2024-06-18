@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'package:chicken_delight/screens/LoginScreen.dart';
 import 'package:chicken_delight/utils/app_utils.dart';
+import 'package:chicken_delight/widget/AnimatedWidget.dart';
 import 'package:chicken_delight/widget/loading.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -61,8 +62,8 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
       appBar:AppBar(
         toolbarHeight: kToolbarHeight,
         automaticallyImplyLeading: false,
+        centerTitle: false,
         title: getTitle("Profile"),
-        centerTitle: true,
         elevation: 0,
         backgroundColor: chicken_bg,
       ),
@@ -73,28 +74,24 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  SizedBox(
-                    width: double.infinity,
-                    height: 120,
-                    child: Card(
-                      color: white,
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(kTextFieldCornerRadius),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 10,right: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              onTap: () {
-                                startActivity(context, const ProfileViewPage());
-                              },
-                              child: Row(
+                  OpenContainerWrapper(
+                    closedChild: SizedBox(
+                      width: double.infinity,
+                      height: 120,
+                      child: Card(
+                        color: white,
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(kTextFieldCornerRadius),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10,right: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
                                 children: [
                                   SizedBox(
                                     height: 60,
@@ -116,11 +113,12 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
                                     ),
                                   ),
                                   const Gap(4),
-                                  Expanded(child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      sessionManager.getName().toString().isNotEmpty
-                                          ? Container(
+                                  Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          sessionManager.getName().toString().isNotEmpty
+                                              ? Container(
                                             margin: const EdgeInsets.only(top: 6),
                                             child:RichText(
                                               textAlign: TextAlign.center,
@@ -135,19 +133,20 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
                                               ),
                                             ),
                                           )
-                                          : const Text("Guest User", style: TextStyle(fontWeight: FontWeight.w800, color: black,fontSize: 18))
-                                    ],
-                                  )),
+                                              : const Text("Guest User", style: TextStyle(fontWeight: FontWeight.w800, color: black,fontSize: 18))
+                                        ],
+                                      )),
                                   const Gap(4),
                                   Image.asset('assets/images/ic_right_arrow_new.png', height: 12, width: 12, color: black),
                                   const Gap(10)
                                 ],
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
+                    openedChild: const ProfileViewPage(),
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 18, left: 5, right: 5),
@@ -155,35 +154,25 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(kContainerCornerRadius),
                       color: white,
-                      border: Border.all(
-                        color: white,
-                        width: 0.8,
-                      ),
+                      border: Border.all(color: white, width: 0.8),
                     ),
-                    child: Column(
-                      children: [
-                        GestureDetector(
-                          behavior: HitTestBehavior.opaque,
-                          onTap: () {
-                            startActivity(context, const ChangePasswordScreen());
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.asset('assets/images/ic_lock.png', height: 22, width: 22, color: black),
-                              const Gap(12),
-                              Expanded(
-                                child: Text("Change Password",
-                                    style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),
-                                    textAlign: TextAlign.left
-                                ),
-                              ),
-                              Image.asset('assets/images/ic_right_arrow_new.png', height: 14, width: 14, color: black)
-                            ],
+                    child: OpenContainerWrapper(
+                      closedChild: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset('assets/images/ic_lock.png', height: 22, width: 22, color: black),
+                          const Gap(12),
+                          Expanded(
+                            child: Text("Change Password",
+                                style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),
+                                textAlign: TextAlign.left
+                            ),
                           ),
-                        ),
-                      ],
+                          Image.asset('assets/images/ic_right_arrow_new.png', height: 14, width: 14, color: black)
+                        ],
+                      ),
+                      openedChild: const ChangePasswordScreen(),
                     ),
                   ),
                   Container(
@@ -194,29 +183,26 @@ class _ProfileScreenState extends BaseState<ProfileScreen> {
                       color: white,
                       border: Border.all(color: white, width: 0.8),
                     ),
-                    child: Column(
-                      children: [
-                        GestureDetector(
-                          behavior: HitTestBehavior.opaque,
-                          onTap: () {
-                            logoutFromApp(context);
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.asset('assets/images/ic_logout.png', height: 22, width: 22, color: black),
-                              const Gap(12),
-                              Expanded(
-                                child: Text("Logout",
-                                    style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
-                                ),
-                              ),
-                              Image.asset('assets/images/ic_right_arrow_new.png', height: 14, width: 14, color: black)
-                            ],
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () {
+                        logoutFromApp(context);
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset('assets/images/ic_logout.png', height: 22, width: 22, color: black),
+                          const Gap(12),
+                          Expanded(
+                            child: Text("Logout",
+                                style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),
+                                textAlign: TextAlign.left
+                            ),
                           ),
-                        ),
-                      ],
+                          Image.asset('assets/images/ic_right_arrow_new.png', height: 14, width: 14, color: black)
+                        ],
+                      ),
                     ),
                   ),
                 ],

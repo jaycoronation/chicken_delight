@@ -74,12 +74,14 @@ class NotificationRecords {
       String? title, 
       String? message, 
       String? link, 
-      String? timestamp,}){
+      String? timestamp,
+    String? readTimestamp,}){
     _id = id;
     _title = title;
     _message = message;
     _link = link;
     _timestamp = timestamp;
+    _readTimestamp = readTimestamp;
 }
 
   NotificationRecords.fromJson(dynamic json) {
@@ -88,28 +90,33 @@ class NotificationRecords {
     _message = json['message'];
     _link = json['link'];
     _timestamp = json['timestamp'];
+    _readTimestamp = json['read_timestamp'];
   }
   String? _id;
   String? _title;
   String? _message;
   String? _link;
   String? _timestamp;
+  String? _readTimestamp;
 NotificationRecords copyWith({  String? id,
   String? title,
   String? message,
   String? link,
   String? timestamp,
+  String? readTimestamp,
 }) => NotificationRecords(  id: id ?? _id,
   title: title ?? _title,
   message: message ?? _message,
   link: link ?? _link,
   timestamp: timestamp ?? _timestamp,
+  readTimestamp: readTimestamp ?? _readTimestamp,
 );
   String? get id => _id;
   String? get title => _title;
   String? get message => _message;
   String? get link => _link;
   String? get timestamp => _timestamp;
+  String? get readTimestamp => _readTimestamp;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -118,6 +125,7 @@ NotificationRecords copyWith({  String? id,
     map['message'] = _message;
     map['link'] = _link;
     map['timestamp'] = _timestamp;
+    map['read_timestamp'] = _readTimestamp;
     return map;
   }
 

@@ -135,6 +135,7 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
           toolbarHeight: kToolbarHeight,
           automaticallyImplyLeading: false,
           title: getTitle("Profile"),
+          centerTitle: false,
           leading: GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () {
@@ -142,13 +143,12 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
               },
               child:getBackArrowBlack()
           ),
-          centerTitle: true,
           elevation: 0,
           backgroundColor: chicken_bg,
         ),
         body: SingleChildScrollView(
             child: Container(
-              margin: const EdgeInsets.all(12),
+              margin: const EdgeInsets.only(left: 12, right: 12, bottom: 22),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(kContainerCornerRadius),

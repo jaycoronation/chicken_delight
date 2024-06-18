@@ -50,7 +50,6 @@ class _ForgotPasswordScreenState extends BaseState<ForgotPasswordScreen> {
                  Navigator.pop(context);
                },
                child:getBackArrowBlack()),
-           centerTitle: true,
            elevation: 0,
            backgroundColor: appBG,
          ),

@@ -1,19 +1,19 @@
 import 'dart:convert';
 
 import 'package:chicken_delight/constant/global_context.dart';
-import 'package:chicken_delight/model/ItemResponseModel.dart';
 import 'package:chicken_delight/model/common/CommonResponseModel.dart';
 import 'package:chicken_delight/tabs/tabnavigation.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:chicken_delight/widget/loading.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:provider/provider.dart';
 import '../common_widget/common_widget.dart';
 import '../constant/ApiService.dart';
 import '../constant/api_end_point.dart';
 import '../constant/colors.dart';
 import '../model/OrderDetailResponseModel.dart';
+import '../utils/TextChanger.dart';
 import '../utils/app_utils.dart';
 import '../utils/base_class.dart';
 
@@ -101,6 +101,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
             toolbarHeight: kToolbarHeight,
             automaticallyImplyLeading: false,
             title: getTitle("Order Detail"),
+            centerTitle: false,
             leading: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
@@ -112,35 +113,59 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                   else
                   {
                     if (Navigator.canPop(context))
-                      {
-                        Navigator.pop(context);
-                      }
+                    {
+                      Navigator.pop(context);
+                    }
                     else
-                      {
-                        startAndRemoveActivity(context, const TabNavigation(0));
-                      }
+                    {
+                      startAndRemoveActivity(context, const TabNavigation(0));
+                    }
                   }
                 },
                 child: getBackArrowBlack()
             ),
-            centerTitle: true,
             elevation: 0,
             backgroundColor: chicken_bg,
           ),
-          body: Padding(
+          body: isLoading ? const LoadingWidget()
+              : Padding(
             padding: const EdgeInsets.only(left: 16, right: 16),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Visibility(
+                    visible: status == "Accepted",
+                    child: Container(
+                      alignment: Alignment.centerRight,
+                      margin: const EdgeInsets.only(bottom: 5),
+                      child: getCommonButton("Cancel Order", black, isLoading, () {
+                        {
+                          cancelOrder();
+                        }
+                      }),
+                    ),
+                  ),
+                  Visibility(
+                    visible: status == "Processed",
+                    child: Container(
+                      alignment: Alignment.centerRight,
+                      margin: const EdgeInsets.only(bottom: 5),
+                      child: getCommonButton("Print Invoice", black, isLoading, () {
+                        {
+                          showSnackBar("Coming soon...", context);
+                        }
+                      }),
+                    ),
+                  ),
                   Card(
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(kContainerCornerRadius),
                     ),
-                    child: Padding(
+                    child: Container(
                       padding: const EdgeInsets.all(10.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -169,7 +194,6 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                       ),
                     ),
                   ),
-                  const Gap(8),
                   MediaQuery.removePadding(
                     context: context,
                     removeBottom: true,
@@ -375,96 +399,73 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(kContainerCornerRadius),
                       ),
-                      child: Padding(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
                         padding: const EdgeInsets.all(10.0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(" Shipping To",
+                            Text("Shipping To",
                                 style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
                             ),
                             Container(
-                              alignment: Alignment.topLeft,
-                              margin: const EdgeInsets.only(left: 8, right: 8, top: 10, bottom: 5),
+                              margin: const EdgeInsets.only(top: 10, bottom: 5),
                               child: const Text("Franchise Name",
                                 textAlign: TextAlign.start,
                                 style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
                               ),
                             ),
-                            Container(
-                              alignment: Alignment.topLeft,
-                              margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                              child: Text(franchiseName,
-                                textAlign: TextAlign.start,
-                                style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
-                              ),
+                            Text(franchiseName,
+                              textAlign: TextAlign.start,
+                              style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
                             ),
                             Container(
-                              alignment: Alignment.topLeft,
-                              margin: const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
+                              margin: const EdgeInsets.only(top: 12, bottom: 5),
                               child: const Text("Phone",
                                 textAlign: TextAlign.start,
                                 style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
                               ),
                             ),
-                            Container(
-                              alignment: Alignment.topLeft,
-                              margin: const EdgeInsets.only(left: 8, right: 8, bottom: 5),
-                              child: Text(orderDetailData.franchiseMobile?.toString() ?? "",
-                                textAlign: TextAlign.start,
-                                style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
-                              ),
+                            Text(orderDetailData.franchiseMobile.toString().isNotEmpty
+                                ? orderDetailData.franchiseMobile?.toString() ?? "" : "-",
+                              textAlign: TextAlign.start,
+                              style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
                             ),
                             Container(
-                              alignment: Alignment.topLeft,
-                              margin: const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
-                              child: const Text("Address",
-                                textAlign: TextAlign.start,
-                                style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                            Container(
-                              alignment: Alignment.topLeft,
-                              margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                              child: Text("${(orderDetailData.addressLine1?.toString() ?? "")}, ${(orderDetailData.addressLine2?.toString() ?? "")} "
-                                  "${(orderDetailData.addressLine3?.toString() ?? "")}" "${(orderDetailData.addressLine4?.toString() ?? "")}",
-                                textAlign: TextAlign.start,
-                                overflow: TextOverflow.clip,
-                                style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                            Container(
-                              alignment: Alignment.topLeft,
-                              margin: const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
+                              margin: const EdgeInsets.only(top: 12, bottom: 5),
                               child: const Text("Email",
                                 textAlign: TextAlign.start,
                                 style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
                               ),
                             ),
-                            Container(
-                              alignment: Alignment.topLeft,
-                              margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                              child: Text(orderDetailData.franchiseMobile == "" ? "-" : orderDetailData.franchiseMobile?.toString() ?? "",
-                                textAlign: TextAlign.start,
-                                style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
-                              ),
+                            Text(orderDetailData.franchiseEmail == "" ? "-" : orderDetailData.franchiseEmail?.toString() ?? "",
+                              textAlign: TextAlign.start,
+                              style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
                             ),
                             Container(
-                              alignment: Alignment.topLeft,
-                              margin: const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
+                              margin: const EdgeInsets.only(top: 12, bottom: 5),
+                              child: const Text("Address",
+                                textAlign: TextAlign.start,
+                                style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            Text("${(orderDetailData.addressLine1?.toString() ?? "")}, ${(orderDetailData.addressLine2?.toString() ?? "")} "
+                                "${(orderDetailData.addressLine3?.toString() ?? "")}" "${(orderDetailData.addressLine4?.toString() ?? "")}",
+                              textAlign: TextAlign.start,
+                              overflow: TextOverflow.clip,
+                              style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(top: 12, bottom: 5),
                               child: const Text("City",
                                 textAlign: TextAlign.start,
                                 style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
                               ),
                             ),
-                            Container(
-                              alignment: Alignment.topLeft,
-                              margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                              child: Text(orderDetailData.city?.toString() ?? "",
-                                textAlign: TextAlign.start,
-                                style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
-                              ),
+                            Text(orderDetailData.city.toString().isNotEmpty ? orderDetailData.city?.toString() ?? "" : "-",
+                              textAlign: TextAlign.start,
+                              style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
                             ),
                            /* Container(
                               alignment: Alignment.topLeft,
@@ -483,25 +484,19 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                               ),
                             ),*/
                             Container(
-                              alignment: Alignment.topLeft,
-                              margin: const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
+                              margin: const EdgeInsets.only(top: 12, bottom: 5),
                               child: const Text("State",
                                 textAlign: TextAlign.start,
                                 style: TextStyle(fontSize: 14, color: kTextLightGray, fontWeight: FontWeight.w600),
                               ),
                             ),
-                            Container(
-                              alignment: Alignment.topLeft,
-                              margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                              child: Text(orderDetailData.state?.toString() ?? "",
-                                textAlign: TextAlign.start,
-                                style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
-                              ),
+                            Text(orderDetailData.state.toString().isNotEmpty ? orderDetailData.state?.toString() ?? "" : "-",
+                              textAlign: TextAlign.start,
+                              style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
                             ),
                           ],
                         ),
                       ),
-
                       /*Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -536,11 +531,11 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text("Payment Status",
-                                style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
+                                style: TextStyle(fontSize: subTitle, color: black, fontWeight: FontWeight.w600),textAlign: TextAlign.left
                             ),
-                            Gap(10),
+                            const Gap(10),
                             Text(paymentStatus,
-                                style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
+                                style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500),textAlign: TextAlign.left
                             ),
                           ],
                         ),
@@ -560,6 +555,121 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
   void castStatefulWidget() {
    widget is OrderDetailScreen;
   }
+
+  void cancelOrder() {
+    showModalBottomSheet<String>(
+        isScrollControlled: true,
+        backgroundColor: white,
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
+        context: context,
+        builder: (context) {
+          return Padding(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: StatefulBuilder(
+              builder: (BuildContext context, StateSetter updateState) {
+                return Wrap(
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)), color: white),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            height: 2,
+                            width: 40,
+                            alignment: Alignment.center,
+                            color: black,
+                            margin: const EdgeInsets.only(top: 10, bottom: 10),
+                          ),
+                          Container(margin: const EdgeInsets.only(top: 10, bottom: 10),
+                              child: Text('Cancel Order', style: TextStyle(fontSize: medium, fontWeight: FontWeight.w700, color: black))
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 10, bottom: 15),
+                            child: Text('Are you sure want to cancel this order?', style: TextStyle(fontSize: subTitle, fontWeight: FontWeight.w400, color: black)),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(left: 15, right: 15),
+                            child: TextField(
+                              readOnly: false,
+                              keyboardType: TextInputType.text,
+                              textInputAction: TextInputAction.next,
+                              textCapitalization: TextCapitalization.words,
+                              cursorColor: black,
+                              maxLines: 3,
+                              controller: cancelRemarksController,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: subTitle,
+                                color: black,
+                              ),
+                              decoration: InputDecoration(
+                                labelText: 'Remarks',
+                                alignLabelWithHint: true,
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14 ),
+                                counterText: "",
+                                labelStyle:  TextStyle(fontSize: description, color:gray_dark),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(left: 20, right: 20, bottom: 30, top: 20),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(width: 0.4, color: black),
+                                      borderRadius: BorderRadius.all(Radius.circular(kButtonCornerRadius)),
+                                    ),
+                                    margin: const EdgeInsets.only(right: 10),
+                                    child: TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text('No',
+                                            style: TextStyle(
+                                              fontSize: subTitle,
+                                              fontWeight: FontWeight.w600,
+                                              color: black,
+                                            ))),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(kButtonCornerRadius),
+                                      color: black,
+                                    ),
+                                    child: TextButton(
+                                      onPressed: () async {
+                                        orderDeleteRequest();
+
+                                        Navigator.pop(context);
+                                        setState(() {
+                                        });
+                                      },
+                                      child: Text('Yes', style: TextStyle(fontSize: subTitle, fontWeight: FontWeight.w600, color: white)),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          );
+        }).then(
+          (value) {},
+    );
+  }
+
 
   // API Call func...
   getOrderDetail() async {
@@ -602,6 +712,52 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
         paymentStatus = dataResponse.orderDetailRecord?.paymentStatus ?? "";
         orderNumber = dataResponse.orderDetailRecord?.orderNumber ?? "";
         status = dataResponse.orderDetailRecord?.status ?? "";
+      }
+      else
+      {
+        showSnackBar(dataResponse.message.toString(), context);
+      }
+      setState(() {
+        isLoading = false;
+      });
+    }
+    else
+      {
+        noInternetSnackBar(context);
+      }
+
+  }
+
+  orderDeleteRequest() async {
+    if (isOnline) {
+      setState(() {
+        isLoading = true;
+      });
+
+      HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+        HttpLogger(logLevel: LogLevel.BODY),
+      ]);
+
+      final url = Uri.parse(MAIN_URL + orderDelete);
+      Map<String, String> jsonBody = {
+        'id': orderId,
+        "remarks" : cancelRemarksController.value.text.toString()
+      };
+
+      final response = await http.post(url, body: jsonBody,
+          headers:  {"Authorization": sessionManager.getToken() ?? ""});
+
+      final statusCode = response.statusCode;
+
+      final body = response.body;
+      Map<String, dynamic> user = jsonDecode(body);
+      var dataResponse = OrderDetailResponseModel.fromJson(user);
+
+      if (statusCode == 200 && dataResponse.success == 1)
+      {
+        context.read<TextChanger>().setAddOrder("add");
+        context.read<TextChanger>().refreshProduct("refreshProduct");
+        getOrderDetail();
       }
       else
       {

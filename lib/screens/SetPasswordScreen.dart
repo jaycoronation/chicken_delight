@@ -72,7 +72,6 @@ class _SetPasswordScreenState extends BaseState<SetPasswordScreen> {
                 Navigator.pop(context);
               },
               child:getBackArrowBlack()),
-          centerTitle: true,
           elevation: 0,
           backgroundColor: appBG,
         ),

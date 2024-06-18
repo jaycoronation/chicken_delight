@@ -2,10 +2,7 @@ import 'dart:convert';
 import 'dart:core';
 import 'package:chicken_delight/utils/app_utils.dart';
 import 'package:chicken_delight/widget/loading.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -75,7 +72,6 @@ class _ProfileViewPageState extends BaseState<ProfileViewPage> {
           toolbarHeight: kToolbarHeight,
           automaticallyImplyLeading: false,
           title: getTitle("Profile"),
-          centerTitle: true,
           elevation: 0,
           backgroundColor: chicken_bg,
           leading: GestureDetector(
@@ -138,45 +134,28 @@ class _ProfileViewPageState extends BaseState<ProfileViewPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Gap(10),
-
                                 Text(name.isNotEmpty ? name : "Guest User",
                                     style: const TextStyle(fontWeight: FontWeight.w600, color: black,fontSize: 17)),
-                                const Gap(5),
-                                Row(
-                                  children: [
-                                   /* const Gap(8),
-                                    Image.asset('assets/images/mobile.png', height: 24, width: 24, color: black,),
-                                    const Gap(10),*/
-                                    GestureDetector(
-                                      behavior: HitTestBehavior.opaque,
-                                      onTap: () {
-                                        launchPhoneURL("tel://$mobile");
-                                      },
-                                      child: Text(mobile,
-                                          style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16)),
-                                    ),
-                                  //  const Gap(8),
-                                  ],
+                                const Gap(6),
+                                GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () {
+                                    launchPhoneURL("tel://$mobile");
+                                  },
+                                  child: Text(mobile,
+                                      style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16)),
                                 ),
-                                const Gap(5),
-                                Row(
-                                  children: [
-                                   /* const Gap(8),
-                                    Image.asset('assets/images/mail.png', height: 24, width: 24, color: black,),
-                                    const Gap(10),*/
-                                    GestureDetector(
-                                      behavior: HitTestBehavior.opaque,
-                                      onTap: () {
-                                        onOpenMailClicked(email);
-                                      },
-                                      child: Text(email,
-                                          overflow: TextOverflow.clip,
-                                          style: const TextStyle(overflow: TextOverflow.clip,
-                                              fontWeight: FontWeight.w600, color: black, fontSize: 16)
-                                      ),
-                                    ),
-                                   // const Gap(8),
-                                  ],
+                                const Gap(6),
+                                GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () {
+                                    onOpenMailClicked(email);
+                                  },
+                                  child: Text(email,
+                                      overflow: TextOverflow.clip,
+                                      style: const TextStyle(overflow: TextOverflow.clip,
+                                          fontWeight: FontWeight.w600, color: black, fontSize: 16)
+                                  ),
                                 ),
                                 const Gap(10),
                               ],
@@ -186,7 +165,7 @@ class _ProfileViewPageState extends BaseState<ProfileViewPage> {
                         ),
                       ),
                     ),
-                    const Gap(20),
+                    const Gap(10),
                     Card(
                       color: white,
                       clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -195,7 +174,7 @@ class _ProfileViewPageState extends BaseState<ProfileViewPage> {
                         borderRadius: BorderRadius.circular(kTextFieldCornerRadius),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(18),
+                        padding: const EdgeInsets.all(12),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -211,7 +190,7 @@ class _ProfileViewPageState extends BaseState<ProfileViewPage> {
                                 ),
                               ],
                             ),
-                            const Gap(15),
+                            const Gap(12),
                             GestureDetector(
                               behavior: HitTestBehavior.opaque,
                               onTap: () {
@@ -226,7 +205,7 @@ class _ProfileViewPageState extends BaseState<ProfileViewPage> {
                                 ],
                               ),
                             ),
-                            const Gap(15),
+                            const Gap(12),
                             Row(
                               children: [
                                 Image.asset('assets/images/user.png', height: 24, width: 24, color: black,),
@@ -235,8 +214,7 @@ class _ProfileViewPageState extends BaseState<ProfileViewPage> {
                                     style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16)),
                               ],
                             ),
-                            const Gap(15),
-
+                            const Gap(12),
                             Row(
                               children: [
                                 Image.asset('assets/images/location.png', height: 24, width: 24, color: black,),

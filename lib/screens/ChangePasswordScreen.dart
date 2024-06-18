@@ -62,6 +62,7 @@ class _ChangePasswordScreenState extends BaseState<ChangePasswordScreen> {
         appBar: AppBar(
           toolbarHeight: kToolbarHeight,
           automaticallyImplyLeading: false,
+          centerTitle: false,
           title: Text("Change Password", style: getAppBarTitleStyle(),),
           leading: GestureDetector(
               behavior: HitTestBehavior.opaque,
@@ -69,7 +70,6 @@ class _ChangePasswordScreenState extends BaseState<ChangePasswordScreen> {
                 Navigator.pop(context);
               },
               child:getBackArrowBlack()),
-          centerTitle: true,
           elevation: 0,
           backgroundColor: appBG,
         ),

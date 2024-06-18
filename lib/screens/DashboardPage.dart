@@ -25,6 +25,7 @@ import '../model/common/CommonResponseModel.dart';
 import '../utils/TextChanger.dart';
 import '../utils/base_class.dart';
 import '../utils/session_manager_methods.dart';
+import '../widget/AnimatedWidget.dart';
 import '../widget/loading.dart';
 import '../widget/no_internet.dart';
 import 'LoginScreen.dart';
@@ -181,78 +182,76 @@ class _DashboardPageState extends BaseState<DashboardPage> {
     super.dispose();
   }
 
-  Padding setData() {
-    return Padding(
-        padding: const EdgeInsets.only(bottom: 12),
-        child: RefreshIndicator(
-          color: primaryColor,
-          onRefresh: _refresh,
-          child: LayoutBuilder(
-              builder: (context, constraints) {
-                return SingleChildScrollView(
-                  controller: _scrollController,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                    child: IntrinsicHeight(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Visibility(
-                            visible: listOrders.isNotEmpty,
-                            child: Container(
-                              alignment: Alignment.topLeft,
-                              margin: const EdgeInsets.only(top:10, bottom: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.only(left: 22),
-                                    child: Text("Orders",
-                                        style: TextStyle(fontWeight: FontWeight.w800, color: black,fontSize: titleFont20)),
-                                  ),
-                                  const Gap(12),
-                                  SizedBox(
-                                    height: 140,
-                                    child: _orderListView() ,
-                                  )
-                                ],
+  Widget setData() {
+    return RefreshIndicator(
+      color: primaryColor,
+      onRefresh: _refresh,
+      child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              controller: _scrollController,
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Visibility(
+                        visible: listOrders.isNotEmpty,
+                        child: Container(
+                          alignment: Alignment.topLeft,
+                          margin: const EdgeInsets.only(top:10, bottom: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(left: 22),
+                                child: Text("Orders",
+                                    style: TextStyle(fontWeight: FontWeight.w800, color: black,fontSize: titleFont20)),
                               ),
-                            ),
+                              const Gap(12),
+                              SizedBox(
+                                height: 140,
+                                child: _orderListView() ,
+                              )
+                            ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 12, right: 12,),
-                            child: Column(
-                              children: [
-                                Container(
-                                  alignment: Alignment.topLeft,
-                                  margin: const EdgeInsets.only(top:10, bottom: 10, left: 10),
-                                  child: Text("Activity", style: TextStyle(fontWeight: FontWeight.w800, color: black,fontSize: titleFont20)),
-                                ),
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 410,
-                                  child: Card(
-                                      color: white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(22),
-                                      ),
-                                      child: Padding(padding: const EdgeInsets.all(10), child: _topCountList())),
-                                ),
-                                const Gap(10),
-
-                              ],
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12, right: 12,),
+                        child: Column(
+                          children: [
+                            Container(
+                              alignment: Alignment.topLeft,
+                              margin: const EdgeInsets.only(top:10, bottom: 10, left: 10),
+                              child: Text("Activity", style: TextStyle(fontWeight: FontWeight.w800, color: black,fontSize: titleFont20)),
+                            ),
+                            SizedBox(
+                              width: double.infinity,
+                              height: 410,
+                              child: Card(
+                                  color: white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(22),
+                                  ),
+                                  child: Padding(padding: const EdgeInsets.all(10), child: _topCountList())),
+                            ),
+                            const Gap(10),
+
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                );
-              }
-          )
-        ));
+                ),
+              ),
+            );
+          }
+      )
+    );
   }
 
   GridView _topCountList() {
@@ -268,8 +267,14 @@ class _DashboardPageState extends BaseState<DashboardPage> {
             if (analysisList[index].name == "Items") {
               final BottomNavigationBar bar = bottomWidgetKey.currentWidget as BottomNavigationBar;
               bar.onTap!(1);
-            } else if (analysisList[index].name == "Orders") {
+            }
+            else if (analysisList[index].name == "Total Orders") {
              // _orderList(context);
+              final BottomNavigationBar bar = bottomWidgetKey.currentWidget as BottomNavigationBar;
+              bar.onTap!(2);
+            }
+            else if (analysisList[index].name == "Today's Order") {
+              // _orderList(context);
               final BottomNavigationBar bar = bottomWidgetKey.currentWidget as BottomNavigationBar;
               bar.onTap!(2);
             }
@@ -317,25 +322,15 @@ class _DashboardPageState extends BaseState<DashboardPage> {
             ? 5
             : listOrders.length,
         itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () async {
-              if (isOnline)
-              {
-                orderDetailPage(context, checkValidString(listOrders[index].id));
-              }
-              else
-              {
-                noInternetSnackBar(context);
-              }
-            },
-            child: Container(
-                width:listOrders.length > 1 ? MediaQuery.of(context).size.width * 0.75 : MediaQuery.of(context).size.width * 0.9,
-                margin: EdgeInsets.only(right: 6, left: index == 0 ? 22.0 : 0.0),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    color: white,
-                    borderRadius: BorderRadius.circular(kTextFieldCornerRadius)),
-                child: Row(
+          return Container(
+              width:listOrders.length > 1 ? MediaQuery.of(context).size.width * 0.75 : MediaQuery.of(context).size.width * 0.9,
+              margin: EdgeInsets.only(right: 6, left: index == 0 ? 22 : 0),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  color: white,
+                  borderRadius: BorderRadius.circular(kTextFieldCornerRadius)),
+              child: OpenContainerWrapper(
+                closedChild: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -344,41 +339,41 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                       margin: const EdgeInsets.only(left: 2),
                       alignment: Alignment.center,
                       // width: 55,
-                      child: Column(
+                      child: const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text("Order Number", textAlign: TextAlign.start,
-                              style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: small)),
-                          const Gap(6),
+                              style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 13)),
+                          Gap(6),
                           Text("Grand Total", textAlign: TextAlign.start,
-                              style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: small)),
-                          const Gap(6),
+                              style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 13)),
+                          Gap(6),
                           Text("Remark", textAlign: TextAlign.start,
-                              style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: small)),
-                          const Gap(6),
+                              style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 13)),
+                          Gap(6),
                           Text("Order-Date", textAlign: TextAlign.start,
-                              style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: small)),
-                          const Gap(6),
+                              style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 13)),
+                          Gap(6),
                           Text("Status", textAlign: TextAlign.start,
-                              style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: small)),
+                              style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 13)),
                         ],
                       ),
                     ),
                     const Gap(4),
-                     Column(
+                    const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(":", textAlign: TextAlign.start, style: TextStyle(color: hintLight, fontWeight: FontWeight.w400, fontSize: small)),
-                        const Gap(6),
-                        Text(":", textAlign: TextAlign.start, style: TextStyle(color: hintLight, fontWeight: FontWeight.w400, fontSize: small)),
-                        const Gap(6),
-                        Text(":", textAlign: TextAlign.start, style: TextStyle(color: hintLight, fontWeight: FontWeight.w400, fontSize: small)),
-                        const Gap(6),
-                        Text(":", textAlign: TextAlign.start, style: TextStyle(color: hintLight, fontWeight: FontWeight.w400, fontSize: small)),
-                        const Gap(6),
-                        Text(":", textAlign: TextAlign.start, style: TextStyle(color: hintLight, fontWeight: FontWeight.w400, fontSize: small)),
+                        Text(":", textAlign: TextAlign.start, style: TextStyle(color: hintLight, fontWeight: FontWeight.w400, fontSize: 13)),
+                        Gap(6),
+                        Text(":", textAlign: TextAlign.start, style: TextStyle(color: hintLight, fontWeight: FontWeight.w400, fontSize: 13)),
+                        Gap(6),
+                        Text(":", textAlign: TextAlign.start, style: TextStyle(color: hintLight, fontWeight: FontWeight.w400, fontSize: 13)),
+                        Gap(6),
+                        Text(":", textAlign: TextAlign.start, style: TextStyle(color: hintLight, fontWeight: FontWeight.w400, fontSize: 13)),
+                        Gap(6),
+                        Text(":", textAlign: TextAlign.start, style: TextStyle(color: hintLight, fontWeight: FontWeight.w400, fontSize: 13)),
                       ],
                     ),
                     const Gap(4),
@@ -389,31 +384,31 @@ class _DashboardPageState extends BaseState<DashboardPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(checkValidString(listOrders[index].orderNumber), textAlign: TextAlign.start, maxLines: 1,
-                                  style:  TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: small)),
+                              Text(listOrders[index].orderNumber ?? "", textAlign: TextAlign.start, maxLines: 1,
+                                  style: const TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 13)),
                               const Gap(6),
-                              Text(checkValidString(getPrice(listOrders[index].grandTotal ?? "")),
+                              Text(getPrice(listOrders[index].grandTotal ?? ""),
                                   textAlign: TextAlign.start,maxLines: 1,
-                                  style:  TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: small)),
+                                  style: const TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 13)),
                               const Gap(6),
-                              Text(listOrders[index].remarks!.isNotEmpty ? checkValidString(listOrders[index].remarks) : "-",
+                              Text(listOrders[index].remarks!.isNotEmpty ? listOrders[index].remarks ?? "" : "-",
                                   textAlign: TextAlign.start, maxLines: 1,
-                                  style: TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: small)),
+                                  style: const TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 13)),
                               const Gap(6),
-                              Text(getDateFromTimestamp(checkValidString(listOrders[index].timestamp)), textAlign: TextAlign.start, maxLines: 1,
-                                  style: TextStyle(color: black, fontWeight: FontWeight.w600, fontSize: small)),
+                              Text(getDateFromTimestamp(listOrders[index].timestamp ?? ""), textAlign: TextAlign.start, maxLines: 1,
+                                  style: const TextStyle(color: black, fontWeight: FontWeight.w600, fontSize: 13)),
                               const Gap(6),
-                              Text(checkValidString(listOrders[index].status), textAlign: TextAlign.start, maxLines: 1,
-                                  style: TextStyle(color: black, fontWeight: FontWeight.w600, fontSize: small)),
-    
+                              Text(listOrders[index].status ?? "", textAlign: TextAlign.start, maxLines: 1,
+                                  style: const TextStyle(color: black, fontWeight: FontWeight.w600, fontSize: 13)),
                             ],
                           ),
                         )
                     ),
                     const Gap(6),
                   ],
-                )),
-          );
+                ),
+                openedChild: OrderDetailScreen(listOrders[index].id?.toString() ?? "", false),
+              ));
         },
     );
   }

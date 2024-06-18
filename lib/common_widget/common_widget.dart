@@ -67,7 +67,7 @@ Widget getCommonButton(String title, Color backgroundColor, bool isLoading, void
     style: ButtonStyle(
       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
         RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4.0),
+            borderRadius: BorderRadius.circular(12.0),
             side: const BorderSide(color: white,width: 0.6)
         ),
       ),
@@ -162,6 +162,7 @@ double largeFont = 28;
 double titleFont = 22;
 double titleFont20 = 20;
 double medium = 18;
+double title = 15;
 double subTitle = 16;
 double description = 14;
 double small = 12;

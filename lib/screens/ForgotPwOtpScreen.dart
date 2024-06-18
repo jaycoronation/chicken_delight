@@ -52,7 +52,6 @@ class _ForgotPwOtpScreenState extends BaseState<ForgotPwOtpScreen> {
                 Navigator.pop(context);
               },
               child:getBackArrowBlack()),
-          centerTitle: true,
           elevation: 0,
           backgroundColor: appBG,
         ),

@@ -72,7 +72,6 @@ class _SelectItemPageState extends BaseState<SelectItemPage> {
                   Navigator.pop(context);
                 },
                 child:getBackArrowBlack()),
-            centerTitle: true,
             elevation: 0,
             backgroundColor: appBG,
             actions: [
@@ -181,11 +180,11 @@ class _SelectItemPageState extends BaseState<SelectItemPage> {
                                               child: RichText(
                                                 textAlign: TextAlign.start,
                                                 text: TextSpan(
-                                                  text: "${checkValidString(listItems[index].productCode)} ",
+                                                  text: "${listItems[index].productCode} ",
                                                   style: getBlackTextStyle(),
                                                   children: <TextSpan>[
                                                     TextSpan(
-                                                      text: checkValidString(listItems[index].name),
+                                                      text: listItems[index].name ?? "",
                                                       style: getThinTextStyle(),
                                                     ),
                                                   ],

@@ -142,7 +142,6 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
           toolbarHeight: _isSearchHideShow ? 110 : kToolbarHeight,
           automaticallyImplyLeading: false,
           title: getTitle("Items"),
-          centerTitle: true,
           elevation: 0,
           backgroundColor: chicken_bg,
           actions: [
@@ -294,7 +293,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                               if (listCategory[index].id == "all") {
                                 catId = "";
                               } else {
-                                catId = checkValidString(listCategory[index].id);
+                                catId = listCategory[index].id.toString() ?? "";
                               }
                               print("catId-----" +catId);
                               getItemListData(true);
@@ -489,24 +488,24 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text(getSet.name ?? "",
-                                    style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
+                                    style: TextStyle(fontSize: title, color: black,fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
                                     overflow: TextOverflow.clip
                                 ),
                                 const Gap(8),
                                 Text(getSet.productCode ?? "",
-                                    style: TextStyle(fontSize: small, color: black,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
+                                    style: TextStyle(fontSize: title, color: black,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
                                     overflow: TextOverflow.clip
                                 ),
                                 const Gap(8),
                                 Row(
                                   children: [
                                     Text(getPrice(getSet.salePrice ?? ""),
-                                        style: TextStyle(fontSize: small, color: black,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
+                                        style: TextStyle(fontSize: medium, color: black,fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
                                         overflow: TextOverflow.clip
                                     ),
                                     const Gap(5),
                                     Text(getPrice(getSet.mrpPrice ?? ""),
-                                      style: TextStyle(fontSize: small, color: gray_dark,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,decoration: TextDecoration.lineThrough),
+                                      style: TextStyle(fontSize: medium, color: gray_dark,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,decoration: TextDecoration.lineThrough),
                                       textAlign: TextAlign.left,
                                       overflow: TextOverflow.clip,
                                     ),
@@ -532,7 +531,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                 child: Image.network(getSet.icon ?? "",
                                   fit: BoxFit.cover,
                                   height: 70,
-                                  width:70,
+                                  width: 70,
                                 ),
                               ),
                               const Gap(18),
@@ -614,11 +613,12 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                                       removeItem(index);
                                                     } else {
                                                       getSet.quantity = getSet.quantity! - 1;
+                                                      cartCount -= 1;
+
                                                     }
 
                                                     var total = num.parse(getSet.salePrice.toString()) * num.parse((getSet.quantity ?? "").toString());
                                                     getSet.amount = total;
-                                                    cartCount -= 1;
 
                                                     shakeKey.currentState?.shake();
 
@@ -738,33 +738,33 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                               width:70,
                             ),
                           ),
-                          const Gap(8),
+                          const Gap(6),
                           Container(
                             alignment: Alignment.centerLeft,
                             child: Text(getSet.name ?? "",
-                                style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w600,
+                                style: TextStyle(fontSize: title, color: black,fontWeight: FontWeight.w600,
                                   overflow: TextOverflow.clip,),textAlign: TextAlign.left,
                                 overflow: TextOverflow.clip
                             ),
                           ),
-                          const Gap(8),
+                          const Gap(6),
                           Container(
                             alignment: Alignment.centerLeft,
                             child: Text(getSet.productCode ?? "",
-                                style: TextStyle(fontSize: small, color: black,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
+                                style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
                                 overflow: TextOverflow.clip
                             ),
                           ),
-                          const Gap(8),
+                          const Gap(6),
                           Row(
                             children: [
                               Text(getPrice(getSet.salePrice ?? ""),
-                                  style: TextStyle(fontSize: small, color: black,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
+                                  style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
                                   overflow: TextOverflow.clip
                               ),
                               const Gap(5),
                               Text(getPrice(getSet.mrpPrice ?? ""),
-                                style: TextStyle(fontSize: small, color: gray_dark,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,decoration: TextDecoration.lineThrough),
+                                style: TextStyle(fontSize: subTitle, color: gray_dark,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,decoration: TextDecoration.lineThrough),
                                 textAlign: TextAlign.left,
                                 overflow: TextOverflow.clip,
                               ),
@@ -846,11 +846,12 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
 
                                                 } else {
                                                   getSet.quantity = getSet.quantity! - 1;
+                                                  cartCount -= 1;
                                                 }
 
                                                 var total = num.parse(getSet.salePrice.toString()) * num.parse((getSet.quantity ?? "").toString());
                                                 getSet.amount = total;
-                                                cartCount -= 1;
+
 
                                                 shakeKey.currentState?.shake();
 
@@ -1076,6 +1077,8 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                               onPressed: () async {
                                 setState(() {
                                   shakeKey.currentState?.shake();
+
+                                  cartCount -= 1;
 
                                   NavigationService.listItems[index].quantity = 0;
                                   NavigationService.listItems[index].isSelected = false;

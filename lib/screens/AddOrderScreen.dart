@@ -79,7 +79,6 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
               },
               child:getBackArrowBlack()
           ),
-          centerTitle: true,
           elevation: 0,
           backgroundColor: chicken_bg,
         ),

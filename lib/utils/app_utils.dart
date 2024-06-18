@@ -85,13 +85,6 @@ showToast(String? message,BuildContext? context){
   );
 }
 
-checkValidString (String? value) {
-  /*if (value == null || value == "null" || value == "<null>")
-  {
-    value = "";
-  }*/
-  return value;
-}
 
 checkValidDouble (String? value) {
   if (value == null || value == "null" || value == "<null>" || value == "")
@@ -151,7 +144,7 @@ isValidPhoneNumber(String? input)
 toDisplayCase (String str) {
   print("str === $str");
 
-  if(checkValidString(str).toString().isNotEmpty)
+  if(str.toString().isNotEmpty)
     {
       try {
         return str.toLowerCase().split(' ').map((word) {

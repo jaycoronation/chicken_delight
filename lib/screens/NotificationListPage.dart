@@ -43,7 +43,7 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: true,
-      onPopInvoked: (didPop){
+      onPopInvoked: (didPop) {
         if(didPop){
           return;
         }
@@ -61,9 +61,37 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
                 Navigator.pop(context, "success");
               },
               child:getBackArrowBlack()),
-          centerTitle: true,
           elevation: 0,
           backgroundColor: appBG,
+          actions: [
+            Visibility(
+              visible: listNotification.isNotEmpty,
+              child: Container(
+                margin: const EdgeInsets.only(top: 10,bottom: 10, right: 20),
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: white, backgroundColor: white,
+                      elevation: 0.0,
+                      padding: const EdgeInsets.only(top: 5.0, bottom: 5.0,left: 15,right: 15),
+                      side: const BorderSide(color: black, width: 1.0, style: BorderStyle.solid),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(kTextFieldCornerRadius)),
+                      tapTargetSize: MaterialTapTargetSize.padded,
+                      animationDuration: const Duration(milliseconds: 100),
+                      enableFeedback: true,
+                      alignment: Alignment.center,
+                    ),
+                    onPressed: () async {
+                      _openBottomSheetForRemove();
+                    },
+                    child: const Text("Clear",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w500),
+                    )
+                ),
+              ),
+            )
+          ],
+
         ),
           body: isOnline
             ? _isLoading
@@ -157,7 +185,7 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
                     child: Column(
                       children: [
                         Card(
-                          color: white,
+                          color: listNotification[index].readTimestamp!.isNotEmpty ? white : grayNew,
                           clipBehavior: Clip.antiAliasWithSaveLayer,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
@@ -172,18 +200,18 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
                               children: [
                                 Row(
                                   children: [
-                                    Text(checkValidString(listNotification[index].title),
+                                    Text(listNotification[index].title ?? "",
                                       textAlign: TextAlign.start,
                                       style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.w700),
                                     ),
                                     const Spacer(),
-                                    Text(checkValidString(listNotification[index].timestamp),
+                                    Text(listNotification[index].timestamp ?? "",
                                       textAlign: TextAlign.start,
                                       style: const TextStyle(fontSize: 14, color: kTextDarkGray, fontWeight: FontWeight.w400),
                                     ),
                                   ],
                                 ),
-                                Text(checkValidString(listNotification[index].message),
+                                Text(listNotification[index].message ?? "",
                                   maxLines: 5,
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.start,
@@ -261,6 +289,77 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
   void dispose() {
     super.dispose();
   }
+
+  Future<void> orderDetailPage(BuildContext context, String orderID) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => OrderDetailScreen(orderID, false)),
+    );
+    print("result ===== $result");
+
+    if (result == "success") {
+      getNotificationList(true);
+    }
+  }
+
+  void _openBottomSheetForRemove() {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: white,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+      elevation: 5,
+      isDismissible: true,
+      builder: (BuildContext context) {
+        return Wrap(
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(height: 16,),
+                Container(height: 2, width: 40, color: black, margin: const EdgeInsets.only(bottom: 12)),
+                const Text("Clear Notification?",
+                    style: TextStyle(color: black, fontWeight: FontWeight.w500, fontSize: 18)),
+                Container(height: 20,),
+                const Text("Are you sure want to clear all Notifications?",
+                    style: TextStyle(color: black, fontWeight: FontWeight.normal, fontSize: 16),
+                    textAlign: TextAlign.center),
+                Container(height: 20),
+                Container(
+                  margin: const EdgeInsets.only(left: 22, right: 22),
+                  width: double.infinity,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: black, backgroundColor: black,
+                        elevation: 0.0,
+                        padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(kButtonCornerRadius)),
+                        tapTargetSize: MaterialTapTargetSize.padded,
+                        animationDuration: const Duration(milliseconds: 100),
+                        enableFeedback: true,
+                        alignment:
+                        Alignment.center,
+                      ),
+                      onPressed: () async {
+                        Navigator.pop(context);
+                        notificationClearRequest();
+                      },
+                      child: const Text("Clear",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 16, color: white, fontWeight: FontWeight.w600),
+                      )),
+                ),
+                Container(height: 22,),
+              ],
+            )
+          ],
+        );
+      },
+    );
+  }
+
 
   //API call func...
   void getNotificationList(bool isFirstTime) async {
@@ -347,29 +446,89 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
   }
 
   void notificationRead(String notificationId, String orderID) async {
-    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.BODY),
-    ]);
+    if (isOnline)
+      {
+        HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+          HttpLogger(logLevel: LogLevel.BODY),
+        ]);
 
-    final url = Uri.parse(MAIN_URL + notificationSave);
+        final url = Uri.parse(MAIN_URL + notificationSave);
 
-    Map<String, String> jsonBody = {'id': notificationId};
+        Map<String, String> jsonBody = {'id': notificationId};
 
-    final response = await http.post(url, body: jsonBody, headers: {
-      "Authorization": sessionManager.getToken().toString(),
-    });
+        final response = await http.post(url, body: jsonBody, headers: {
+          "Authorization": sessionManager.getToken().toString(),
+        });
 
-    final statusCode = response.statusCode;
-    final body = response.body;
-    Map<String, dynamic> apiResponse = jsonDecode(body);
-    var dataResponse = CommonResponseModel.fromJson(apiResponse);
+        final statusCode = response.statusCode;
+        final body = response.body;
+        Map<String, dynamic> apiResponse = jsonDecode(body);
+        var dataResponse = CommonResponseModel.fromJson(apiResponse);
 
-    if (statusCode == 200 && dataResponse.success == 1) {
-      startActivity(context, OrderDetailScreen(orderID, false));
-    } else {
-      showSnackBar(dataResponse.message, context);
+        if (statusCode == 200 && dataResponse.success == 1) {
+          if (orderID.isNotEmpty)
+          {
+            orderDetailPage(context, orderID);
+          }
+          else
+          {
+            //showSnackBar("No order Id found", context);
+          }
+        } else {
+          showSnackBar(dataResponse.message, context);
+        }
+      }
+    else
+    {
+      noInternetSnackBar(context);
     }
 
+  }
+
+  void notificationClearRequest() async {
+    if (isOnline)
+      {
+        setState(() {
+          _isLoading = true;
+        });
+        HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+          HttpLogger(logLevel: LogLevel.BODY),
+        ]);
+
+        final url = Uri.parse(MAIN_URL + notificationClear);
+
+        Map<String, String> jsonBody = {
+          //'id': notificationId
+        };
+
+        final response = await http.post(url, body: jsonBody, headers: {
+          "Authorization": sessionManager.getToken().toString(),
+        });
+
+        final statusCode = response.statusCode;
+        final body = response.body;
+        Map<String, dynamic> apiResponse = jsonDecode(body);
+        var dataResponse = CommonResponseModel.fromJson(apiResponse);
+
+        if (statusCode == 200 && dataResponse.success == 1) {
+          setState(() {
+            _isLoading = false;
+          });
+          listNotification.clear();
+
+          getNotificationList(true);
+
+        } else {
+          setState(() {
+            _isLoading = false;
+          });
+          showSnackBar(dataResponse.message, context);
+        }
+      }
+    else
+      {
+        noInternetSnackBar(context);
+      }
   }
 
 }
