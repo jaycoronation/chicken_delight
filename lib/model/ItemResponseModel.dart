@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
-/// records : [{"id":"512","description":"<p>test</p>\r\n","name":"test local","icon":"http://192.168.1.91/chicken_delight/api/assets/upload/items/1717480504_download (8).jfif","product_code":"852963","unit":"kg","variation_name":"test","sku_code":"741258","sale_price":"56.4","mrp_price":"50","dp_price":"40","category":"Chicken","variation_id":"519","category_id":"32"},
+/// records : [{"id":"11","description":"<p>test</p>\r\n","name":"Check Product","icon":"https://chickendelight.saltpixels.in/api/assets/upload/items/default.png","product_code":"adada","unit":"kg","variation_name":"Var 1","sku_code":"","sale_price":"15","mrp_price":"15","variation_id":"18","dp_price":"10","category":"Check Product Category","shipping_charge":"0","compositions":[{"id":"40","raw_material_id":"17","amount_used":"0.25","item_id":"11","variation_id":"18","timestamp":"1718725480"}],"category_id":"39"}]
 /// message : "items details found"
 /// success : 1
-/// total_records : "509"
+/// total_records : "15"
 
 ItemResponseModel itemResponseModelFromJson(String str) => ItemResponseModel.fromJson(json.decode(str));
 String itemResponseModelToJson(ItemResponseModel data) => json.encode(data.toJson());
@@ -62,20 +62,22 @@ ItemResponseModel copyWith({  List<Records>? records,
 
 }
 
-/// id : "512"
+/// id : "11"
 /// description : "<p>test</p>\r\n"
-/// name : "test local"
-/// icon : "http://192.168.1.91/chicken_delight/api/assets/upload/items/1717480504_download (8).jfif"
-/// product_code : "852963"
+/// name : "Check Product"
+/// icon : "https://chickendelight.saltpixels.in/api/assets/upload/items/default.png"
+/// product_code : "adada"
 /// unit : "kg"
-/// variation_name : "test"
-/// sku_code : "741258"
-/// sale_price : "56.4"
-/// mrp_price : "50"
-/// dp_price : "40"
-/// category : "Chicken"
-/// variation_id : "519"
-/// category_id : "32"
+/// variation_name : "Var 1"
+/// sku_code : ""
+/// sale_price : "15"
+/// mrp_price : "15"
+/// variation_id : "18"
+/// dp_price : "10"
+/// category : "Check Product Category"
+/// shipping_charge : "0"
+/// compositions : [{"id":"40","raw_material_id":"17","amount_used":"0.25","item_id":"11","variation_id":"18","timestamp":"1718725480"}]
+/// category_id : "39"
 
 Records recordsFromJson(String str) => Records.fromJson(json.decode(str));
 String recordsToJson(Records data) => json.encode(data.toJson());
@@ -91,9 +93,10 @@ class Records {
       String? skuCode, 
       String? salePrice, 
       String? mrpPrice, 
+      String? variationId, 
       String? dpPrice, 
       String? category, 
-      String? variationId, 
+      List<Compositions>? compositions,
       String? categoryId,
     bool? isSelected,
     num? quantity,
@@ -109,9 +112,10 @@ class Records {
     _skuCode = skuCode;
     _salePrice = salePrice;
     _mrpPrice = mrpPrice;
+    _variationId = variationId;
     _dpPrice = dpPrice;
     _category = category;
-    _variationId = variationId;
+    _compositions = compositions;
     _categoryId = categoryId;
     _isSelected = isSelected;
     _quantity = quantity;
@@ -129,9 +133,15 @@ class Records {
     _skuCode = json['sku_code'];
     _salePrice = json['sale_price'];
     _mrpPrice = json['mrp_price'];
+    _variationId = json['variation_id'];
     _dpPrice = json['dp_price'];
     _category = json['category'];
-    _variationId = json['variation_id'];
+    if (json['compositions'] != null) {
+      _compositions = [];
+      json['compositions'].forEach((v) {
+        _compositions?.add(Compositions.fromJson(v));
+      });
+    }
     _categoryId = json['category_id'];
     _isSelected = json['isSelected'] ?? false;
     _quantity = json['quantity'];
@@ -147,15 +157,14 @@ class Records {
   String? _skuCode;
   String? _salePrice;
   String? _mrpPrice;
+  String? _variationId;
   String? _dpPrice;
   String? _category;
-  String? _variationId;
+  List<Compositions>? _compositions;
   String? _categoryId;
   bool? _isSelected;
   num? _quantity;
   num? _amount;
-
-
 Records copyWith({  String? id,
   String? description,
   String? name,
@@ -166,14 +175,15 @@ Records copyWith({  String? id,
   String? skuCode,
   String? salePrice,
   String? mrpPrice,
+  String? variationId,
   String? dpPrice,
   String? category,
-  String? variationId,
+  String? shippingCharge,
+  List<Compositions>? compositions,
   String? categoryId,
   bool? isSelected,
   num? quantity,
   num? amount,
-
 }) => Records(  id: id ?? _id,
   description: description ?? _description,
   name: name ?? _name,
@@ -184,9 +194,10 @@ Records copyWith({  String? id,
   skuCode: skuCode ?? _skuCode,
   salePrice: salePrice ?? _salePrice,
   mrpPrice: mrpPrice ?? _mrpPrice,
+  variationId: variationId ?? _variationId,
   dpPrice: dpPrice ?? _dpPrice,
   category: category ?? _category,
-  variationId: variationId ?? _variationId,
+  compositions: compositions ?? _compositions,
   categoryId: categoryId ?? _categoryId,
   isSelected: isSelected ?? _isSelected,
   quantity: quantity ?? _quantity,
@@ -202,15 +213,17 @@ Records copyWith({  String? id,
   String? get skuCode => _skuCode;
   String? get salePrice => _salePrice;
   String? get mrpPrice => _mrpPrice;
+  String? get variationId => _variationId;
   String? get dpPrice => _dpPrice;
   String? get category => _category;
-  String? get variationId => _variationId;
+  List<Compositions>? get compositions => _compositions;
   String? get categoryId => _categoryId;
   bool? get isSelected => _isSelected;
   num? get quantity => _quantity;
   num? get amount => _amount;
 
   TextEditingController quantityController = TextEditingController();
+
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -224,9 +237,12 @@ Records copyWith({  String? id,
     map['sku_code'] = _skuCode;
     map['sale_price'] = _salePrice;
     map['mrp_price'] = _mrpPrice;
+    map['variation_id'] = _variationId;
     map['dp_price'] = _dpPrice;
     map['category'] = _category;
-    map['variation_id'] = _variationId;
+    if (_compositions != null) {
+      map['compositions'] = _compositions?.map((v) => v.toJson()).toList();
+    }
     map['category_id'] = _categoryId;
     map['isSelected'] = _isSelected;
     map['quantity'] = _quantity;
@@ -244,6 +260,78 @@ Records copyWith({  String? id,
 
   set amount(num? value) {
     _amount = value;
+  }
+
+}
+
+/// id : "40"
+/// raw_material_id : "17"
+/// amount_used : "0.25"
+/// item_id : "11"
+/// variation_id : "18"
+/// timestamp : "1718725480"
+
+Compositions compositionsFromJson(String str) => Compositions.fromJson(json.decode(str));
+String compositionsToJson(Compositions data) => json.encode(data.toJson());
+class Compositions {
+  Compositions({
+      String? id, 
+      String? rawMaterialId, 
+      String? amountUsed, 
+      String? itemId, 
+      String? variationId, 
+      String? timestamp,}){
+    _id = id;
+    _rawMaterialId = rawMaterialId;
+    _amountUsed = amountUsed;
+    _itemId = itemId;
+    _variationId = variationId;
+    _timestamp = timestamp;
+}
+
+  Compositions.fromJson(dynamic json) {
+    _id = json['id'];
+    _rawMaterialId = json['raw_material_id'];
+    _amountUsed = json['amount_used'];
+    _itemId = json['item_id'];
+    _variationId = json['variation_id'];
+    _timestamp = json['timestamp'];
+  }
+  String? _id;
+  String? _rawMaterialId;
+  String? _amountUsed;
+  String? _itemId;
+  String? _variationId;
+  String? _timestamp;
+Compositions copyWith({  String? id,
+  String? rawMaterialId,
+  String? amountUsed,
+  String? itemId,
+  String? variationId,
+  String? timestamp,
+}) => Compositions(  id: id ?? _id,
+  rawMaterialId: rawMaterialId ?? _rawMaterialId,
+  amountUsed: amountUsed ?? _amountUsed,
+  itemId: itemId ?? _itemId,
+  variationId: variationId ?? _variationId,
+  timestamp: timestamp ?? _timestamp,
+);
+  String? get id => _id;
+  String? get rawMaterialId => _rawMaterialId;
+  String? get amountUsed => _amountUsed;
+  String? get itemId => _itemId;
+  String? get variationId => _variationId;
+  String? get timestamp => _timestamp;
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['id'] = _id;
+    map['raw_material_id'] = _rawMaterialId;
+    map['amount_used'] = _amountUsed;
+    map['item_id'] = _itemId;
+    map['variation_id'] = _variationId;
+    map['timestamp'] = _timestamp;
+    return map;
   }
 
 }

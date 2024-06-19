@@ -290,6 +290,7 @@ class _ProfileViewPageState extends BaseState<ProfileViewPage> {
       businessName = profileData.businessName ?? "";
       website = profileData.website ?? "";
       address = "${profileData.addressLine1?.toString() ?? " "}, ${profileData.addressLine2?.toString() ?? " "}, ${profileData.addressLine3?.toString() ?? " "}, ${profileData.addressLine4?.toString() ?? " "}";
+      sessionManager.setShippingCharge(profileData.shippingCharge?.toString() ?? "");
 
     });
 

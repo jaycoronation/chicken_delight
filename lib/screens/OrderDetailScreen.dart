@@ -4,10 +4,12 @@ import 'package:chicken_delight/constant/global_context.dart';
 import 'package:chicken_delight/model/common/CommonResponseModel.dart';
 import 'package:chicken_delight/tabs/tabnavigation.dart';
 import 'package:chicken_delight/widget/loading.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 import '../common_widget/common_widget.dart';
 import '../constant/ApiService.dart';
 import '../constant/api_end_point.dart';
@@ -42,6 +44,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
   String paymentStatus = "";
   String orderNumber = "";
   String status = "";
+  String shippingCharge = "";
   String orderId = "";
   bool isFrom = false;
 
@@ -135,30 +138,6 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Visibility(
-                    visible: status == "Accepted",
-                    child: Container(
-                      alignment: Alignment.centerRight,
-                      margin: const EdgeInsets.only(bottom: 5),
-                      child: getCommonButton("Cancel Order", black, isLoading, () {
-                        {
-                          cancelOrder();
-                        }
-                      }),
-                    ),
-                  ),
-                  Visibility(
-                    visible: status == "Processed",
-                    child: Container(
-                      alignment: Alignment.centerRight,
-                      margin: const EdgeInsets.only(bottom: 5),
-                      child: getCommonButton("Print Invoice", black, isLoading, () {
-                        {
-                          showSnackBar("Coming soon...", context);
-                        }
-                      }),
-                    ),
-                  ),
                   Card(
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     elevation: 0,
@@ -321,25 +300,28 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                               ),
                             ],
                           ),
-                          Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Shipping:",
-                                      style: TextStyle(fontSize: 15, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
-                                  ),
-                                  Text(getPrice("75"),
-                                      style: TextStyle(fontSize: 15, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                  margin: const EdgeInsets.only(top: 12,bottom: 12),
-                                  child: const Divider(indent: 0,height: 1,color: grayNew,)
-                              ),
-                            ],
+                          Visibility(
+                            visible: shippingCharge != "0",
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text("Shipping:",
+                                        style: TextStyle(fontSize: 15, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
+                                    ),
+                                    Text(getPrice("75"),
+                                        style: TextStyle(fontSize: 15, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                    margin: const EdgeInsets.only(top: 12,bottom: 12),
+                                    child: const Divider(indent: 0,height: 1,color: grayNew,)
+                                ),
+                              ],
+                            ),
                           ),
                           Column(
                             children: [
@@ -347,11 +329,11 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("Total Price:",
+                                  const Text("Total Price:",
                                       style: TextStyle(fontSize: 15, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
                                   ),
                                   Text(getPrice(grandTotal),
-                                      style: TextStyle(fontSize: 15, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
+                                      style: const TextStyle(fontSize: 15, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
                                   ),
                                 ],
                               ),
@@ -542,7 +524,32 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                       ),
                     ),
                   ),
-                  Gap(40)
+                  const Gap(10),
+                  Visibility(
+                    visible: status == "Accepted",
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(top: 10, bottom: 20, left: 60, right: 60),
+                      child: getCommonButtonLoad("Cancel Order", false, () {
+                        {
+                          cancelOrder();
+                        }
+                      }),
+                    ),
+                  ),
+                  Visibility(
+                    visible: status == "Processed",
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(top: 10, bottom: 20, left: 60, right: 60),
+                      child: getCommonButtonLoad("Print Invoice", false, () {
+                        {
+                          showSnackBar("Coming soon...", context);
+                        }
+                      }),
+                    ),
+                  ),
+                  const Gap(40)
                 ],
               ),
             ),
@@ -712,6 +719,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
         paymentStatus = dataResponse.orderDetailRecord?.paymentStatus ?? "";
         orderNumber = dataResponse.orderDetailRecord?.orderNumber ?? "";
         status = dataResponse.orderDetailRecord?.status ?? "";
+        shippingCharge = dataResponse.orderDetailRecord?.shippingCharge ?? "";
       }
       else
       {
@@ -725,7 +733,6 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
       {
         noInternetSnackBar(context);
       }
-
   }
 
   orderDeleteRequest() async {
@@ -772,6 +779,29 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
         noInternetSnackBar(context);
       }
 
+  }
+
+  //PDF code...
+
+  //Create row for the grid.
+  void _add(String orderNo, String franchiseName, String shippingMethod, String paymentTerm, String reqShipDate, PdfGrid grid) {
+    final PdfGridRow row = grid.rows.add();
+    row.cells[0].value = orderNo;
+    row.cells[1].value = franchiseName;
+    row.cells[2].value = shippingMethod;
+    row.cells[3].value = paymentTerm;
+    row.cells[4].value = reqShipDate;
+  }
+
+  //Create row for the grid.
+  void _addItems(String ordered, String itemNo, String description, String unit, String unitPrice, String extPrice, PdfGrid grid) {
+    final PdfGridRow row = grid.rows.add();
+    row.cells[0].value = ordered;
+    row.cells[1].value = itemNo;
+    row.cells[2].value = description.toString();
+    row.cells[3].value = unit.toString();
+    row.cells[4].value = unitPrice.toString();
+    row.cells[5].value = extPrice.toString();
   }
 
 }

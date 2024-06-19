@@ -83,7 +83,8 @@ class Profile {
       String? type, 
       String? website, 
       String? businessName, 
-      String? profilePicture, 
+      String? shippingCharge,
+      String? profilePicture,
       String? businessLogo,}){
     _name = name;
     _email = email;
@@ -100,6 +101,7 @@ class Profile {
     _type = type;
     _website = website;
     _businessName = businessName;
+    _shippingCharge = shippingCharge;
     _profilePicture = profilePicture;
     _businessLogo = businessLogo;
 }
@@ -120,6 +122,7 @@ class Profile {
     _type = json['type'];
     _website = json['website'];
     _businessName = json['business_name'];
+    _shippingCharge = json['shipping_charge'];
     _profilePicture = json['profile_picture'];
     _businessLogo = json['business_logo'];
   }
@@ -138,6 +141,7 @@ class Profile {
   String? _type;
   String? _website;
   String? _businessName;
+  String? _shippingCharge;
   String? _profilePicture;
   String? _businessLogo;
 Profile copyWith({  String? name,
@@ -155,6 +159,7 @@ Profile copyWith({  String? name,
   String? type,
   String? website,
   String? businessName,
+  String? shippingCharge,
   String? profilePicture,
   String? businessLogo,
 }) => Profile(  name: name ?? _name,
@@ -172,6 +177,7 @@ Profile copyWith({  String? name,
   type: type ?? _type,
   website: website ?? _website,
   businessName: businessName ?? _businessName,
+  shippingCharge: shippingCharge ?? _shippingCharge,
   profilePicture: profilePicture ?? _profilePicture,
   businessLogo: businessLogo ?? _businessLogo,
 );
@@ -190,6 +196,7 @@ Profile copyWith({  String? name,
   String? get type => _type;
   String? get website => _website;
   String? get businessName => _businessName;
+  String? get shippingCharge => _shippingCharge;
   String? get profilePicture => _profilePicture;
   String? get businessLogo => _businessLogo;
 
@@ -210,6 +217,7 @@ Profile copyWith({  String? name,
     map['type'] = _type;
     map['website'] = _website;
     map['business_name'] = _businessName;
+    map['shipping_charge'] = _shippingCharge;
     map['profile_picture'] = _profilePicture;
     map['business_logo'] = _businessLogo;
     return map;

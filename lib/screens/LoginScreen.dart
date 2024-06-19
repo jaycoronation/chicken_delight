@@ -206,6 +206,7 @@ class _LoginScreenState extends BaseState<LoginScreen> {
           loginResponse.records?.type  ?? "",
           loginResponse.records?.name  ?? "",
           loginResponse.records?.profilePicture  ?? "",
+          loginResponse.records?.shippingCharge  ?? "",
 
         );
         startActivity(context, const TabNavigation(0));

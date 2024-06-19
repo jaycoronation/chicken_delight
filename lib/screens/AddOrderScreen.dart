@@ -68,9 +68,10 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
       },
       child: Scaffold(
         backgroundColor: chicken_bg,
-        appBar:AppBar(
+        appBar: AppBar(
           toolbarHeight: kToolbarHeight,
           automaticallyImplyLeading: false,
+          centerTitle: false,
           title: getTitle("Add Order"),
           leading: GestureDetector(
               behavior: HitTestBehavior.opaque,
@@ -137,7 +138,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text((NavigationService.listItemsTmp[index].name ?? ""),
-                                            style: TextStyle(fontSize: small, color: black,fontWeight: FontWeight.w600,
+                                            style: const TextStyle(fontSize: 13, color: black,fontWeight: FontWeight.w600,
                                               overflow: TextOverflow.clip,
                                             ),
                                             textAlign: TextAlign.left,
@@ -146,7 +147,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                           ),
                                           const Gap(18),
                                           Text(getPrice(NavigationService.listItemsTmp[index].salePrice ?? " "),
-                                              style: TextStyle(fontSize: small, color: black,fontWeight: FontWeight.w400),
+                                              style: const TextStyle(fontSize: 13, color: black,fontWeight: FontWeight.w400),
                                               textAlign: TextAlign.center
                                           ),
                                         ],
@@ -292,7 +293,66 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                         ),
                         Container(
                           margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                          child:Column(
+                          child: Column(
+                            children: [
+                              Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Text("Total Items",
+                                          style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 14)
+                                      ),
+                                      Text(NavigationService.listItemsTmp.length.toString(),
+                                          style: const TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 15),
+                                      ),
+                                    ],
+                                  ),
+
+                                ],
+                              ),
+                              const Gap(5),
+                              Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Text("Sub Total",
+                                          style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 14)
+                                      ),
+                                      Text(getPrice(subTotal.toStringAsFixed(2)),
+                                          style: TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 15)
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              const Gap(5),
+                              Visibility(
+                               visible: sessionManager.getShippingCharge().toString() == "1",
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const Text("Shipping:",
+                                            style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 14)
+                                        ),
+                                        Text(getPrice("75"),
+                                          style: const TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 15),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+/*
+                          Column(
                             children: [
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -354,6 +414,9 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                               ),
                             ],
                           ),
+*/
+
+
                         ),
                       ],
                     ),

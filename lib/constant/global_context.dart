@@ -7,6 +7,7 @@ class NavigationService {
 
   static GlobalKey<NavigatorState> navigatorKeyHome = GlobalKey<NavigatorState>();
   static  List<Records> listItems = [];
+  static  List<Records> listItemsMain = [];
   static  List<Records> listItemsTmp = [];
   static String? notif_type = "";
   static String? notif_id = "";

@@ -16,6 +16,7 @@ class SessionManager {
   final String type = "type";
   final String name = "name";
   final String profilePicture = "profile_picture";
+  final String shippingCharge = "shipping_charge";
 
   final String cartCount = "0";
 
@@ -28,13 +29,14 @@ class SessionManager {
   }
 
   //set data into shared preferences...
-  Future createLoginSession(String apiUserId, String apiToken, String apiType, String apiName, String apiProfilePicture) async {
+  Future createLoginSession(String apiUserId, String apiToken, String apiType, String apiName, String apiProfilePicture, String apiShippingCharge) async {
     await SessionManagerMethods.setBool(isLoggedIn, true);
     await SessionManagerMethods.setString(userId,apiUserId);
     await SessionManagerMethods.setString(token,apiToken);
     await SessionManagerMethods.setString(type,apiType);
     await SessionManagerMethods.setString(name, apiName);
     await SessionManagerMethods.setString(profilePicture, apiProfilePicture);
+    await SessionManagerMethods.setString(shippingCharge, apiShippingCharge);
   }
 
   Future<void> setUserId(String apiUserId)
@@ -80,6 +82,15 @@ class SessionManager {
 
   String? getImagePic() {
     return SessionManagerMethods.getString(profilePicture);
+  }
+
+  Future<void> setShippingCharge(String apiShippingCharge)
+  async {
+    await SessionManagerMethods.setString(shippingCharge, apiShippingCharge);
+  }
+
+  String? getShippingCharge() {
+    return SessionManagerMethods.getString(shippingCharge);
   }
 
   final String unreadNotificationCount = "unread_notification_count";

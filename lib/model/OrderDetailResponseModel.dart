@@ -99,7 +99,8 @@ class OrderDetailRecord {
       String? addressLine4, 
       String? franchiseEmail, 
       String? franchiseMobile, 
-      String? country, 
+      String? shippingCharge,
+      String? country,
       String? stateId, 
       String? cityId, 
       String? state, 
@@ -127,6 +128,7 @@ class OrderDetailRecord {
     _addressLine2 = addressLine2;
     _addressLine3 = addressLine3;
     _addressLine4 = addressLine4;
+    _shippingCharge = shippingCharge;
     _franchiseEmail = franchiseEmail;
     _franchiseMobile = franchiseMobile;
     _country = country;
@@ -165,6 +167,7 @@ class OrderDetailRecord {
     _addressLine2 = json['address_line_2'];
     _addressLine3 = json['address_line_3'];
     _addressLine4 = json['address_line_4'];
+    _shippingCharge = json['shipping_charge'];
     _franchiseEmail = json['franchise_email'];
     _franchiseMobile = json['franchise_mobile'];
     _country = json['country'];
@@ -201,6 +204,7 @@ class OrderDetailRecord {
   String? _addressLine2;
   String? _addressLine3;
   String? _addressLine4;
+  String? _shippingCharge;
   String? _franchiseEmail;
   String? _franchiseMobile;
   String? _country;
@@ -231,6 +235,7 @@ OrderDetailRecord copyWith({  String? id,
   String? addressLine2,
   String? addressLine3,
   String? addressLine4,
+  String? shippingCharge,
   String? franchiseEmail,
   String? franchiseMobile,
   String? country,
@@ -261,6 +266,7 @@ OrderDetailRecord copyWith({  String? id,
   addressLine2: addressLine2 ?? _addressLine2,
   addressLine3: addressLine3 ?? _addressLine3,
   addressLine4: addressLine4 ?? _addressLine4,
+  shippingCharge: shippingCharge ?? _shippingCharge,
   franchiseEmail: franchiseEmail ?? _franchiseEmail,
   franchiseMobile: franchiseMobile ?? _franchiseMobile,
   country: country ?? _country,
@@ -292,6 +298,7 @@ OrderDetailRecord copyWith({  String? id,
   String? get addressLine2 => _addressLine2;
   String? get addressLine3 => _addressLine3;
   String? get addressLine4 => _addressLine4;
+  String? get shippingCharge => _shippingCharge;
   String? get franchiseEmail => _franchiseEmail;
   String? get franchiseMobile => _franchiseMobile;
   String? get country => _country;
@@ -327,6 +334,7 @@ OrderDetailRecord copyWith({  String? id,
     map['address_line_2'] = _addressLine2;
     map['address_line_3'] = _addressLine3;
     map['address_line_4'] = _addressLine4;
+    map['shipping_charge'] = _shippingCharge;
     map['franchise_email'] = _franchiseEmail;
     map['franchise_mobile'] = _franchiseMobile;
     map['country'] = _country;

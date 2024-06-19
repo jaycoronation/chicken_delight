@@ -63,6 +63,7 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
               child:getBackArrowBlack()),
           elevation: 0,
           backgroundColor: appBG,
+          centerTitle: false,
           actions: [
             Visibility(
               visible: listNotification.isNotEmpty,
@@ -74,7 +75,7 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
                       elevation: 0.0,
                       padding: const EdgeInsets.only(top: 5.0, bottom: 5.0,left: 15,right: 15),
                       side: const BorderSide(color: black, width: 1.0, style: BorderStyle.solid),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(kTextFieldCornerRadius)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       tapTargetSize: MaterialTapTargetSize.padded,
                       animationDuration: const Duration(milliseconds: 100),
                       enableFeedback: true,
@@ -83,7 +84,7 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
                     onPressed: () async {
                       _openBottomSheetForRemove();
                     },
-                    child: const Text("Clear",
+                    child: const Text("Mark All Read",
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w500),
                     )

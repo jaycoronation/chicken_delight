@@ -60,12 +60,14 @@ class Records {
       String? token, 
       String? type, 
       String? name, 
-      String? profilePicture,}){
+      String? profilePicture,
+    String? shippingCharge,}){
     _id = id;
     _token = token;
     _type = type;
     _name = name;
     _profilePicture = profilePicture;
+    _shippingCharge = shippingCharge;
 }
 
   Records.fromJson(dynamic json) {
@@ -74,28 +76,33 @@ class Records {
     _type = json['type'];
     _name = json['name'];
     _profilePicture = json['profile_picture'];
+    _shippingCharge = json['shipping_charge'];
   }
   String? _id;
   String? _token;
   String? _type;
   String? _name;
   String? _profilePicture;
+  String? _shippingCharge;
 Records copyWith({  String? id,
   String? token,
   String? type,
   String? name,
   String? profilePicture,
+  String? shippingCharge,
 }) => Records(  id: id ?? _id,
   token: token ?? _token,
   type: type ?? _type,
   name: name ?? _name,
   profilePicture: profilePicture ?? _profilePicture,
+  shippingCharge: shippingCharge ?? _shippingCharge,
 );
   String? get id => _id;
   String? get token => _token;
   String? get type => _type;
   String? get name => _name;
   String? get profilePicture => _profilePicture;
+  String? get shippingCharge => _shippingCharge;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -104,6 +111,7 @@ Records copyWith({  String? id,
     map['type'] = _type;
     map['name'] = _name;
     map['profile_picture'] = _profilePicture;
+    map['shipping_charge'] = _shippingCharge;
     return map;
   }
 

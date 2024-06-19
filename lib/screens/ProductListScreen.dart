@@ -96,7 +96,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
           setState(() {});
         }
       }
-      pagination();
+      //pagination();
     });
 
     getItemListData(true);
@@ -183,7 +183,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
 
                 if (!_isSearchHideShow)
                 {
-                  getItemListData(false,true);
+                  getItemListData(true);
                 }
 
               },
@@ -245,7 +245,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
             ),
             const Gap(20)
           ],
-          bottom: _isLoading ? null : PreferredSize(
+          bottom: PreferredSize(
             preferredSize: const Size.fromHeight(36),
             child:  Column(
               children: [
@@ -287,7 +287,6 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                     listCategory[j].isSelected = false;
                                   }
                                 }
-
                               });
 
                               if (listCategory[index].id == "all") {
@@ -295,8 +294,25 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                               } else {
                                 catId = listCategory[index].id.toString() ?? "";
                               }
-                              print("catId-----" +catId);
-                              getItemListData(true);
+
+                              NavigationService.listItems = [];
+
+                              setState(() {
+                                if (catId.isEmpty)
+                                {
+                                  NavigationService.listItems = NavigationService.listItemsMain;
+                                }
+                                else
+                                {
+                                  for (int i = 0; i < NavigationService.listItemsMain.length; i++) {
+                                    if (NavigationService.listItemsMain[i].categoryId.toString() == catId) {
+                                      NavigationService.listItems.add(NavigationService.listItemsMain[i]);
+                                    }
+                                  }
+                                }
+                              });
+
+                              //getItemListData(true);
                             },
                             child: Text(listCategory[index].name,
                                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400,
@@ -353,38 +369,39 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                       searchText = "";
                                     });
 
-                                    getItemListData(true,true);
+                                    //getItemListData(true);
                                   },
                                 )
                             ),
                             onChanged: (text) {
                               searchController.text = text;
                               searchController.selection = TextSelection.fromPosition(TextPosition(offset: searchController.text.length));
-                              /*    setState(() {
-                              if (text.isNotEmpty) {
-                                listOrders = [];
-                                for (int i = 0; i < listOrdersMain.length; i++) {
-                                  if (listOrdersMain[i].orderNumber.toString().toLowerCase().contains(text.toString().toLowerCase())) {
-                                    listOrders.add(listOrdersMain[i]);
-                                  }
-                                }
-                              } else {
-                                listOrders = listOrdersMain;
-                              }
-                             });*/
 
-                              if (text.isEmpty) {
+                              setState(() {
+                                if (text.isNotEmpty) {
+                                  NavigationService.listItems = [];
+                                  for (int i = 0; i < NavigationService.listItemsMain.length; i++) {
+                                    if (NavigationService.listItemsMain[i].name.toString().toLowerCase().contains(text.toString().toLowerCase())) {
+                                      NavigationService.listItems.add(NavigationService.listItemsMain[i]);
+                                    }
+                                  }
+                                } else {
+                                  NavigationService.listItems = NavigationService.listItemsMain;
+                                }
+                              });
+
+                              /*if (text.isEmpty) {
                                 setState(() {
                                   searchText = "";
                                 });
-                                getItemListData(true,true);
+                                getItemListData(true);
                               }
                               else if (text.length > 2) {
                                 setState(() {
                                   searchText = searchController.text ?? "";
                                 });
-                                getItemListData(true,true);
-                              }
+                                getItemListData(true);
+                              }*/
                             },
                           ),
                         )),
@@ -928,8 +945,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
     return isAnySelected;
   }
 
-  Future<void> redirectToCart()
-  async {
+  Future<void> redirectToCart() async {
     NavigationService.listItemsTmp = [];
 
     setState(() {
@@ -1113,6 +1129,81 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
 
 
   //API call function...
+  void getItemListData([bool isFromSearch = false]) async {
+    if (isOnline) {
+      setState(() {
+        if (isFromSearch)
+        {
+          _isLoading = false;
+        }
+        else
+        {
+          _isLoading = true;
+        }
+      });
+
+      HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+        HttpLogger(logLevel: LogLevel.BODY),
+      ]);
+
+      final url = Uri.parse(MAIN_URL + itemList);
+      Map<String, String> jsonBody = {
+        'category_id': catId,
+        'limit': _pageResult.toString(),
+        'page': _pageIndex.toString(),
+        'search': searchText,
+      };
+
+      final response = await http.post(url, body: jsonBody, headers: {
+        "Authorization": sessionManager.getToken() ?? "",
+      });
+      final statusCode = response.statusCode;
+
+      final body = response.body;
+      Map<String, dynamic> order = jsonDecode(body);
+      var dataResponse = ItemResponseModel.fromJson(order);
+
+      if (statusCode == 200 && dataResponse.success == 1) {
+        if (dataResponse.records != null) {
+
+          NavigationService.listItems = dataResponse.records ?? [];
+          NavigationService.listItemsMain = NavigationService.listItems;
+
+          if (listCategory.isEmpty)
+          {
+            listCategory = [];
+
+            listCategory.add(CategoryMenu(idStatic: "all", nameStatic: "All", isSelectedStatic: true));
+            for (int i = 0; i < NavigationService.listItems.length; i++)
+            {
+              listCategory.add(CategoryMenu(idStatic: NavigationService.listItems[i].categoryId.toString(),
+                  nameStatic: NavigationService.listItems[i].category.toString(), isSelectedStatic: false));
+            }
+
+            final ids = listCategory.map((e) => e.id).toSet();
+            listCategory.retainWhere((x) => ids.remove(x.id));
+            print("listCategoryTmp.length====>" + listCategory.length.toString());
+          }
+
+        }
+
+        setState(() {
+          _isLoading = false;
+        });
+
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+
+    } else {
+      noInternetSnackBar(context);
+    }
+
+  }
+
+/*
   void getItemListData(bool isFirstTime, [bool isFromSearch = false]) async {
     if (isOnline) {
       if (isFirstTime) {
@@ -1187,7 +1278,16 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
             listCategory.retainWhere((x) => ids.remove(x.id));
             print("listCategoryTmp.length====>" + listCategory.length.toString());
           }
+          else
+            {
+              for (int i = 0; i < NavigationService.listItems.length; i++)
+              {
+                if (NavigationService.listItems[i].isSelected ?? false)
+                  {
 
+                  }
+              }
+            }
 
           if (_tempList.isNotEmpty) {
             _pageIndex += 1;
@@ -1214,5 +1314,6 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
     }
 
   }
+*/
 
 }
