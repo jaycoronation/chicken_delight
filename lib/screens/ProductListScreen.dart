@@ -231,8 +231,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                             alignment: Alignment.centerRight,
                             margin: const EdgeInsets.only(left: 20),
                             child: Center(
-                              child: Text(
-                                  cartCount.toString(),
+                              child: Text(cartCount.toString(),
                                   style: TextStyle(fontWeight: FontWeight.w400, color: black, fontSize: small)),
                             ),
                           ),

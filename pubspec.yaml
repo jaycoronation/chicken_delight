@@ -68,7 +68,8 @@ dependencies:
   provider: ^6.0.5
   flutter_shakemywidget: ^1.0.5+1
   animations: ^2.0.11
-  syncfusion_flutter_pdf: ^26.1.38
+  syncfusion_flutter_pdf:
+  open_file:
 
 
 dev_dependencies:

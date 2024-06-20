@@ -2,11 +2,12 @@ import 'dart:convert';
 
 import 'package:chicken_delight/constant/global_context.dart';
 import 'package:chicken_delight/model/common/CommonResponseModel.dart';
+import 'package:chicken_delight/screens/save_file_mobile.dart';
 import 'package:chicken_delight/tabs/tabnavigation.dart';
 import 'package:chicken_delight/widget/loading.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
@@ -18,6 +19,9 @@ import '../model/OrderDetailResponseModel.dart';
 import '../utils/TextChanger.dart';
 import '../utils/app_utils.dart';
 import '../utils/base_class.dart';
+
+
+//Local imports
 
 class OrderDetailScreen extends StatefulWidget {
   final String orderId;
@@ -544,7 +548,8 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                       margin: const EdgeInsets.only(top: 10, bottom: 20, left: 60, right: 60),
                       child: getCommonButtonLoad("Print Invoice", false, () {
                         {
-                          showSnackBar("Coming soon...", context);
+                          _generatePDF();
+                          //showSnackBar("Coming soon...", context);
                         }
                       }),
                     ),
@@ -783,6 +788,251 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
 
   //PDF code...
 
+  Future<void> _generatePDF() async {
+    //Create a PDF document.
+    final PdfDocument document = PdfDocument();
+    //Add page to the PDF
+    final PdfPage page = document.pages.add();
+    //Get page client size
+    final Size pageSize = page.getClientSize();
+    //Draw rectangle
+    page.graphics.drawRectangle(
+        bounds: Rect.fromLTWH(0, 0, pageSize.width, pageSize.height),
+        pen: PdfPen(PdfColor(142, 170, 219, 255)));
+    //Generate PDF grid.
+    final PdfGrid grid = _getGrid();
+    _drawGrid(page, grid);
+
+    final PdfGrid grid1 = _getGrid1();
+
+    //Draw the header section by creating text element
+    final PdfLayoutResult result = _drawHeader(page, pageSize, grid1);
+    //Draw grid
+    _drawGrid1(page, grid1, result);
+    //Add invoice footer
+    // _drawFooter(page, pageSize);
+    //Save and dispose the document.
+    final List<int> bytes = await document.save();
+    document.dispose();
+    await saveAndLaunchFile(bytes, 'Invoice.pdf');
+
+    //Launch file.
+ //   await saveAndLaunchFile(bytes, 'Invoice.pdf');
+    print("PDF downloaded....");
+
+  }
+    //Draws the grid
+  void _drawGrid(PdfPage page, PdfGrid grid) {
+    Rect? totalPriceCellBounds;
+    Rect? quantityCellBounds;
+    //Invoke the beginCellLayout event.
+    grid.beginCellLayout = (Object sender, PdfGridBeginCellLayoutArgs args) {
+      final PdfGrid grid = sender as PdfGrid;
+      if (args.cellIndex == grid.columns.count - 1) {
+        totalPriceCellBounds = args.bounds;
+      } else if (args.cellIndex == grid.columns.count - 2) {
+        quantityCellBounds = args.bounds;
+      }
+    };
+    /*   //Draw the PDF grid and get the result.
+    result = grid.draw(
+        page: page, bounds: Rect.fromLTWH(0, result.bounds.bottom + 40, 0, 0))!;
+    //Draw grand total.
+    page.graphics.drawString('Grand Total',
+        PdfStandardFont(PdfFontFamily.helvetica, 9, style: PdfFontStyle.bold),
+        bounds: Rect.fromLTWH(
+            quantityCellBounds!.left,
+            result.bounds.bottom + 10,
+            quantityCellBounds!.width,
+            quantityCellBounds!.height));
+    page.graphics.drawString(_getTotalAmount(grid).toString(),
+        PdfStandardFont(PdfFontFamily.helvetica, 9, style: PdfFontStyle.bold),
+        bounds: Rect.fromLTWH(
+            totalPriceCellBounds!.left,
+            result.bounds.bottom + 10,
+            totalPriceCellBounds!.width,
+            totalPriceCellBounds!.height));*/
+  }
+  void _drawGrid1(PdfPage page, PdfGrid grid, PdfLayoutResult result) {
+    Rect? totalPriceCellBounds;
+    Rect? quantityCellBounds;
+    //Invoke the beginCellLayout event.
+    grid.beginCellLayout = (Object sender, PdfGridBeginCellLayoutArgs args) {
+      final PdfGrid grid = sender as PdfGrid;
+      if (args.cellIndex == grid.columns.count - 1) {
+        totalPriceCellBounds = args.bounds;
+      } else if (args.cellIndex == grid.columns.count - 2) {
+        quantityCellBounds = args.bounds;
+      }
+    };
+    //Draw the PDF grid and get the result.
+    result = grid.draw(
+        page: page, bounds: Rect.fromLTWH(0, result.bounds.bottom + 40, 0, 0))!;
+    //Draw grand total.
+    page.graphics.drawString('Grand Total',
+        PdfStandardFont(PdfFontFamily.helvetica, 9, style: PdfFontStyle.bold),
+        bounds: Rect.fromLTWH(
+            quantityCellBounds!.left,
+            result.bounds.bottom + 10,
+            quantityCellBounds!.width,
+            quantityCellBounds!.height));
+   /* page.graphics.drawString(_getTotalAmount(grid).toString(),
+        PdfStandardFont(PdfFontFamily.helvetica, 9, style: PdfFontStyle.bold),
+        bounds: Rect.fromLTWH(
+            totalPriceCellBounds!.left,
+            result.bounds.bottom + 10,
+            totalPriceCellBounds!.width,
+            totalPriceCellBounds!.height));*/
+  }
+
+  //Draw the invoice footer data.
+  void _drawFooter(PdfPage page, Size pageSize) {
+    final PdfPen linePen =
+    PdfPen(PdfColor(142, 170, 219, 255), dashStyle: PdfDashStyle.custom);
+    linePen.dashPattern = <double>[3, 3];
+    //Draw line
+    page.graphics.drawLine(linePen, Offset(0, pageSize.height - 100),
+        Offset(pageSize.width, pageSize.height - 100));
+    const String footerContent =
+        '800 Interchange Blvd.\r\n\r\nSuite 2501, Austin, TX 78721\r\n\r\nAny Questions? support@adventure-works.com';
+    //Added 30 as a margin for the layout
+    page.graphics.drawString(
+        footerContent, PdfStandardFont(PdfFontFamily.helvetica, 9),
+        format: PdfStringFormat(alignment: PdfTextAlignment.right),
+        bounds: Rect.fromLTWH(pageSize.width - 30, pageSize.height - 70, 0, 0));
+  }
+
+  //Draw the invoice header
+  PdfLayoutResult _drawHeader(PdfPage page, Size pageSize, PdfGrid grid) {
+    //Draw rectangle
+    final PdfFont contentFont = PdfStandardFont(PdfFontFamily.helvetica, 9);
+
+    //Create data format and convert it to text.
+    final String invoiceNumber = 'Invoice Number: $orderNumber\r\n\r\nDate: ' "${orderDetailData.timestamp?.toString() ?? " "}";
+
+    final Size contentSize = contentFont.measureString(invoiceNumber);
+    const String address = 'Melnex Enterprise Ltd. \r\n\r\n395 Berry Street \r\n\r\nWinnipeg Manitoba R3J 1N6';
+    PdfTextElement(text: invoiceNumber, font: contentFont).draw(
+        page: page,
+        bounds: Rect.fromLTWH(pageSize.width - (contentSize.width + 30), 30,
+            contentSize.width + 30, pageSize.height - 30));
+    PdfTextElement(text: address, font: contentFont).draw(
+        page: page,
+        bounds: Rect.fromLTWH(30, 30,
+            pageSize.width - (contentSize.width + 30), pageSize.height - 30))!;
+
+    // final String invoiceNumber = 'Invoice Number: $orderNumber\r\n\r\nDate: ' "${orderDetailData.timestamp?.toString() ?? " "}";
+
+    String billAddress = 'Bill to:\r\n\r\n${franchiseName}\r\n\r\n${orderDetailData.addressLine1} ${orderDetailData.addressLine2}\r\n\r\n${orderDetailData.addressLine3} ${orderDetailData.addressLine4}';
+    final Size contentSize1 = contentFont.measureString(billAddress);
+    String shipAddress = 'Ship to:\r\n\r\n${franchiseName}\r\n\r\n${orderDetailData.addressLine1} ${orderDetailData.addressLine2}\r\n\r\n${orderDetailData.addressLine3} ${orderDetailData.addressLine4}';
+
+    PdfTextElement(text: shipAddress, font: contentFont).draw(
+        page: page,
+        bounds: Rect.fromLTWH(pageSize.width - (contentSize1.width + 30), 120,
+            contentSize1.width + 30, pageSize.height - 120));
+    return PdfTextElement(text: billAddress, font: contentFont).draw(
+        page: page,
+        bounds: Rect.fromLTWH(30, 120,
+            pageSize.width - (contentSize1.width), pageSize.height - 30))!;
+  }
+
+  //Create PDF grid and return
+  PdfGrid _getGrid() {
+    //Create a PDF grid
+    final PdfGrid grid = PdfGrid();
+    //Set the columns count to the grid.
+    grid.columns.add(count: 5);
+    //Create the header row of the grid.
+    final PdfGridRow headerRow = grid.headers.add(1)[0];
+    //Set style
+    headerRow.style.backgroundBrush = PdfSolidBrush(PdfColor(68, 114, 196));
+    headerRow.style.textBrush = PdfBrushes.white;
+    headerRow.cells[0].value = 'Purchase Order No.';
+    headerRow.cells[0].stringFormat.alignment = PdfTextAlignment.center;
+    headerRow.cells[1].value = 'Franchise Name';
+    headerRow.cells[2].value = 'Shipping Method';
+    headerRow.cells[3].value = 'Payment Terms';
+    headerRow.cells[4].value = 'Req Ship Date';
+    _add(orderNumber, franchiseName, "Local Delivery", "", orderDetailData.timestamp?.toString() ?? "",grid);
+
+
+    grid.applyBuiltInStyle(PdfGridBuiltInStyle.listTable4Accent5);
+//grid.columns[1].width = 200;
+    for (int i = 0; i < headerRow.cells.count; i++) {
+      headerRow.cells[i].style.cellPadding =
+          PdfPaddings(bottom: 5, left: 5, right: 5, top: 5);
+    }
+
+    for (int i = 0; i < grid.rows.count; i++) {
+      final PdfGridRow row = grid.rows[i];
+      for (int j = 0; j < row.cells.count; j++) {
+        final PdfGridCell cell = row.cells[j];
+        if (j == 0) {
+          cell.stringFormat.alignment = PdfTextAlignment.center;
+        }
+        cell.style.cellPadding =
+            PdfPaddings(bottom: 5, left: 5, right: 5, top: 5);
+      }
+    }
+    return grid;
+  }
+
+  PdfGrid _getGrid1() {
+    //Create a PDF grid
+    final PdfGrid grid1 = PdfGrid();
+
+    grid1.columns.add(count: 6);
+
+    final PdfGridRow headerRow1 = grid1.headers.add(1)[0];
+    //Set style
+    headerRow1.style.backgroundBrush = PdfSolidBrush(PdfColor(68, 114, 196));
+    headerRow1.style.textBrush = PdfBrushes.white;
+
+    headerRow1.cells[0].value = 'Ordered';
+    headerRow1.cells[0].stringFormat.alignment = PdfTextAlignment.center;
+    headerRow1.cells[1].value = 'Item No.';
+    headerRow1.cells[2].value = 'Description';
+    headerRow1.cells[3].value = 'Unit';
+    headerRow1.cells[4].value = 'Unit Price';
+    headerRow1.cells[5].value = 'Ext. Price';
+    for (int i = 0; i < orderDetailData.itemsMainList!.length; i++)
+      {
+        for (int j = 0; j < orderDetailData.itemsMainList![i].itemsInnerList!.length; j++)
+          {
+            _addItems("${orderDetailData.itemsMainList![i].itemsInnerList![j].category?.toString() ?? " "}\n"
+                "${orderDetailData.itemsMainList![i].itemsInnerList![j].quantity?.toString() ?? ""}",
+                orderDetailData.itemsMainList![i].itemsInnerList![j].skuCode?.toString() ?? "",
+                orderDetailData.itemsMainList![i].itemsInnerList![j].item?.toString() ?? "",
+                orderDetailData.itemsMainList![i].itemsInnerList![j].unit?.toString() ?? "",
+                getPrice(orderDetailData.itemsMainList![i].itemsInnerList![j].amount?.toString() ?? ""),
+                getPrice(orderDetailData.itemsMainList![i].itemsInnerList![j].amount?.toString() ?? "")
+                ,grid1);
+          }
+      }
+
+    grid1.applyBuiltInStyle(PdfGridBuiltInStyle.listTable4Accent5);
+//grid.columns[1].width = 200;
+
+    for (int i = 0; i < headerRow1.cells.count; i++) {
+      headerRow1.cells[i].style.cellPadding =
+          PdfPaddings(bottom: 5, left: 5, right: 5, top: 5);
+    }
+    for (int i = 0; i < grid1.rows.count; i++) {
+      final PdfGridRow row = grid1.rows[i];
+      for (int j = 0; j < row.cells.count; j++) {
+        final PdfGridCell cell = row.cells[j];
+        if (j == 0) {
+          cell.stringFormat.alignment = PdfTextAlignment.center;
+        }
+        cell.style.cellPadding =
+            PdfPaddings(bottom: 5, left: 5, right: 5, top: 5);
+      }
+    }
+    return grid1;
+  }
+
+
   //Create row for the grid.
   void _add(String orderNo, String franchiseName, String shippingMethod, String paymentTerm, String reqShipDate, PdfGrid grid) {
     final PdfGridRow row = grid.rows.add();
@@ -803,5 +1053,17 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
     row.cells[4].value = unitPrice.toString();
     row.cells[5].value = extPrice.toString();
   }
+
+  //Get the total amount.
+  num _getTotalAmount(PdfGrid grid) {
+    num total = 0;
+    for (int i = 0; i < grid.rows.count; i++) {
+      final String value =
+      grid.rows[i].cells[grid.columns.count - 1].value as String;
+      total += num.parse(value);
+    }
+    return total;
+  }
+
 
 }
