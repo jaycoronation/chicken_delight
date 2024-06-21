@@ -220,7 +220,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                                           Row(
                                             children: [
                                               Visibility(
-                                                visible: getSetInner.image!.isNotEmpty,
+                                                visible: getSetInner.image?.isNotEmpty ?? false,
                                                 child: ClipRRect(
                                                   borderRadius: BorderRadius.circular(12),
                                                   child: Image.network(
@@ -793,12 +793,15 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
 
   Future<void> _generatePDF() async {
     //Create a PDF document.
+    print("PDF Start....");
     final PdfDocument document = PdfDocument();
     //Add page to the PDF
+    print("PDF Page Add....");
     final PdfPage page = document.pages.add();
     //Get page client size
     final Size pageSize = page.getClientSize();
     //Draw rectangle
+    print("PDF Add Data....");
     page.graphics.drawRectangle(bounds: Rect.fromLTWH(0, 0, pageSize.width, pageSize.height),
         pen: PdfPen(PdfColor(142, 170, 219, 255)));
 
@@ -807,19 +810,23 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
     //_getGridBillTo(page, result);
     _getGrid(page,result);
     _getGridBottom(page,result);
+    print("PDF Aft6er Data....");
     //Draw grid
     //Save and dispose the document.
-    final List<int> bytes = await document.save();
+    print("PDF Aft6er Data....");
+    final List<int> bytes = await document.save().onError((error, stackTrace) {
+      print("error === $error");
+      print("stackTrace === $stackTrace");
+      return [];
+    },);
+    await saveAndLaunchFile(bytes, 'Invoice_${DateTime.now().millisecondsSinceEpoch}.pdf');
     document.dispose();
-    await saveAndLaunchFile(bytes, 'Invoice.pdf');
-
     //Launch file.
-    print("PDF downloaded....");
 
   }
 
   //Draw the invoice header
-  PdfLayoutResult _drawHeader(PdfPage page, Size pageSize)
+  _drawHeader(PdfPage page, Size pageSize)
   {
     //Draw rectangle
     final PdfFont contentFont = PdfStandardFont(PdfFontFamily.helvetica, 17);
@@ -849,11 +856,11 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
         page: page,
         bounds: Rect.fromLTWH(pageSize.width - (contentSize.width + 10), 30,
             contentSize.width + 10, pageSize.height - 10));
+
     PdfTextElement(text: address, font: contentFont).draw(
         page: page,
         bounds: Rect.fromLTWH(10, 30, pageSize.width - (contentSize.width + 10), pageSize.height - 10)
-     )!;
-
+     );
 
     String billAddress = 'Bill to:\r\n\r\n$franchiseName\r\n${orderDetailData.addressLine1}\n${orderDetailData.addressLine2}\r\n${orderDetailData.addressLine3}\n${orderDetailData.addressLine4}';
     final Size contentSize1 = contentFont.measureString(billAddress);
@@ -863,10 +870,11 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
         page: page,
         bounds: Rect.fromLTWH(pageSize.width - (contentSize1.width + 10), 160,
             contentSize1.width + 10, pageSize.height - 120));
-    return PdfTextElement(text: billAddress, font: contentFont).draw(
+
+    return PdfTextElement(text: shipAddress, font: contentFont).draw(
         page: page,
-        bounds: Rect.fromLTWH(10, 160,
-            pageSize.width - (contentSize1.width), pageSize.height - 10))!;
+        bounds: Rect.fromLTWH(pageSize.width - (contentSize1.width + 10), 160,
+            contentSize1.width + 10, pageSize.height - 120));
   }
 
   PdfGrid _getGridBillTo(PdfPage page, PdfLayoutResult result) {
@@ -875,7 +883,6 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
     //Set the columns count to the grid.
     grid.columns.add(count: 1);
     //Create the header row of the grid.
-
 
     final PdfGridRow row = grid.rows.add();
     row.cells[0].value = 'Bill to';
@@ -935,7 +942,6 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
     grid.columns.add(count: 6);
     //Create the header row of the grid.
 
-
     final PdfGridRow row = grid.rows.add();
     row.cells[0].value = 'Ordered';
     row.cells[1].value = 'Item No.';
@@ -945,20 +951,19 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
     row.cells[5].value = 'Ext. Price';
 
     List<PdfGridRow> item = List<PdfGridRow>.empty(growable: true);
-    for (int i = 0; i < orderDetailData.itemsMainList!.length; i++)
+    for (int i = 0; i < (orderDetailData.itemsMainList?.length ?? 0); i++)
     {
-      for (int j = 0; j < orderDetailData.itemsMainList![i].itemsInnerList!.length; j++)
+      for (int j = 0; j < (orderDetailData.itemsMainList?[i].itemsInnerList?.length ?? 0); j++)
       {
-
         PdfGridRow row1 = grid.rows.add();
         row1.style = cellStyle;
-        row1.cells[0].value = "${orderDetailData.itemsMainList![i].itemsInnerList![j].category?.toString() ?? " "}\n"
-            "${orderDetailData.itemsMainList![i].itemsInnerList![j].quantity?.toString() ?? ""}";
-        row1.cells[1].value = orderDetailData.itemsMainList![i].itemsInnerList![j].skuCode?.toString() ?? "";
-        row1.cells[2].value = orderDetailData.itemsMainList![i].itemsInnerList![j].item?.toString().toUpperCase() ?? "";
-        row1.cells[3].value = orderDetailData.itemsMainList![i].itemsInnerList![j].unit?.toString().toUpperCase() ?? "";
-        row1.cells[4].value = getPrice(orderDetailData.itemsMainList![i].itemsInnerList![j].amount?.toString() ?? "");
-        row1.cells[5].value = getPrice(orderDetailData.itemsMainList![i].itemsInnerList![j].amount?.toString() ?? "");
+        row1.cells[0].value = "${orderDetailData.itemsMainList?[i].itemsInnerList?[j].category?.toString() ?? " "}\n"
+            "${orderDetailData.itemsMainList?[i].itemsInnerList?[j].quantity?.toString() ?? ""}";
+        row1.cells[1].value = orderDetailData.itemsMainList?[i].itemsInnerList?[j].skuCode?.toString() ?? "";
+        row1.cells[2].value = orderDetailData.itemsMainList?[i].itemsInnerList?[j].item?.toString().toUpperCase() ?? "";
+        row1.cells[3].value = orderDetailData.itemsMainList?[i].itemsInnerList?[j].unit?.toString().toUpperCase() ?? "";
+        row1.cells[4].value = getPrice(orderDetailData.itemsMainList?[i].itemsInnerList?[j].amount?.toString() ?? "");
+        row1.cells[5].value = getPrice(orderDetailData.itemsMainList?[i].itemsInnerList?[j].amount?.toString() ?? "");
 
         item.add(row1);
       }

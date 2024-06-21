@@ -11,6 +11,9 @@ import 'package:path_provider_platform_interface/path_provider_platform_interfac
 Future<void> saveAndLaunchFile(List<int> bytes, String fileName) async {
   //Get the storage folder location using path_provider package.
   String? path;
+
+  print("PDF path Data.... ==== ${path}");
+
   if (Platform.isAndroid ||
       Platform.isIOS ||
       Platform.isLinux ||
@@ -18,6 +21,8 @@ Future<void> saveAndLaunchFile(List<int> bytes, String fileName) async {
     final Directory directory =
     await path_provider.getApplicationSupportDirectory();
     path = directory.path;
+
+    print("PDF path New.... ==== ${path}");
   } else {
     path = await PathProviderPlatform.instance.getApplicationSupportPath();
   }
@@ -26,6 +31,8 @@ Future<void> saveAndLaunchFile(List<int> bytes, String fileName) async {
   await file.writeAsBytes(bytes, flush: true);
   if (Platform.isAndroid || Platform.isIOS) {
     //Launch the file (used open_file package)
+    print("File name ::== $fileName");
+
     await OpenFile.open('$path/$fileName');
   //  await open_file.OpenFile.open('$path/$fileName');
   } else if (Platform.isWindows) {
