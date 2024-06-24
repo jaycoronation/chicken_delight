@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:chicken_delight/constant/global_context.dart';
 import 'package:chicken_delight/model/common/CommonResponseModel.dart';
@@ -8,8 +7,6 @@ import 'package:chicken_delight/tabs/tabnavigation.dart';
 import 'package:chicken_delight/widget/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
@@ -802,8 +799,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
     final Size pageSize = page.getClientSize();
     //Draw rectangle
     print("PDF Add Data....");
-    page.graphics.drawRectangle(bounds: Rect.fromLTWH(0, 0, pageSize.width, pageSize.height),
-        pen: PdfPen(PdfColor(142, 170, 219, 255)));
+  //  page.graphics.drawRectangle(bounds: Rect.fromLTWH(0, 0, pageSize.width, pageSize.height),pen: PdfPen(PdfColor(142, 170, 219, 255)));
 
     //Draw the header section by creating text element
     final PdfLayoutResult result = _drawHeader(page, pageSize);
@@ -829,7 +825,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
   _drawHeader(PdfPage page, Size pageSize)
   {
     //Draw rectangle
-    final PdfFont contentFont = PdfStandardFont(PdfFontFamily.helvetica, 17);
+    final PdfFont contentFont = PdfStandardFont(PdfFontFamily.helvetica, 9);
 
   /*  final PdfGrid grid = PdfGrid();
     //Set the columns count to the grid.
@@ -851,30 +847,33 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
         //"\r\nPage: ${page.getClientSize()}";
 
     final Size contentSize = contentFont.measureString(invoiceNumber);
+
     const String address = 'Melnex Enterprise Ltd.\r\n395 Berry Street\r\nWinnipeg Manitoba R3J 1N6';
+
     PdfTextElement(text: invoiceNumber, font: contentFont).draw(
         page: page,
-        bounds: Rect.fromLTWH(pageSize.width - (contentSize.width + 10), 30,
-            contentSize.width + 10, pageSize.height - 10));
+        bounds: Rect.fromLTWH(pageSize.width - (contentSize.width), 10,
+            contentSize.width, pageSize.height));
 
     PdfTextElement(text: address, font: contentFont).draw(
         page: page,
-        bounds: Rect.fromLTWH(10, 30, pageSize.width - (contentSize.width + 10), pageSize.height - 10)
+        bounds: Rect.fromLTWH(0, 10, pageSize.width - (contentSize.width), pageSize.height)
      );
 
-    String billAddress = 'Bill to:\r\n\r\n$franchiseName\r\n${orderDetailData.addressLine1}\n${orderDetailData.addressLine2}\r\n${orderDetailData.addressLine3}\n${orderDetailData.addressLine4}';
-    final Size contentSize1 = contentFont.measureString(billAddress);
     String shipAddress = 'Ship to:\r\n\r\n$franchiseName\r\n${orderDetailData.addressLine1}\n${orderDetailData.addressLine2}\r\n${orderDetailData.addressLine3}\n${orderDetailData.addressLine4}';
+    final Size contentSize1 = contentFont.measureString(shipAddress);
+
+    String billAddress = 'Bill to:\r\n\r\n$franchiseName\r\n${orderDetailData.addressLine1}\n${orderDetailData.addressLine2}\r\n${orderDetailData.addressLine3}\n${orderDetailData.addressLine4}';
 
     PdfTextElement(text: shipAddress, font: contentFont).draw(
         page: page,
-        bounds: Rect.fromLTWH(pageSize.width - (contentSize1.width + 10), 160,
-            contentSize1.width + 10, pageSize.height - 120));
+        bounds: Rect.fromLTWH(pageSize.width - (contentSize1.width), 80,
+            contentSize1.width, pageSize.height - 80));
 
-    return PdfTextElement(text: shipAddress, font: contentFont).draw(
+    return PdfTextElement(text: billAddress, font: contentFont).draw(
         page: page,
-        bounds: Rect.fromLTWH(pageSize.width - (contentSize1.width + 10), 160,
-            contentSize1.width + 10, pageSize.height - 120));
+        bounds: Rect.fromLTWH(0, 80,
+            contentSize1.width, pageSize.height - 80));
   }
 
   PdfGrid _getGridBillTo(PdfPage page, PdfLayoutResult result) {
@@ -930,7 +929,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
       row.cells[i].style = cellStyle;
       row1.cells[i].style = cellStyle;
     }
-    grid.draw(page: page, bounds: Rect.fromLTWH(0, result.bounds.bottom + 40, 0, 0));
+    grid.draw(page: page, bounds: Rect.fromLTWH(0, result.bounds.bottom + 30, 0, 0));
 
     return grid;
   }
@@ -990,7 +989,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
       }
     }
 
-    grid.draw(page: page, bounds: Rect.fromLTWH(0, result.bounds.bottom + 200, 0, 0));
+    grid.draw(page: page, bounds: Rect.fromLTWH(0, result.bounds.bottom + 95, 0, 0));
 
     return grid;
   }
@@ -1005,8 +1004,8 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
         bottom: PdfPen(PdfColor(0, 0, 0), width: 1),
         right: PdfPen(PdfColor(0, 0, 0), width: 1)),
     cellPadding: PdfPaddings(left: 5, right: 5, top: 10, bottom: 10),
-    font: PdfStandardFont(PdfFontFamily.helvetica, 16),
-   format: PdfStringFormat(alignment: PdfTextAlignment.center, lineAlignment: PdfVerticalAlignment.middle, wordSpacing: 8),
+    font: PdfStandardFont(PdfFontFamily.helvetica, 9),
+   format: PdfStringFormat(alignment: PdfTextAlignment.center, lineAlignment: PdfVerticalAlignment.middle, wordSpacing: 4),
    textBrush: PdfBrushes.black,
   );
 

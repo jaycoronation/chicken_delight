@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:chicken_delight/screens/LoginScreen.dart';
@@ -13,7 +12,6 @@ import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:url_launcher/url_launcher.dart';
-import '../constant/api_end_point.dart';
 import '../constant/colors.dart';
 
 import 'package:path_provider/path_provider.dart';

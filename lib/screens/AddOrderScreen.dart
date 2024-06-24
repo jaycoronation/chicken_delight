@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:chicken_delight/common_widget/CommonTextFiled.dart';
 import 'package:chicken_delight/model/OrderAddResponseModel.dart';
+import 'package:chicken_delight/model/common/drop_down_model.dart';
 import 'package:chicken_delight/screens/OrderDetailScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -26,11 +27,16 @@ class AddOrderScreen extends StatefulWidget {
 
 class _AddOrderScreenState extends BaseState<AddOrderScreen> {
   TextEditingController remarksController = TextEditingController();
+  TextEditingController selectRepeatController = TextEditingController();
 
   bool isLoading = false;
 
   var subTotal = 0.0;
   var grandTotal = 0.0;
+
+  bool isRepeat = false;
+  String repeatDays = "";
+  List<DropDownModel> orderRepeatOption = [];
 
 
   @override
@@ -46,6 +52,11 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
       }
     });
 
+    orderRepeatOption.add(DropDownModel(idParam: "15", nameParam: 'Repeat in every 15 days', isSelectedParam: false));
+    orderRepeatOption.add(DropDownModel(idParam: "15", nameParam: "Repeat in every 30 days", isSelectedParam: false));
+    orderRepeatOption.add(DropDownModel(idParam: "15", nameParam: "Repeat in every 45 days", isSelectedParam: false));
+    orderRepeatOption.add(DropDownModel(idParam: "15", nameParam: "Repeat in every 60 days", isSelectedParam: false));
+
     for (int i = 0; i < NavigationService.listItemsTmp.length; i++)
     {
       var total = num.parse(NavigationService.listItemsTmp[i].salePrice.toString()) * num.parse(NavigationService.listItemsTmp[i].quantity.toString());
@@ -53,7 +64,9 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
     }
 
     getPriceCalculated();
+
     super.initState();
+
   }
 
   @override
@@ -227,28 +240,98 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                   ),
                                 ],
                               ),
-                              // GestureDetector(
-                              //   behavior: HitTestBehavior.opaque,
-                              //   onTap: () {
-                              //     if (isOnline)
-                              //     {
-                              //       setState(() {
-                              //         removeItem(index);
-                              //       });
-                              //     }
-                              //     else
-                              //     {
-                              //       noInternetSnackBar(context);
-                              //     }
-                              //   },
-                              //   child: const Icon(Icons.delete_outline, color: black, size: 26,),
-                              // ),
                             ],
                           ),
                         );
                       }
                   ),
                 ),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 5, top: 5),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(kContainerCornerRadius),
+                    color: white,
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        margin: const EdgeInsets.only(left: 10, bottom: 5, top: 10),
+                        child: Text("Repeat Order",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(fontWeight: FontWeight.w600, color: black,fontSize: titleFont20)),
+                      ),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () {
+
+                              setState(() {
+                                isRepeat = true;
+                              });
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                    margin: const EdgeInsets.only(top: 10, right: 5,left: 20),
+                                    child: !isRepeat ? Image.asset("assets/images/ic_radio_unselected.png", width: 20, height: 20, color: black) :
+                                    Image.asset("assets/images/ic_radio_selected.png",  width: 20, height: 20,)
+                                ),
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  padding: const EdgeInsets.only(top: 10, right: 16),
+                                  child: const Text("Yes", style: TextStyle(fontSize: 15,fontWeight: FontWeight.w600, color: black),),
+                                ),
+                              ],
+                            ),
+                          ),
+                          GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () {
+                              setState(() {
+                                isRepeat = false;
+                                selectRepeatController.text = "";
+                                repeatDays = "";
+                              });
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                    margin: const EdgeInsets.only(top: 10, right: 5),
+                                    child: isRepeat ? Image.asset("assets/images/ic_radio_unselected.png", width: 20, height: 20,) :
+                                    Image.asset("assets/images/ic_radio_selected.png", width: 20, height: 20)
+
+                                ),
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  padding: const EdgeInsets.only(top: 10, right: 16),
+                                  child: const Text("No", style: TextStyle(fontSize: 15,fontWeight: FontWeight.w600, color: black),),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      const Gap(5),
+                      Visibility(
+                        visible: isRepeat,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: CommonTextFieldForBottomSheet(
+                              controller: selectRepeatController,
+                              suffixIcon: 'assets/images/ic_dropdown.png',
+                              hintText: "Select repeat interval (e.g. every 15 days)*",
+                              onTap: () {
+                                openBottomSheet();
+                              }),
+                        ),
+                      ),
+                      const Gap(5),
+                    ],
+                  ),
+                ),
+
                 Container(
                   margin: const EdgeInsets.only(bottom: 10, top: 5),
                   decoration: BoxDecoration(
@@ -269,7 +352,9 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                         child: OutlineTextField(
                           controller: remarksController,
                           hintText: "Enter Remark",
-                          onTapClear: () {  },
+                          onTapClear: () {
+
+                          },
                         ),
                       ),
                     ],
@@ -323,7 +408,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                           style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 14)
                                       ),
                                       Text(getPrice(subTotal.toStringAsFixed(2)),
-                                          style: TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 15)
+                                          style: const TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 15)
                                       ),
                                     ],
                                   ),
@@ -430,6 +515,10 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                       {
                         showSnackBar("Please select item.", context);
                       }
+                      else if (isRepeat)
+                      {
+                        showSnackBar("Please select days option.", context);
+                      }
                       else
                       {
                         _makeJsonData();
@@ -444,6 +533,114 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
       ),
     );
   }
+
+  void openBottomSheet() {
+    showModalBottomSheet<String>(
+        isScrollControlled: true,
+        backgroundColor: white,
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
+        context: context,
+        builder: (context) {
+          return Padding(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: StatefulBuilder(
+              builder: (BuildContext context, StateSetter updateState) {
+                return ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.88,
+                  ),
+                  child: Container(
+                    decoration: const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
+                    padding: const EdgeInsets.only(top: 8, bottom: 8),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          height: 2,
+                          width: 40,
+                          alignment: Alignment.center,
+                          color: primaryColor,
+                          margin: const EdgeInsets.only(top: 10, bottom: 6),
+                        ),
+                        Container(
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
+                          child: const Text(
+                            "Select Option",
+                            style: TextStyle(color: primaryColor, fontWeight: FontWeight.w500, fontSize: 16),
+                          ),
+                        ),
+                        Flexible(
+                          child: SingleChildScrollView(
+                            child: Wrap(
+                              children: [
+                                Container(
+                                  alignment: Alignment.bottomCenter,
+                                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 12),
+                                  child: ListView.builder(
+                                    itemCount: orderRepeatOption.length,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.vertical,
+                                    itemBuilder: (context, index) {
+                                      return IntrinsicHeight(
+                                        child: GestureDetector(
+                                          behavior: HitTestBehavior.opaque,
+                                          onTap: () {
+                                            updateState(() {
+                                             // orderRepeatOption[index].isSelected = !(orderRepeatOption[index].isSelected ?? false);
+                                             selectRepeatController.text = orderRepeatOption[index].name?.toString() ?? "";
+                                             repeatDays = orderRepeatOption[index].id?.toString() ?? "";
+                                            });
+                                            Navigator.pop(context);
+                                          },
+                                          child: Container(
+                                            color: white,
+                                            child: setOptionList(index),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+        }).then(
+          (value) {},
+    );
+  }
+
+  Column setOptionList(int index) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.only(left: 22, right: 22, top: 15, bottom: 15),
+          child: Text(orderRepeatOption[index].name.toString(),
+            style: TextStyle(
+                fontWeight: selectRepeatController.text == orderRepeatOption[index].name ? FontWeight.w600 : FontWeight.w400,
+                color: black,
+                fontSize: 15),
+          ),
+        ),
+        Container(
+          height: 0.5,
+          color: (index == orderRepeatOption.length - 1) ? white : primaryColor,
+        ),
+      ],
+    );
+  }
+
 
   @override
   void castStatefulWidget() {
@@ -597,7 +794,6 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
       NavigationService.listItemsTmp.addAll(listItemsTemp);
     }
     print("<><> Json Product ${jsonEncode(NavigationService.listItemsTmp).toString().trim()} END<><>");
-
   }
 
   // API Call func...
@@ -620,9 +816,10 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
         'items': NavigationService.listItemsTmp.isNotEmpty ? jsonEncode(NavigationService.listItemsTmp).toString().trim() : "",
         'paymentMethod': "[]",
         'remarks': remarksController.value.text.toString().isNotEmpty ? remarksController.value.text.toString() : "",
-        'shipping_charges': '75',
+        'shipping_charges': sessionManager.getShippingCharge().toString(),
         'sub_total': subTotal.toString(),
-        'warehouse': ""
+        'repeat_date': repeatDays,
+        'repeat_order': isRepeat ? "1" : "0"
       };
 
       final response = await http.post(url, body: jsonBody, headers: {

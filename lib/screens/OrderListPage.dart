@@ -58,13 +58,6 @@ class _OrderListPageState extends BaseState<OrderListPage> {
   bool isScrollingDown = false;
   final scrollDirection = Axis.horizontal;
 
-  List<String> orderStatusDataMap = [
-    "Accept Order",
-    "Cancel Order",
-    "Ship Order",
-    "Print Bill"
-  ];
-
   String selectedDateFilter = "All";
   List<String> dateFilterList = ['All',"Today","Yesterday", "Last 7 Days", "Last 30 Days", "This Month", "Last Month", "Custom Range"];
 
@@ -73,7 +66,6 @@ class _OrderListPageState extends BaseState<OrderListPage> {
 
   var strCustomToDate;
   var strCustomFromDate;
-
 
 
   @override
@@ -91,6 +83,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
     orderFilterOption.add(CommonResponseModel(success: 0, message: 'All', isSelected: true));
     orderFilterOption.add(CommonResponseModel(message: "Accepted"));
     orderFilterOption.add(CommonResponseModel(message: "Processed"));
+    orderFilterOption.add(CommonResponseModel(message: "Placed"));
     orderFilterOption.add(CommonResponseModel(message: "Delivered"));
     orderFilterOption.add(CommonResponseModel(message: "Cancelled"));
 

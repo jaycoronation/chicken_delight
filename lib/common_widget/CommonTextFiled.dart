@@ -187,8 +187,8 @@ class CommonTextFieldForBottomSheet extends StatelessWidget {
         ) : null,
         suffixIcon: suffixIcon.isNotEmpty
             ? Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Image.asset(suffixIcon, width: 22, height: 22))
+            padding: const EdgeInsets.all(16.0),
+            child: Image.asset(suffixIcon, width: 16, height: 16, color: black,))
             : null,
         // suffixIcon: suffixIcon,
       ),

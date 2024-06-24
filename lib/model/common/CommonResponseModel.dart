@@ -10,14 +10,12 @@ class CommonResponseModel {
     _success = success;
     _message = message;
     _isSelected = isSelected;
-
   }
 
   CommonResponseModel.fromJson(dynamic json) {
     _success = json['success'];
     _message = json['message'];
     _isSelected = json['isSelected'];
-
   }
   int? _success = 0;
   String? _message = "";
@@ -32,12 +30,11 @@ class CommonResponseModel {
   );
   int? get success => _success;
   String? get message => _message;
+  bool? get isSelected => _isSelected;
 
   set success(int? value) {
     _success = value;
   }
-
-  bool? get isSelected => _isSelected;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

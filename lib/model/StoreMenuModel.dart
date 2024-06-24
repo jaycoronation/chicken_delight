@@ -34,12 +34,10 @@ class CategoryMenu {
     id = value;
   }
 
-
   set setName(String value)
   {
     name = value;
   }
-
 
   set setIsSelected(bool value)
   {

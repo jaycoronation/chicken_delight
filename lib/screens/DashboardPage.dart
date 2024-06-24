@@ -41,7 +41,6 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends BaseState<DashboardPage> {
 
-  final GlobalKey<ScaffoldState> _key = GlobalKey();
   bool _isLoading = false;
   final ScrollController _scrollController = ScrollController();
 
