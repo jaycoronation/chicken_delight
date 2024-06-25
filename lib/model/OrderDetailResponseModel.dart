@@ -1,5 +1,5 @@
 import 'dart:convert';
-/// order_detail_record : {"id":"18","order_number":"IN06240000018","sub_total":"133.92","grand_total":"208.92","status":"Delivered","created_for":"12","created_by":"12","remarks":"TEST","timestamp":"Jun 10, 2024 07:59 PM","payment_status":"Completed","order_stages":[{"status_id":"40","order_id":"18","status":"Delivered","remarks":"","timestamp":"Jun 10, 2024, 07:59 PM"}],"franchise_name":"Portage Ave","address_line_1":"1855a Portage Ave","address_line_2":"MB R3J 0G8","address_line_3":"New Road","address_line_4":"Near Highway","franchise_email":"john@chickendelight.com","franchise_mobile":"9825589659","country":"Canada","state_id":"868","city_id":"16441","state":"New Brunswick","city":"Fredericton","warehouse_name":"Alberta","ware_address_line_1":"21 adam street","ware_address_line_2":"","ware_address_line_3":"","ware_address_line_4":"","total_items":"2","items_main_list":[{"category":"Food","items_inner_list":[{"id":"29","order_id":"18","item_id":"11","item":"BAG SHREDDED MOZZA CHEESE 20 LB / 9.07 KG.-BAG SHREDDED MOZZA CHEESE 10 LB / 4.55 KG.","category_id":"1","category":"Food","base_price":"33.48","amount":"66.96","sku_code":"MOZCHS10LB","unit":"lb","quantity":"2","timestamp":"1718029770","stock":10,"image":"https://chickendelight.saltpixels.in/api/assets/upload/items/default.png"}]}]}
+/// order_detail_record : {"id":"41","order_number":"IN06240000041","sub_total":"55","grand_total":"55","status":"Processed","created_for":"12","created_by":"6","remarks":"","repeat_date":"","timestamp":"Jun 18, 2024 10:51 AM","date":"Jun 18, 2024","payment_status":"Pending","order_stages":[{"status_id":"77","order_id":"41","status":"Processed","remarks":"","timestamp":"Jun 18, 2024, 11:00 AM"}],"franchise_name":"Duo Enterprises Ltd.","address_line_1":"1329 MCPHILLIPS ST.","address_line_2":"WINNIPEG MB","address_line_3":"","address_line_4":"","shipping_charge":"1","franchise_email":"CDelight@shaw.ca","franchise_mobile":"2049821385","country":"Canada","state_id":"867","city_id":"17215","state":"Manitoba","city":"Winnipeg","warehouse_name":"Saskatchewan","ware_address_line_1":"Nipawin River Inn","ware_address_line_2":"101 Centre","ware_address_line_3":"St SK S0E 1E0","ware_address_line_4":"","selecteditems":[{"id":"90","item_id":"8","variation_id":"8","item":"chicken wings-24","base_price":"27.5","sale_price":"27.5","unit":"pieces","amount":"55","quantity":"2","sku_code":"4564561","category_id":"33","category":"Chicken","stock":131,"icon":"https://chickendelight.saltpixels.in/api/assets/upload/items/default.png"}],"total_items":"1","items_main_list":[{"category":"Chicken","items_inner_list":[{"id":"90","order_id":"41","item_id":"8","item":"chicken wings-24","category_id":"33","category":"Chicken","base_price":"27.5","amount":"55","sku_code":"4564561","unit":"pieces","quantity":"2","timestamp":"1718725898","stock":131,"image":"https://chickendelight.saltpixels.in/api/assets/upload/items/default.png"}]}]}
 /// message : "order details found"
 /// success : 1
 
@@ -46,36 +46,40 @@ OrderDetailResponseModel copyWith({  OrderDetailRecord? orderDetailRecord,
 
 }
 
-/// id : "18"
-/// order_number : "IN06240000018"
-/// sub_total : "133.92"
-/// grand_total : "208.92"
-/// status : "Delivered"
+/// id : "41"
+/// order_number : "IN06240000041"
+/// sub_total : "55"
+/// grand_total : "55"
+/// status : "Processed"
 /// created_for : "12"
-/// created_by : "12"
-/// remarks : "TEST"
-/// timestamp : "Jun 10, 2024 07:59 PM"
-/// payment_status : "Completed"
-/// order_stages : [{"status_id":"40","order_id":"18","status":"Delivered","remarks":"","timestamp":"Jun 10, 2024, 07:59 PM"}]
-/// franchise_name : "Portage Ave"
-/// address_line_1 : "1855a Portage Ave"
-/// address_line_2 : "MB R3J 0G8"
-/// address_line_3 : "New Road"
-/// address_line_4 : "Near Highway"
-/// franchise_email : "john@chickendelight.com"
-/// franchise_mobile : "9825589659"
+/// created_by : "6"
+/// remarks : ""
+/// repeat_date : ""
+/// timestamp : "Jun 18, 2024 10:51 AM"
+/// date : "Jun 18, 2024"
+/// payment_status : "Pending"
+/// order_stages : [{"status_id":"77","order_id":"41","status":"Processed","remarks":"","timestamp":"Jun 18, 2024, 11:00 AM"}]
+/// franchise_name : "Duo Enterprises Ltd."
+/// address_line_1 : "1329 MCPHILLIPS ST."
+/// address_line_2 : "WINNIPEG MB"
+/// address_line_3 : ""
+/// address_line_4 : ""
+/// shipping_charge : "1"
+/// franchise_email : "CDelight@shaw.ca"
+/// franchise_mobile : "2049821385"
 /// country : "Canada"
-/// state_id : "868"
-/// city_id : "16441"
-/// state : "New Brunswick"
-/// city : "Fredericton"
-/// warehouse_name : "Alberta"
-/// ware_address_line_1 : "21 adam street"
-/// ware_address_line_2 : ""
-/// ware_address_line_3 : ""
+/// state_id : "867"
+/// city_id : "17215"
+/// state : "Manitoba"
+/// city : "Winnipeg"
+/// warehouse_name : "Saskatchewan"
+/// ware_address_line_1 : "Nipawin River Inn"
+/// ware_address_line_2 : "101 Centre"
+/// ware_address_line_3 : "St SK S0E 1E0"
 /// ware_address_line_4 : ""
-/// total_items : "2"
-/// items_main_list : [{"category":"Food","items_inner_list":[{"id":"29","order_id":"18","item_id":"11","item":"BAG SHREDDED MOZZA CHEESE 20 LB / 9.07 KG.-BAG SHREDDED MOZZA CHEESE 10 LB / 4.55 KG.","category_id":"1","category":"Food","base_price":"33.48","amount":"66.96","sku_code":"MOZCHS10LB","unit":"lb","quantity":"2","timestamp":"1718029770","stock":10,"image":"https://chickendelight.saltpixels.in/api/assets/upload/items/default.png"}]}]
+/// selecteditems : [{"id":"90","item_id":"8","variation_id":"8","item":"chicken wings-24","base_price":"27.5","sale_price":"27.5","unit":"pieces","amount":"55","quantity":"2","sku_code":"4564561","category_id":"33","category":"Chicken","stock":131,"icon":"https://chickendelight.saltpixels.in/api/assets/upload/items/default.png"}]
+/// total_items : "1"
+/// items_main_list : [{"category":"Chicken","items_inner_list":[{"id":"90","order_id":"41","item_id":"8","item":"chicken wings-24","category_id":"33","category":"Chicken","base_price":"27.5","amount":"55","sku_code":"4564561","unit":"pieces","quantity":"2","timestamp":"1718725898","stock":131,"image":"https://chickendelight.saltpixels.in/api/assets/upload/items/default.png"}]}]
 
 OrderDetailRecord orderDetailRecordFromJson(String str) => OrderDetailRecord.fromJson(json.decode(str));
 String orderDetailRecordToJson(OrderDetailRecord data) => json.encode(data.toJson());
@@ -89,7 +93,9 @@ class OrderDetailRecord {
       String? createdFor, 
       String? createdBy, 
       String? remarks, 
+      String? repeatDate, 
       String? timestamp, 
+      String? date, 
       String? paymentStatus, 
       List<OrderStages>? orderStages, 
       String? franchiseName, 
@@ -97,10 +103,10 @@ class OrderDetailRecord {
       String? addressLine2, 
       String? addressLine3, 
       String? addressLine4, 
+      String? shippingCharge, 
       String? franchiseEmail, 
       String? franchiseMobile, 
-      String? shippingCharge,
-      String? country,
+      String? country, 
       String? stateId, 
       String? cityId, 
       String? state, 
@@ -110,6 +116,7 @@ class OrderDetailRecord {
       String? wareAddressLine2, 
       String? wareAddressLine3, 
       String? wareAddressLine4, 
+      List<Selecteditems>? selecteditems, 
       String? totalItems, 
       List<ItemsMainList>? itemsMainList,}){
     _id = id;
@@ -120,7 +127,9 @@ class OrderDetailRecord {
     _createdFor = createdFor;
     _createdBy = createdBy;
     _remarks = remarks;
+    _repeatDate = repeatDate;
     _timestamp = timestamp;
+    _date = date;
     _paymentStatus = paymentStatus;
     _orderStages = orderStages;
     _franchiseName = franchiseName;
@@ -141,6 +150,7 @@ class OrderDetailRecord {
     _wareAddressLine2 = wareAddressLine2;
     _wareAddressLine3 = wareAddressLine3;
     _wareAddressLine4 = wareAddressLine4;
+    _selecteditems = selecteditems;
     _totalItems = totalItems;
     _itemsMainList = itemsMainList;
 }
@@ -154,7 +164,9 @@ class OrderDetailRecord {
     _createdFor = json['created_for'];
     _createdBy = json['created_by'];
     _remarks = json['remarks'];
+    _repeatDate = json['repeat_date'];
     _timestamp = json['timestamp'];
+    _date = json['date'];
     _paymentStatus = json['payment_status'];
     if (json['order_stages'] != null) {
       _orderStages = [];
@@ -180,6 +192,12 @@ class OrderDetailRecord {
     _wareAddressLine2 = json['ware_address_line_2'];
     _wareAddressLine3 = json['ware_address_line_3'];
     _wareAddressLine4 = json['ware_address_line_4'];
+    if (json['selecteditems'] != null) {
+      _selecteditems = [];
+      json['selecteditems'].forEach((v) {
+        _selecteditems?.add(Selecteditems.fromJson(v));
+      });
+    }
     _totalItems = json['total_items'];
     if (json['items'] != null) {
       _itemsMainList = [];
@@ -196,7 +214,9 @@ class OrderDetailRecord {
   String? _createdFor;
   String? _createdBy;
   String? _remarks;
+  String? _repeatDate;
   String? _timestamp;
+  String? _date;
   String? _paymentStatus;
   List<OrderStages>? _orderStages;
   String? _franchiseName;
@@ -217,6 +237,7 @@ class OrderDetailRecord {
   String? _wareAddressLine2;
   String? _wareAddressLine3;
   String? _wareAddressLine4;
+  List<Selecteditems>? _selecteditems;
   String? _totalItems;
   List<ItemsMainList>? _itemsMainList;
 OrderDetailRecord copyWith({  String? id,
@@ -227,7 +248,9 @@ OrderDetailRecord copyWith({  String? id,
   String? createdFor,
   String? createdBy,
   String? remarks,
+  String? repeatDate,
   String? timestamp,
+  String? date,
   String? paymentStatus,
   List<OrderStages>? orderStages,
   String? franchiseName,
@@ -248,6 +271,7 @@ OrderDetailRecord copyWith({  String? id,
   String? wareAddressLine2,
   String? wareAddressLine3,
   String? wareAddressLine4,
+  List<Selecteditems>? selecteditems,
   String? totalItems,
   List<ItemsMainList>? itemsMainList,
 }) => OrderDetailRecord(  id: id ?? _id,
@@ -258,7 +282,9 @@ OrderDetailRecord copyWith({  String? id,
   createdFor: createdFor ?? _createdFor,
   createdBy: createdBy ?? _createdBy,
   remarks: remarks ?? _remarks,
+  repeatDate: repeatDate ?? _repeatDate,
   timestamp: timestamp ?? _timestamp,
+  date: date ?? _date,
   paymentStatus: paymentStatus ?? _paymentStatus,
   orderStages: orderStages ?? _orderStages,
   franchiseName: franchiseName ?? _franchiseName,
@@ -279,6 +305,7 @@ OrderDetailRecord copyWith({  String? id,
   wareAddressLine2: wareAddressLine2 ?? _wareAddressLine2,
   wareAddressLine3: wareAddressLine3 ?? _wareAddressLine3,
   wareAddressLine4: wareAddressLine4 ?? _wareAddressLine4,
+  selecteditems: selecteditems ?? _selecteditems,
   totalItems: totalItems ?? _totalItems,
   itemsMainList: itemsMainList ?? _itemsMainList,
 );
@@ -290,7 +317,9 @@ OrderDetailRecord copyWith({  String? id,
   String? get createdFor => _createdFor;
   String? get createdBy => _createdBy;
   String? get remarks => _remarks;
+  String? get repeatDate => _repeatDate;
   String? get timestamp => _timestamp;
+  String? get date => _date;
   String? get paymentStatus => _paymentStatus;
   List<OrderStages>? get orderStages => _orderStages;
   String? get franchiseName => _franchiseName;
@@ -311,6 +340,7 @@ OrderDetailRecord copyWith({  String? id,
   String? get wareAddressLine2 => _wareAddressLine2;
   String? get wareAddressLine3 => _wareAddressLine3;
   String? get wareAddressLine4 => _wareAddressLine4;
+  List<Selecteditems>? get selecteditems => _selecteditems;
   String? get totalItems => _totalItems;
   List<ItemsMainList>? get itemsMainList => _itemsMainList;
 
@@ -324,7 +354,9 @@ OrderDetailRecord copyWith({  String? id,
     map['created_for'] = _createdFor;
     map['created_by'] = _createdBy;
     map['remarks'] = _remarks;
+    map['repeat_date'] = _repeatDate;
     map['timestamp'] = _timestamp;
+    map['date'] = _date;
     map['payment_status'] = _paymentStatus;
     if (_orderStages != null) {
       map['order_stages'] = _orderStages?.map((v) => v.toJson()).toList();
@@ -347,6 +379,9 @@ OrderDetailRecord copyWith({  String? id,
     map['ware_address_line_2'] = _wareAddressLine2;
     map['ware_address_line_3'] = _wareAddressLine3;
     map['ware_address_line_4'] = _wareAddressLine4;
+    if (_selecteditems != null) {
+      map['selecteditems'] = _selecteditems?.map((v) => v.toJson()).toList();
+    }
     map['total_items'] = _totalItems;
     if (_itemsMainList != null) {
       map['items'] = _itemsMainList?.map((v) => v.toJson()).toList();
@@ -356,8 +391,8 @@ OrderDetailRecord copyWith({  String? id,
 
 }
 
-/// category : "Food"
-/// items_inner_list : [{"id":"29","order_id":"18","item_id":"11","item":"BAG SHREDDED MOZZA CHEESE 20 LB / 9.07 KG.-BAG SHREDDED MOZZA CHEESE 10 LB / 4.55 KG.","category_id":"1","category":"Food","base_price":"33.48","amount":"66.96","sku_code":"MOZCHS10LB","unit":"lb","quantity":"2","timestamp":"1718029770","stock":10,"image":"https://chickendelight.saltpixels.in/api/assets/upload/items/default.png"}]
+/// category : "Chicken"
+/// items_inner_list : [{"id":"90","order_id":"41","item_id":"8","item":"chicken wings-24","category_id":"33","category":"Chicken","base_price":"27.5","amount":"55","sku_code":"4564561","unit":"pieces","quantity":"2","timestamp":"1718725898","stock":131,"image":"https://chickendelight.saltpixels.in/api/assets/upload/items/default.png"}]
 
 ItemsMainList itemsMainListFromJson(String str) => ItemsMainList.fromJson(json.decode(str));
 String itemsMainListToJson(ItemsMainList data) => json.encode(data.toJson());
@@ -399,19 +434,19 @@ ItemsMainList copyWith({  String? category,
 
 }
 
-/// id : "29"
-/// order_id : "18"
-/// item_id : "11"
-/// item : "BAG SHREDDED MOZZA CHEESE 20 LB / 9.07 KG.-BAG SHREDDED MOZZA CHEESE 10 LB / 4.55 KG."
-/// category_id : "1"
-/// category : "Food"
-/// base_price : "33.48"
-/// amount : "66.96"
-/// sku_code : "MOZCHS10LB"
-/// unit : "lb"
+/// id : "90"
+/// order_id : "41"
+/// item_id : "8"
+/// item : "chicken wings-24"
+/// category_id : "33"
+/// category : "Chicken"
+/// base_price : "27.5"
+/// amount : "55"
+/// sku_code : "4564561"
+/// unit : "pieces"
 /// quantity : "2"
-/// timestamp : "1718029770"
-/// stock : 10
+/// timestamp : "1718725898"
+/// stock : 131
 /// image : "https://chickendelight.saltpixels.in/api/assets/upload/items/default.png"
 
 ItemsInnerList itemsInnerListFromJson(String str) => ItemsInnerList.fromJson(json.decode(str));
@@ -543,11 +578,155 @@ ItemsInnerList copyWith({  String? id,
 
 }
 
-/// status_id : "40"
-/// order_id : "18"
-/// status : "Delivered"
+/// id : "90"
+/// item_id : "8"
+/// variation_id : "8"
+/// item : "chicken wings-24"
+/// base_price : "27.5"
+/// sale_price : "27.5"
+/// unit : "pieces"
+/// amount : "55"
+/// quantity : "2"
+/// sku_code : "4564561"
+/// category_id : "33"
+/// category : "Chicken"
+/// stock : 131
+/// icon : "https://chickendelight.saltpixels.in/api/assets/upload/items/default.png"
+
+Selecteditems selecteditemsFromJson(String str) => Selecteditems.fromJson(json.decode(str));
+String selecteditemsToJson(Selecteditems data) => json.encode(data.toJson());
+class Selecteditems {
+  Selecteditems({
+      String? id, 
+      String? itemId, 
+      String? variationId, 
+      String? item, 
+      String? basePrice, 
+      String? salePrice, 
+      String? unit, 
+      String? amount, 
+      String? quantity, 
+      String? skuCode, 
+      String? categoryId, 
+      String? category, 
+      num? stock, 
+      String? icon,}){
+    _id = id;
+    _itemId = itemId;
+    _variationId = variationId;
+    _item = item;
+    _basePrice = basePrice;
+    _salePrice = salePrice;
+    _unit = unit;
+    _amount = amount;
+    _quantity = quantity;
+    _skuCode = skuCode;
+    _categoryId = categoryId;
+    _category = category;
+    _stock = stock;
+    _icon = icon;
+}
+
+  Selecteditems.fromJson(dynamic json) {
+    _id = json['id'];
+    _itemId = json['item_id'];
+    _variationId = json['variation_id'];
+    _item = json['item'];
+    _basePrice = json['base_price'];
+    _salePrice = json['sale_price'];
+    _unit = json['unit'];
+    _amount = json['amount'];
+    _quantity = json['quantity'];
+    _skuCode = json['sku_code'];
+    _categoryId = json['category_id'];
+    _category = json['category'];
+    _stock = json['stock'];
+    _icon = json['icon'];
+  }
+  String? _id;
+  String? _itemId;
+  String? _variationId;
+  String? _item;
+  String? _basePrice;
+  String? _salePrice;
+  String? _unit;
+  String? _amount;
+  String? _quantity;
+  String? _skuCode;
+  String? _categoryId;
+  String? _category;
+  num? _stock;
+  String? _icon;
+Selecteditems copyWith({  String? id,
+  String? itemId,
+  String? variationId,
+  String? item,
+  String? basePrice,
+  String? salePrice,
+  String? unit,
+  String? amount,
+  String? quantity,
+  String? skuCode,
+  String? categoryId,
+  String? category,
+  num? stock,
+  String? icon,
+}) => Selecteditems(  id: id ?? _id,
+  itemId: itemId ?? _itemId,
+  variationId: variationId ?? _variationId,
+  item: item ?? _item,
+  basePrice: basePrice ?? _basePrice,
+  salePrice: salePrice ?? _salePrice,
+  unit: unit ?? _unit,
+  amount: amount ?? _amount,
+  quantity: quantity ?? _quantity,
+  skuCode: skuCode ?? _skuCode,
+  categoryId: categoryId ?? _categoryId,
+  category: category ?? _category,
+  stock: stock ?? _stock,
+  icon: icon ?? _icon,
+);
+  String? get id => _id;
+  String? get itemId => _itemId;
+  String? get variationId => _variationId;
+  String? get item => _item;
+  String? get basePrice => _basePrice;
+  String? get salePrice => _salePrice;
+  String? get unit => _unit;
+  String? get amount => _amount;
+  String? get quantity => _quantity;
+  String? get skuCode => _skuCode;
+  String? get categoryId => _categoryId;
+  String? get category => _category;
+  num? get stock => _stock;
+  String? get icon => _icon;
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['id'] = _id;
+    map['item_id'] = _itemId;
+    map['variation_id'] = _variationId;
+    map['item'] = _item;
+    map['base_price'] = _basePrice;
+    map['sale_price'] = _salePrice;
+    map['unit'] = _unit;
+    map['amount'] = _amount;
+    map['quantity'] = _quantity;
+    map['sku_code'] = _skuCode;
+    map['category_id'] = _categoryId;
+    map['category'] = _category;
+    map['stock'] = _stock;
+    map['icon'] = _icon;
+    return map;
+  }
+
+}
+
+/// status_id : "77"
+/// order_id : "41"
+/// status : "Processed"
 /// remarks : ""
-/// timestamp : "Jun 10, 2024, 07:59 PM"
+/// timestamp : "Jun 18, 2024, 11:00 AM"
 
 OrderStages orderStagesFromJson(String str) => OrderStages.fromJson(json.decode(str));
 String orderStagesToJson(OrderStages data) => json.encode(data.toJson());

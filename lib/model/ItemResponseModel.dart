@@ -101,6 +101,7 @@ class Records {
     bool? isSelected,
     num? quantity,
     num? amount,
+    int? updateCartCount
   }){
     _id = id;
     _description = description;
@@ -120,6 +121,7 @@ class Records {
     _isSelected = isSelected;
     _quantity = quantity;
     _amount = amount;
+    _updateCartCount = updateCartCount;
 }
 
   Records.fromJson(dynamic json) {
@@ -146,6 +148,7 @@ class Records {
     _isSelected = json['isSelected'] ?? false;
     _quantity = json['quantity'];
     _amount = json['amount'];
+    _updateCartCount = json['update_cart_count'];
   }
   String? _id;
   String? _description;
@@ -165,6 +168,7 @@ class Records {
   bool? _isSelected;
   num? _quantity;
   num? _amount;
+  int? _updateCartCount;
 Records copyWith({  String? id,
   String? description,
   String? name,
@@ -184,6 +188,7 @@ Records copyWith({  String? id,
   bool? isSelected,
   num? quantity,
   num? amount,
+  int? updateCartCount,
 }) => Records(  id: id ?? _id,
   description: description ?? _description,
   name: name ?? _name,
@@ -202,6 +207,7 @@ Records copyWith({  String? id,
   isSelected: isSelected ?? _isSelected,
   quantity: quantity ?? _quantity,
   amount: amount ?? _amount,
+  updateCartCount: updateCartCount ?? _updateCartCount,
 );
   String? get id => _id;
   String? get description => _description;
@@ -221,6 +227,7 @@ Records copyWith({  String? id,
   bool? get isSelected => _isSelected;
   num? get quantity => _quantity;
   num? get amount => _amount;
+  int? get updateCartCount => _updateCartCount;
 
   TextEditingController quantityController = TextEditingController();
 
@@ -247,6 +254,7 @@ Records copyWith({  String? id,
     map['isSelected'] = _isSelected;
     map['quantity'] = _quantity;
     map['amount'] = _amount;
+    map['update_cart_count'] = _updateCartCount;
     return map;
   }
 
@@ -260,6 +268,10 @@ Records copyWith({  String? id,
 
   set amount(num? value) {
     _amount = value;
+  }
+
+  set updateCartCount(int? value) {
+    _updateCartCount = value;
   }
 
 }

@@ -321,10 +321,10 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
               children: [
                 Container(height: 16,),
                 Container(height: 2, width: 40, color: black, margin: const EdgeInsets.only(bottom: 12)),
-                const Text("Clear Notification?",
+                const Text("Mark All Read Notifications?",
                     style: TextStyle(color: black, fontWeight: FontWeight.w500, fontSize: 18)),
                 Container(height: 20,),
-                const Text("Are you sure want to clear all Notifications?",
+                const Text("Are you sure want to mark as read all Notifications?",
                     style: TextStyle(color: black, fontWeight: FontWeight.normal, fontSize: 16),
                     textAlign: TextAlign.center),
                 Container(height: 20),

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:chicken_delight/constant/global_context.dart';
 import 'package:chicken_delight/model/common/CommonResponseModel.dart';
+import 'package:chicken_delight/screens/AddOrderScreen.dart';
 import 'package:chicken_delight/screens/save_file_mobile.dart';
 import 'package:chicken_delight/tabs/tabnavigation.dart';
 import 'package:chicken_delight/widget/loading.dart';
@@ -14,6 +15,7 @@ import '../common_widget/common_widget.dart';
 import '../constant/ApiService.dart';
 import '../constant/api_end_point.dart';
 import '../constant/colors.dart';
+import '../model/ItemResponseModel.dart';
 import '../model/OrderDetailResponseModel.dart';
 import '../utils/TextChanger.dart';
 import '../utils/app_utils.dart';
@@ -37,6 +39,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
 
   bool isLoading = false;
   List<ItemsMainList> listItems = [];
+  List<Selecteditems> listSelectedItems = [];
   String subTotal = "";
   String grandTotal = "";
   String wareAddressLine1 = "";
@@ -49,6 +52,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
   String status = "";
   String shippingCharge = "";
   String orderId = "";
+  String dateTime = "";
   bool isFrom = false;
 
   OrderDetailRecord orderDetailData = OrderDetailRecord();
@@ -149,29 +153,44 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                     ),
                     child: Container(
                       padding: const EdgeInsets.all(10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Order #$orderNumber",
-                              style: TextStyle(fontSize: medium, color: black,fontWeight: FontWeight.w600),
-                              textAlign: TextAlign.left
-                          ),
-                          FittedBox(
-                            child: Container(
-                              alignment: Alignment.topRight,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(kButtonCornerRadius)),
-                                color:  appBG,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text("Order #$orderNumber",
+                                  style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),
+                                  textAlign: TextAlign.left
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 6.0, bottom: 6, left: 8, right: 8),
-                                child: Text(status,
-                                    style: TextStyle(fontSize: 13, color: status == "Cancelled" ? Colors.red : Colors.green,fontWeight: FontWeight.w500),
-                                    textAlign: TextAlign.left
+                              FittedBox(
+                                child: Container(
+                                  alignment: Alignment.topRight,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(kButtonCornerRadius)),
+                                    color:  appBG,
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 6.0, bottom: 6, left: 8, right: 8),
+                                    child: Text(status,
+                                        style: TextStyle(fontSize: 13, color: status == "Cancelled" ? Colors.red : Colors.green,fontWeight: FontWeight.w500),
+                                        textAlign: TextAlign.left
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
+                          ),
+                          Text(dateTime,
+                              style: const TextStyle(fontSize: 13, color: text_light_gray,fontWeight: FontWeight.w500),
+                              textAlign: TextAlign.left
+                          ),
+                          const Gap(2),
+                          Text(paymentStatus,
+                              style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500),
+                              textAlign: TextAlign.left
                           ),
                         ],
                       ),
@@ -262,7 +281,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                                               ),
                                             ],
                                           ),
-                                          const Gap(10),
+                                          Gap(5),
                                         ],
                                       );
                                     }
@@ -501,7 +520,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                       ),*/
                     ),
                   ),
-                  Visibility(
+                  /*Visibility(
                     visible: paymentStatus.isNotEmpty,
                     child: Card(
                       clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -528,9 +547,9 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                       ),
                     ),
                   ),
-                  const Gap(10),
+                  const Gap(10),*/
                   Visibility(
-                    visible: status == "Accepted",
+                    visible: status == "Placed" || status == "Accepted",
                     child: Container(
                       width: MediaQuery.of(context).size.width,
                       margin: const EdgeInsets.only(top: 10, bottom: 20, left: 60, right: 60),
@@ -542,16 +561,28 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                     ),
                   ),
                   Visibility(
-                    visible: status == "Processed",
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.only(top: 10, bottom: 20, left: 60, right: 60),
-                      child: getCommonButtonLoad("Print Invoice", false, () {
-                        {
-                          _generatePDF();
-                          //showSnackBar("Coming soon...", context);
-                        }
-                      }),
+                    visible: status == "Processed" || status == "Delivered",
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(top: 10, bottom: 20, left: 20, right: 20),
+                          child: getCommonButtonLoad("Print Invoice", false, () {
+                            {
+                              _generatePDF();
+                            }
+                          }),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(top: 10, bottom: 20, right: 20),
+                          child: getCommonButtonLoad("Repeat Order", false, () {
+                            {
+                              redirectToCart();
+                            }
+                          }),
+                        ),
+                      ],
                     ),
                   ),
                   const Gap(40)
@@ -682,6 +713,85 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
     );
   }
 
+  Future<void> redirectToCart() async {
+    NavigationService.listItemsTmp = [];
+
+    setState(() {
+      for (int i = 0; i < listSelectedItems.length; i++)
+      {
+
+          Records getSet = Records();
+
+          getSet = Records(
+            id: listSelectedItems[i].id?.toString() ?? "",
+            description:  "",
+            name: listSelectedItems[i].item?.toString() ?? "",
+            icon: listSelectedItems[i].icon?.toString() ?? "",
+            productCode: "",
+            unit: listSelectedItems[i].unit?.toString() ?? "",
+            variationName: "",//listSelectedItems[i].variationId?.toString() ?? "",
+            skuCode: listSelectedItems[i].skuCode?.toString() ?? "",
+            salePrice: listSelectedItems[i].salePrice?.toString() ?? "",
+            mrpPrice: "",
+            dpPrice: "",// listItems[i].itemsInnerList?[n].dpPrice,
+            category: listSelectedItems[i].category?.toString() ?? "",
+            variationId: listSelectedItems[i].variationId?.toString() ?? "",
+            categoryId: listSelectedItems[i].categoryId?.toString() ?? "",
+            isSelected: true,//listSelectedItems[i].is?.toString() ?? "",
+            quantity: num.parse(listSelectedItems[i].quantity?.toString() ?? ""),
+            amount: num.parse(listSelectedItems[i].amount?.toString() ?? ""),
+            // updateCartCount: cartCount
+          );
+
+         NavigationService.listItemsTmp.add(getSet);
+        }
+
+
+    });
+
+    await Navigator.push(context, MaterialPageRoute(builder: (context) => AddOrderScreen()));
+    /*setState(() {
+        for (int n = 0; n < NavigationService.listItems.length; n++)
+        {
+          for (int i = 0; i < NavigationService.listItemsTmp.length; i++)
+          {
+            if (NavigationService.listItems[n].id == NavigationService.listItemsTmp[i].id)
+            {
+              if (NavigationService.listItems[n].isSelected == true)
+              {
+                Records getSet = Records();
+
+                getSet = Records(
+                    id:  NavigationService.listItemsTmp[i].id,
+                    description:  NavigationService.listItemsTmp[i].description,
+                    name:  NavigationService.listItemsTmp[i].name,
+                    icon:  NavigationService.listItemsTmp[i].icon,
+                    productCode:  NavigationService.listItemsTmp[i].productCode,
+                    unit:  NavigationService.listItemsTmp[i].unit,
+                    variationName:  NavigationService.listItemsTmp[i].variationName,
+                    skuCode:  NavigationService.listItemsTmp[i].skuCode,
+                    salePrice:  NavigationService.listItemsTmp[i].salePrice,
+                    mrpPrice:  NavigationService.listItemsTmp[i].mrpPrice,
+                    dpPrice:  NavigationService.listItemsTmp[i].dpPrice,
+                    category:  NavigationService.listItemsTmp[i].category,
+                    variationId:  NavigationService.listItemsTmp[i].variationId,
+                    categoryId:  NavigationService.listItemsTmp[i].categoryId,
+                    isSelected :  NavigationService.listItemsTmp[i].isSelected,
+                    quantity: NavigationService.listItemsTmp[i].quantity,
+                    amount: num.parse( NavigationService.listItemsTmp[i].salePrice.toString()),
+                    // updateCartCount: cartCount
+                );
+
+                NavigationService.listItems[n] = getSet;
+              }
+            }
+          }
+        }
+      });*/
+
+
+  }
+
 
   // API Call func...
   getOrderDetail() async {
@@ -713,7 +823,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
         isLoading = false;
         orderDetailData = dataResponse.orderDetailRecord ?? OrderDetailRecord();
         listItems = dataResponse.orderDetailRecord?.itemsMainList ?? [];
-
+        listSelectedItems = dataResponse.orderDetailRecord?.selecteditems ?? [];
         subTotal = dataResponse.orderDetailRecord?.subTotal ?? "";
         grandTotal = dataResponse.orderDetailRecord?.grandTotal ?? "";
         wareAddressLine1 = dataResponse.orderDetailRecord?.wareAddressLine1 ?? "";
@@ -725,6 +835,8 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
         orderNumber = dataResponse.orderDetailRecord?.orderNumber ?? "";
         status = dataResponse.orderDetailRecord?.status ?? "";
         shippingCharge = dataResponse.orderDetailRecord?.shippingCharge ?? "";
+        dateTime = dataResponse.orderDetailRecord?.timestamp ?? "";
+
       }
       else
       {
@@ -787,7 +899,6 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
   }
 
   //PDF code...
-
   Future<void> _generatePDF() async {
     //Create a PDF document.
     print("PDF Start....");
@@ -968,18 +1079,33 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
       }
     }
 
-    final PdfGridRow row3 = grid.rows.add();
-    row3.cells[0].value = '';
-    row3.cells[1].value = '';
-    row3.cells[2].value = '';
-    row3.cells[3].value = 'GRAND TOTAL';
-    row3.cells[4].value = 'Total';
-    row3.cells[5].value = getPrice(grandTotal);
+    if (subTotal != grandTotal)
+    {
+      final PdfGridRow row3 = grid.rows.add();
+      row3.cells[0].value = 'FREIGHT';
+      row3.cells[1].value = '';
+      row3.cells[2].value = 'EACH ${getPrice("75.00")} DELIVERY CHARGES';
+      row3.cells[3].value = '';
+      row3.cells[4].value = getPrice("75.00");
+      row3.cells[5].value = getPrice("75.00");
+
+      for (int i = 0; i < grid.columns.count; i++) {
+        row3.cells[i].style = cellStyle;
+      }
+    }
+
+    final PdfGridRow row4 = grid.rows.add();
+    row4.cells[0].value = '';
+    row4.cells[1].value = '';
+    row4.cells[2].value = '';
+    row4.cells[3].value = 'GRAND TOTAL';
+    row4.cells[4].value = 'Total';
+    row4.cells[5].value = getPrice(grandTotal);
 
 
     for (int i = 0; i < grid.columns.count; i++) {
       row.cells[i].style = cellStyle;
-      row3.cells[i].style = cellStyle;
+      row4.cells[i].style = cellStyle;
     }
 
 
@@ -989,7 +1115,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
       }
     }
 
-    grid.draw(page: page, bounds: Rect.fromLTWH(0, result.bounds.bottom + 95, 0, 0));
+    grid.draw(page: page, bounds: Rect.fromLTWH(0, result.bounds.bottom + 70, 0, 0));
 
     return grid;
   }
@@ -1003,7 +1129,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
         top: PdfPen(PdfColor(0, 0, 0), width: 1),
         bottom: PdfPen(PdfColor(0, 0, 0), width: 1),
         right: PdfPen(PdfColor(0, 0, 0), width: 1)),
-    cellPadding: PdfPaddings(left: 5, right: 5, top: 10, bottom: 10),
+    cellPadding: PdfPaddings(left: 3, right: 3, top: 3, bottom: 3),
     font: PdfStandardFont(PdfFontFamily.helvetica, 9),
    format: PdfStringFormat(alignment: PdfTextAlignment.center, lineAlignment: PdfVerticalAlignment.middle, wordSpacing: 4),
    textBrush: PdfBrushes.black,

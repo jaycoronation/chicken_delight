@@ -53,9 +53,9 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
     });
 
     orderRepeatOption.add(DropDownModel(idParam: "15", nameParam: 'Repeat in every 15 days', isSelectedParam: false));
-    orderRepeatOption.add(DropDownModel(idParam: "15", nameParam: "Repeat in every 30 days", isSelectedParam: false));
-    orderRepeatOption.add(DropDownModel(idParam: "15", nameParam: "Repeat in every 45 days", isSelectedParam: false));
-    orderRepeatOption.add(DropDownModel(idParam: "15", nameParam: "Repeat in every 60 days", isSelectedParam: false));
+    orderRepeatOption.add(DropDownModel(idParam: "30", nameParam: "Repeat in every 30 days", isSelectedParam: false));
+    orderRepeatOption.add(DropDownModel(idParam: "45", nameParam: "Repeat in every 45 days", isSelectedParam: false));
+    orderRepeatOption.add(DropDownModel(idParam: "60", nameParam: "Repeat in every 60 days", isSelectedParam: false));
 
     for (int i = 0; i < NavigationService.listItemsTmp.length; i++)
     {
@@ -89,7 +89,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
           leading: GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () {
-                Navigator.pop(context, "1");
+                Navigator.pop(context); //"1"
               },
               child:getBackArrowBlack()
           ),
@@ -122,8 +122,8 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         return Container(
-                          padding: const EdgeInsets.all(10),
-                          margin: const EdgeInsets.only(bottom: 10),
+                          padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 5),
+                          margin: const EdgeInsets.only(bottom: 5),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(kContainerCornerRadius),
                             color: white,
@@ -215,6 +215,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                                 if (isOnline)
                                                 {
                                                   NavigationService.listItemsTmp[index].quantity = (NavigationService.listItemsTmp[index].quantity! + 1);
+
                                                   var total = num.parse(NavigationService.listItemsTmp[index].salePrice.toString()) * num.parse(NavigationService.listItemsTmp[index].quantity.toString());
                                                   NavigationService.listItemsTmp[index].amount = total;
 
@@ -225,9 +226,9 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                                   noInternetSnackBar(context);
                                                 }
                                               });
-
                                             },
-                                            icon: const Icon(Icons.add,color: white,size: 20,)//Image.asset('assets/images/ic_blue_add.png', height: 24, width: 24),
+                                            icon: const Icon(Icons.add,color: white,size: 20)
+                                          //Image.asset('assets/images/ic_blue_add.png', height: 24, width: 24),
                                         )
                                       ],
                                     ),
@@ -299,9 +300,8 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                               children: [
                                 Container(
                                     margin: const EdgeInsets.only(top: 10, right: 5),
-                                    child: isRepeat ? Image.asset("assets/images/ic_radio_unselected.png", width: 20, height: 20,) :
-                                    Image.asset("assets/images/ic_radio_selected.png", width: 20, height: 20)
-
+                                    child: isRepeat ? Image.asset("assets/images/ic_radio_unselected.png", width: 20, height: 20,)
+                                        : Image.asset("assets/images/ic_radio_selected.png", width: 20, height: 20)
                                 ),
                                 Container(
                                   alignment: Alignment.centerLeft,
@@ -380,128 +380,66 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                           margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
                           child: Column(
                             children: [
-                              Column(
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text("Total Items",
-                                          style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 14)
-                                      ),
-                                      Text(NavigationService.listItemsTmp.length.toString(),
-                                          style: const TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 15),
-                                      ),
-                                    ],
+                                  const Text("Total Items",
+                                      style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 14)
                                   ),
-
+                                  Text(NavigationService.listItemsTmp.length.toString(),
+                                      style: const TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 15),
+                                  ),
                                 ],
                               ),
                               const Gap(5),
-                              Column(
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text("Sub Total",
-                                          style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 14)
-                                      ),
-                                      Text(getPrice(subTotal.toStringAsFixed(2)),
-                                          style: const TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 15)
-                                      ),
-                                    ],
+                                  const Text("Sub Total",
+                                      style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 14)
+                                  ),
+                                  Text(getPrice(subTotal.toStringAsFixed(2)),
+                                      style: const TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 15)
                                   ),
                                 ],
                               ),
                               const Gap(5),
                               Visibility(
                                visible: sessionManager.getShippingCharge().toString() == "1",
-                                child: Column(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        const Text("Shipping:",
-                                            style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 14)
-                                        ),
-                                        Text(getPrice("75"),
-                                          style: const TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 15),
-                                        ),
-                                      ],
+                                    const Text("Shipping",
+                                        style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 14)
+                                    ),
+                                    Text(getPrice("75"),
+                                      style: const TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 15),
                                     ),
                                   ],
                                 ),
                               ),
-                            ],
-                          ),
-/*
-                          Column(
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  const Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text("Total Items", textAlign: TextAlign.start,
-                                          style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 14)
-                                      ),
-                                      Gap(6),
-                                      Text("Sub Total", textAlign: TextAlign.start,
-                                          style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 14)
-                                      ),
-                                      Gap(6),
-                                      Text("Shipping Charges", textAlign: TextAlign.start,
-                                          style: TextStyle(color: hintDark, fontWeight: FontWeight.w400, fontSize: 14)
-                                      ),
-                                    ],
-                                  ),
-                                  const Spacer(),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Text(NavigationService.listItemsTmp.length.toString(), textAlign: TextAlign.start,
-                                          style: TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: small)),
-                                      const Gap(6),
-                                      Text(getPrice(subTotal.toStringAsFixed(2)),
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: small)),
-                                      const Gap(6),
-                                      Text(getPrice("75"), textAlign: TextAlign.start,
-                                          style: TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: small)),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              const Gap(10),
+                              const Gap(5),
                               const Divider(
                                 height: 0.8,
                                 color: grayNew,
                               ),
+                              const Gap(5),
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    margin: const EdgeInsets.only(top: 10),
-                                    child: Text("Grand Total",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(fontWeight: FontWeight.w600, color: black,fontSize: medium)),
-                                  ),
-                                  const Spacer(),
+                                  Text("Grand Total",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(fontWeight: FontWeight.w600, color: black,fontSize: medium)),
                                   Text(getPrice(grandTotal.toStringAsFixed(2)), textAlign: TextAlign.start,
                                       style:const TextStyle(color: black,fontWeight: FontWeight.w600, fontSize: 16)),
                                 ],
                               ),
                             ],
                           ),
-*/
-
-
                         ),
                       ],
                     ),
@@ -511,17 +449,29 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                   margin: const EdgeInsets.only(top: 20, bottom: 30, left: 60, right: 60),
                   width: MediaQuery.of(context).size.width,
                   child: getCommonButtonLoad("Proceed", isLoading,() {
+                      print("isRepeat====");
+                      print(isRepeat);
+
                       if (NavigationService.listItemsTmp.isEmpty)
                       {
                         showSnackBar("Please select item.", context);
                       }
                       else if (isRepeat)
                       {
-                        showSnackBar("Please select days option.", context);
+                        if (selectRepeatController.text.isEmpty)
+                        {
+                          showSnackBar("Please select days option.", context);
+                        }
+                        else
+                        {
+                          _makeJsonData();
+                          saveItem();
+                        }
                       }
                       else
                       {
                         _makeJsonData();
+                        print("Place order");
                         saveItem();
                       }
                   }),
@@ -627,8 +577,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
         Container(
           padding: const EdgeInsets.only(left: 22, right: 22, top: 15, bottom: 15),
           child: Text(orderRepeatOption[index].name.toString(),
-            style: TextStyle(
-                fontWeight: selectRepeatController.text == orderRepeatOption[index].name ? FontWeight.w600 : FontWeight.w400,
+            style: TextStyle(fontWeight: selectRepeatController.text == orderRepeatOption[index].name ? FontWeight.w600 : FontWeight.w400,
                 color: black,
                 fontSize: 15),
           ),

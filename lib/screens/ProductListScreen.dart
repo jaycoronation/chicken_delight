@@ -62,6 +62,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
 
   String catId = "";
 
+
   @override
   void initState() {
 
@@ -503,16 +504,18 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
+                                const Gap(8),
+
                                 Text(getSet.name ?? "",
                                     style: TextStyle(fontSize: title, color: black,fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
                                     overflow: TextOverflow.clip
                                 ),
                                 const Gap(8),
-                                Text(getSet.productCode ?? "",
+                                /*Text(getSet.productCode ?? "",
                                     style: TextStyle(fontSize: title, color: black,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
                                     overflow: TextOverflow.clip
                                 ),
-                                const Gap(8),
+                                const Gap(8),*/
                                 Row(
                                   children: [
                                     Text(getPrice(getSet.salePrice ?? ""),
@@ -521,7 +524,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                     ),
                                     const Gap(5),
                                     Text(getPrice(getSet.mrpPrice ?? ""),
-                                      style: TextStyle(fontSize: medium, color: gray_dark,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,decoration: TextDecoration.lineThrough),
+                                      style: TextStyle(fontSize: title, color: gray_dark,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,decoration: TextDecoration.lineThrough),
                                       textAlign: TextAlign.left,
                                       overflow: TextOverflow.clip,
                                     ),
@@ -764,14 +767,14 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                             ),
                           ),
                           const Gap(6),
-                          Container(
+                          /*Container(
                             alignment: Alignment.centerLeft,
                             child: Text(getSet.productCode ?? "",
                                 style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
                                 overflow: TextOverflow.clip
                             ),
                           ),
-                          const Gap(6),
+                          const Gap(6),*/
                           Row(
                             children: [
                               Text(getPrice(getSet.salePrice ?? ""),
@@ -780,7 +783,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                               ),
                               const Gap(5),
                               Text(getPrice(getSet.mrpPrice ?? ""),
-                                style: TextStyle(fontSize: subTitle, color: gray_dark,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,decoration: TextDecoration.lineThrough),
+                                style: TextStyle(fontSize: title, color: gray_dark,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,decoration: TextDecoration.lineThrough),
                                 textAlign: TextAlign.left,
                                 overflow: TextOverflow.clip,
                               ),
@@ -804,9 +807,11 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                     {
                                       HapticFeedback.lightImpact();
                                     }
+
                                     setState(() {
                                       getSet.quantity = 1;
                                       cartCount += 1;
+
                                       var total = num.parse(getSet.salePrice.toString()) * num.parse((getSet.quantity ?? "").toString());
                                       getSet.amount = total;
 
@@ -815,7 +820,9 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                       } else {
                                         NavigationService.listItems[index].isSelected = true;
                                       }
+
                                     });
+
                                     shakeKey.currentState?.shake();
 
                                   },
@@ -854,12 +861,12 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                             {
                                               HapticFeedback.lightImpact();
                                             }
+
                                             setState(() {
                                               if (isOnline)
                                               {
                                                 if (getSet.quantity == 1) {
                                                   removeItem(index);
-
                                                 } else {
                                                   getSet.quantity = getSet.quantity! - 1;
                                                   cartCount -= 1;
@@ -868,9 +875,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                                 var total = num.parse(getSet.salePrice.toString()) * num.parse((getSet.quantity ?? "").toString());
                                                 getSet.amount = total;
 
-
                                                 shakeKey.currentState?.shake();
-
                                               }
                                               else
                                               {
@@ -971,7 +976,8 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
               categoryId:  NavigationService.listItems[i].categoryId,
               isSelected :  NavigationService.listItems[i].isSelected,
               quantity: NavigationService.listItems[i].quantity,
-              amount: num.parse( NavigationService.listItems[i].salePrice.toString())
+              amount: num.parse(NavigationService.listItems[i].salePrice.toString()),
+              updateCartCount: cartCount
           );
 
           NavigationService.listItemsTmp.add(getSet);
@@ -1011,7 +1017,8 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                     categoryId:  NavigationService.listItemsTmp[i].categoryId,
                     isSelected :  NavigationService.listItemsTmp[i].isSelected,
                     quantity: NavigationService.listItemsTmp[i].quantity,
-                    amount: num.parse( NavigationService.listItemsTmp[i].salePrice.toString())
+                    amount: num.parse( NavigationService.listItemsTmp[i].salePrice.toString()),
+                    updateCartCount: cartCount
                 );
 
                 NavigationService.listItems[n] = getSet;

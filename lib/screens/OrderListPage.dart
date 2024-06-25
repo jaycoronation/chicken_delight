@@ -81,9 +81,9 @@ class _OrderListPageState extends BaseState<OrderListPage> {
       }
     });
     orderFilterOption.add(CommonResponseModel(success: 0, message: 'All', isSelected: true));
+    orderFilterOption.add(CommonResponseModel(message: "Placed"));
     orderFilterOption.add(CommonResponseModel(message: "Accepted"));
     orderFilterOption.add(CommonResponseModel(message: "Processed"));
-    orderFilterOption.add(CommonResponseModel(message: "Placed"));
     orderFilterOption.add(CommonResponseModel(message: "Delivered"));
     orderFilterOption.add(CommonResponseModel(message: "Cancelled"));
 
@@ -462,7 +462,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                                             ),
                                                             const Gap(8),
                                                             Text(listOrders[index].orderNumber ?? "", textAlign: TextAlign.start,
-                                                              style:  TextStyle(fontSize: 13, color: primaryColor, fontWeight: FontWeight.w600),
+                                                              style:  const TextStyle(fontSize: 13, color: primaryColor, fontWeight: FontWeight.w600),
                                                             ),
                                                           ],
                                                         ),
@@ -493,7 +493,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                                 const Gap(5),
                                                 Text(listOrders[index].remarks ?? "",
                                                   textAlign: TextAlign.start,
-                                                  style: TextStyle(fontSize: 13, color: black, fontWeight: FontWeight.bold),
+                                                  style: const TextStyle(fontSize: 13, color: black, fontWeight: FontWeight.bold),
                                                 ),
                                                 /*ListView.builder(
                                                     scrollDirection: Axis.vertical,
@@ -567,14 +567,14 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                                           margin: const EdgeInsets.only(right: 12),
                                                           child: Text(listOrders[index].timestamp ?? "",
                                                             textAlign: TextAlign.start,
-                                                            style: TextStyle(fontSize: 13, color: hintDark, fontWeight: FontWeight.w300),
+                                                            style: const TextStyle(fontSize: 13, color: hintDark, fontWeight: FontWeight.w300),
                                                           ),
                                                         )),
                                                         Container(
                                                           margin: const EdgeInsets.only(top: 2),
                                                           child: Text(getPrice(listOrders[index].grandTotal ?? ""),
                                                             textAlign: TextAlign.center,
-                                                            style: TextStyle(fontSize: 13, color: black, fontWeight: FontWeight.w600),
+                                                            style: const TextStyle(fontSize: 13, color: black, fontWeight: FontWeight.w600),
                                                           ),
                                                         ),
                                                         Container(
