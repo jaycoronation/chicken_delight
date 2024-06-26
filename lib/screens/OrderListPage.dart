@@ -208,7 +208,8 @@ class _OrderListPageState extends BaseState<OrderListPage> {
             child: Column(
               children: [
                 Container(
-                  height: 36, width: double.infinity,
+                  height: 38,
+                  width: double.infinity,
                   margin: const EdgeInsets.only(left: 10, right: 10),
                   child: ListView.builder(
                       scrollDirection: Axis.horizontal,
@@ -256,7 +257,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                   getOrderListData(true);
                                 },
                                 child: Text(orderFilterOption[index].message ?? "",
-                                  style: TextStyle(fontSize: small, fontWeight: FontWeight.w400, color: orderFilterOption[index].isSelected ?? false
+                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: orderFilterOption[index].isSelected ?? false
                                       ? white : black),),
                               ),
                             ),
@@ -414,182 +415,118 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                               child: SlideAnimation(
                                 verticalOffset: 50.0,
                                 child: FadeInAnimation(
-                                  child: GestureDetector(
-                                    behavior: HitTestBehavior.opaque,
-                                    onTap: () async {
-                                      /*showOrderSummery(context,listOrders[index].id ?? "");
-                                      setState(() {
-                                        isOrderListSearch = false;
-                                      });*/
-                                    },
-                                    child: Container(
-                                      margin: const EdgeInsets.only(bottom: 6),
-                                      child: Card(
-                                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                                        elevation: 0,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(kTextFieldCornerRadius),
-                                        ),
-                                        child: OpenContainerWrapper(
-                                          closedChild: Container(
-                                            padding: const EdgeInsets.only(left: 10, top: 8, right: 10, bottom: 10),
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                const Gap(5),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Column(
-                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Row(
-                                                          children: [
-                                                             Text("Franchise", textAlign: TextAlign.start,
-                                                              style: TextStyle(fontSize: small, color: kGray, fontWeight: FontWeight.w600),
-                                                            ),
-                                                            const Gap(8),
-                                                            Text(listOrders[index].createdFor ?? "", textAlign: TextAlign.start,
-                                                              style: TextStyle(fontSize: 13, color: black, fontWeight: FontWeight.w600),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        Row(
-                                                          children: [
-                                                             Text("Order Number", textAlign: TextAlign.start,
-                                                              style: TextStyle(fontSize: small, color: kGray, fontWeight: FontWeight.w600),
-                                                            ),
-                                                            const Gap(8),
-                                                            Text(listOrders[index].orderNumber ?? "", textAlign: TextAlign.start,
-                                                              style:  const TextStyle(fontSize: 13, color: primaryColor, fontWeight: FontWeight.w600),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                       /* Text(checkValidString(listOrders[index].paymentMethod), textAlign: TextAlign.start,
-                                                         style: const TextStyle(fontSize: small, color: black, fontWeight: FontWeight.w600),
-                                                        ),*/
-                                                        const Gap(5)
-                                                      ],
-                                                    ),
-                                                    FittedBox(
-                                                      child: Container(
-                                                        margin: const EdgeInsets.only(bottom: 8,),
-                                                        alignment: Alignment.topRight,
-                                                        decoration: BoxDecoration(
-                                                          borderRadius: BorderRadius.all(Radius.circular(kButtonCornerRadius)),
-                                                          color:  appBG,
-                                                        ),
-                                                        child: Padding(
-                                                          padding: const EdgeInsets.only(top: 6.0, bottom: 6, left: 8, right: 7),
-                                                          child: Text(listOrders[index].status ?? "",
-                                                            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: listOrders[index].status == "Cancelled" ? Colors.red : Colors.green),),
-                                                        ),
+                                  child: Container(
+                                    margin: const EdgeInsets.only(bottom: 6),
+                                    child: Card(
+                                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(kTextFieldCornerRadius),
+                                      ),
+                                      child: OpenContainerWrapper(
+                                        closedChild: Container(
+                                          padding: const EdgeInsets.only(left: 10, top: 8, right: 10, bottom: 10),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              const Gap(5),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Column(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                           const Text("Franchise", textAlign: TextAlign.start,
+                                                            style: TextStyle(fontSize: 13, color: kGray, fontWeight: FontWeight.w600),
+                                                          ),
+                                                          const Gap(8),
+                                                          Text(listOrders[index].createdFor ?? "", textAlign: TextAlign.start,
+                                                            style: TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                           const Text("Order Number", textAlign: TextAlign.start,
+                                                            style: TextStyle(fontSize: 13, color: kGray, fontWeight: FontWeight.w600),
+                                                          ),
+                                                          const Gap(8),
+                                                          Text(listOrders[index].orderNumber ?? "", textAlign: TextAlign.start,
+                                                            style:  const TextStyle(fontSize: 14, color: primaryColor, fontWeight: FontWeight.w600),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                     /* Text(checkValidString(listOrders[index].paymentMethod), textAlign: TextAlign.start,
+                                                       style: const TextStyle(fontSize: small, color: black, fontWeight: FontWeight.w600),
+                                                      ),*/
+                                                      const Gap(5)
+                                                    ],
+                                                  ),
+                                                  FittedBox(
+                                                    child: Container(
+                                                      margin: const EdgeInsets.only(bottom: 8,),
+                                                      alignment: Alignment.topRight,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.all(Radius.circular(kButtonCornerRadius)),
+                                                        color:  appBG,
+                                                      ),
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.only(top: 6.0, bottom: 6, left: 8, right: 7),
+                                                        child: Text(listOrders[index].status ?? "",
+                                                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: listOrders[index].status == "Cancelled" ? Colors.red : Colors.green),),
                                                       ),
                                                     ),
-                                                  ],
-                                                ),
-                                                const DottedLine(dashLength: 1, dashGapLength: 6, lineThickness: 1, dashRadius: 3, dashColor: kTextDarkGray),
-                                                const Gap(5),
-                                                Text(listOrders[index].remarks ?? "",
-                                                  textAlign: TextAlign.start,
-                                                  style: const TextStyle(fontSize: 13, color: black, fontWeight: FontWeight.bold),
-                                                ),
-                                                /*ListView.builder(
-                                                    scrollDirection: Axis.vertical,
-                                                    shrinkWrap: true,
-                                                    primary: false,
-                                                    physics: const NeverScrollableScrollPhysics(),
-                                                    padding: EdgeInsets.zero,
-                                                    itemCount: listOrders[index].items?.length,
-                                                    itemBuilder: (ctx, i) =>
-                                                    Row(
-                                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      children: [
-                                                       */
-                                                /* Container(
-                                                          margin: const EdgeInsets.only(left: 3, top: 8, bottom: 10, right: 10),
-                                                          height: 60,
-                                                          width: 60,
-                                                          child: Card(
-                                                            clipBehavior: Clip.antiAlias,
-                                                            elevation: 0,
-                                                            shape: RoundedRectangleBorder(
-                                                                borderRadius: BorderRadius.circular(kButtonCornerRadius),
-                                                                side: const BorderSide(color: kLightGray, width: 0.5)
-                                                            ),
-                                                            child: FadeInImage.assetNetwork(
-                                                              image: "${listOrders[index].items?[i].image.toString().trim()}&h=500&zc=2",
-                                                              placeholder: 'assets/images/ic_logo_primaryColor.png',
-                                                              fit: BoxFit.cover,
-                                                              height: 60,
-                                                              width: 60,
-                                                            ),
-                                                          ),
-                                                        ),*/
-                                                /*
-                                                        Expanded(
-                                                            child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Text(checkValidString(toDisplayCase(listOrders[index].items![i].item.toString().trim())),
-                                                              textAlign: TextAlign.start,
-                                                              style: const TextStyle(fontSize: small, color: black, fontWeight: FontWeight.bold),
-                                                            ),
-                                                            const Gap(2),
-                                                            Text("${checkValidString(listOrders[index].items?[i].quantity)} X ${checkValidString(getPrice(listOrders[index].items![i].basePrice.toString()))}",
-                                                              textAlign: TextAlign.start,
-                                                              style: const TextStyle(fontSize: small, color: kTextDarkGray, fontWeight: FontWeight.w600),
-                                                            ),
-
-                                                          ],
-                                                        )
-                                                        ),
-                                                      ],
-                                                    )
-                                                ),*/
-                                                Card(
-                                                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                                                  elevation: 0,
-                                                  color: appBG,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(kButtonCornerRadius),
                                                   ),
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.all(12),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                                      children: [
-                                                        Expanded(child: Container(
-                                                          margin: const EdgeInsets.only(right: 12),
-                                                          child: Text(listOrders[index].timestamp ?? "",
-                                                            textAlign: TextAlign.start,
-                                                            style: const TextStyle(fontSize: 13, color: hintDark, fontWeight: FontWeight.w300),
-                                                          ),
-                                                        )),
-                                                        Container(
-                                                          margin: const EdgeInsets.only(top: 2),
-                                                          child: Text(getPrice(listOrders[index].grandTotal ?? ""),
-                                                            textAlign: TextAlign.center,
-                                                            style: const TextStyle(fontSize: 13, color: black, fontWeight: FontWeight.w600),
-                                                          ),
+                                                ],
+                                              ),
+                                              const DottedLine(dashLength: 1, dashGapLength: 6, lineThickness: 1, dashRadius: 3, dashColor: kTextDarkGray),
+                                              const Gap(5),
+                                              Text(listOrders[index].remarks ?? "",
+                                                textAlign: TextAlign.start,
+                                                style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.bold),
+                                              ),
+                                              Card(
+                                                clipBehavior: Clip.antiAliasWithSaveLayer,
+                                                elevation: 0,
+                                                color: appBG,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(kButtonCornerRadius),
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(12),
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: [
+                                                      Expanded(child: Container(
+                                                        margin: const EdgeInsets.only(right: 12),
+                                                        child: Text(listOrders[index].timestamp ?? "",
+                                                          textAlign: TextAlign.start,
+                                                          style: const TextStyle(fontSize: 14, color: hintDark, fontWeight: FontWeight.w300),
                                                         ),
-                                                        Container(
-                                                            margin: const EdgeInsets.only(left: 6),
-                                                            alignment: Alignment.center,
-                                                            child: Image.asset("assets/images/ic_right_arrow_new.png", width: 10, height: 10, color: Colors.black)),
-                                                      ],
-                                                    ),
+                                                      )),
+                                                      Container(
+                                                        margin: const EdgeInsets.only(top: 2),
+                                                        child: Text(getPrice(listOrders[index].grandTotal ?? ""),
+                                                          textAlign: TextAlign.center,
+                                                          style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                          margin: const EdgeInsets.only(left: 6),
+                                                          alignment: Alignment.center,
+                                                          child: Image.asset("assets/images/ic_right_arrow_new.png", width: 10, height: 10, color: Colors.black)),
+                                                    ],
                                                   ),
                                                 ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
-                                          openedChild: OrderDetailScreen(listOrders[index].id ?? "", false),
                                         ),
+                                        openedChild: OrderDetailScreen(listOrders[index].id ?? "", false),
                                       ),
                                     ),
                                   ),

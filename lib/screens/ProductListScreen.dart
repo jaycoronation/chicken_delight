@@ -91,6 +91,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
           setState(() {});
         }
       }
+
       if (_scrollViewController.position.userScrollDirection == ScrollDirection.forward) {
         if (isScrollingDown) {
           isScrollingDown = false;
@@ -160,7 +161,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                     _isSearchHideShow = false;
                   });
 
-                }else {
+                } else {
                   showSnackBar("Products not found.", context);
                 }
               },
@@ -192,8 +193,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                 width: 32,
                 height: 30,
                 alignment: Alignment.center,
-                child: Icon(
-                  _isSearchHideShow ? Icons.search_off : Icons.search_rounded,
+                child: Icon(_isSearchHideShow ? Icons.search_off : Icons.search_rounded,
                   size: 24,
                   color: black,
                 ),
@@ -265,7 +265,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                         index: index,
                         child: Container(
                           margin: const EdgeInsets.only(left: 5,right: 5),
-                          child:ElevatedButton(
+                          child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               foregroundColor: black,
                               backgroundColor: listCategory[index].isSelected ? black : white,
@@ -323,7 +323,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                     },
 
                   ),
-                ) ,
+                ),
                 const Gap(6),
                 Visibility(
                   visible: _isSearchHideShow,
@@ -332,10 +332,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                     child: Card(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(kTextFieldCornerRadius), // if you need this
-                          side: const BorderSide(
-                            color: white,
-                            width: 0,
-                          ),
+                          side: const BorderSide(color: white, width: 0),
                         ),
                         elevation: 0,
                         child: SizedBox(
@@ -505,14 +502,15 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 const Gap(8),
-
-                                Text(getSet.name ?? "",
-                                    style: TextStyle(fontSize: title, color: black,fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
+                                Text(toDisplayCase(getSet.name ?? ""),
+                                    style: TextStyle(fontSize: title, color: black,fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),
+                                    textAlign: TextAlign.left,
                                     overflow: TextOverflow.clip
                                 ),
                                 const Gap(8),
                                 /*Text(getSet.productCode ?? "",
-                                    style: TextStyle(fontSize: title, color: black,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
+                                    style: TextStyle(fontSize: title, color: black,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,),
+                                    textAlign: TextAlign.left,
                                     overflow: TextOverflow.clip
                                 ),
                                 const Gap(8),*/
@@ -585,7 +583,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                           }
                                         });
 
-                                        print("Count ==== ${cartCount}");
+                                        // print("Count ==== ${cartCount}");
 
                                         shakeKey.currentState?.shake();
 
@@ -625,6 +623,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                                 {
                                                   HapticFeedback.lightImpact();
                                                 }
+
                                                 setState(() {
                                                   if (isOnline)
                                                   {
@@ -633,23 +632,22 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                                     } else {
                                                       getSet.quantity = getSet.quantity! - 1;
                                                       cartCount -= 1;
-
                                                     }
 
                                                     var total = num.parse(getSet.salePrice.toString()) * num.parse((getSet.quantity ?? "").toString());
                                                     getSet.amount = total;
 
                                                     shakeKey.currentState?.shake();
-
                                                   }
                                                   else
                                                   {
                                                     noInternetSnackBar(context);
                                                   }
+
                                                 });
 
                                               },
-                                              icon:const Icon(Icons.remove, color: white,)//Image.asset('assets/images/ic_blue_minus.png', height: 24, width: 24),
+                                              icon: const Icon(Icons.remove, color: white,)//Image.asset('assets/images/ic_blue_minus.png', height: 24, width: 24),
                                           ),
                                           Text((getSet.quantity ?? 0).toString(),
                                               style: TextStyle(fontWeight: FontWeight.w600, color: white, fontSize: description)),
@@ -673,7 +671,6 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                                     getSet.amount = total;
 
                                                     shakeKey.currentState?.shake();
-
                                                   }
                                                   else
                                                   {
@@ -760,7 +757,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                           const Gap(6),
                           Container(
                             alignment: Alignment.centerLeft,
-                            child: Text(getSet.name ?? "",
+                            child: Text(toDisplayCase(getSet.name ?? ""),
                                 style: TextStyle(fontSize: title, color: black,fontWeight: FontWeight.w600,
                                   overflow: TextOverflow.clip,),textAlign: TextAlign.left,
                                 overflow: TextOverflow.clip
@@ -955,7 +952,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
     setState(() {
       for (int i = 0; i < NavigationService.listItems.length; i++)
       {
-        if (NavigationService.listItems[i].isSelected == true)
+        if (NavigationService.listItems[i].isSelected ?? false)
         {
           Records getSet = Records();
 
@@ -977,7 +974,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
               isSelected :  NavigationService.listItems[i].isSelected,
               quantity: NavigationService.listItems[i].quantity,
               amount: num.parse(NavigationService.listItems[i].salePrice.toString()),
-              updateCartCount: cartCount
+              // updateCartCount: cartCount
           );
 
           NavigationService.listItemsTmp.add(getSet);
@@ -990,35 +987,39 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
     {
       await Navigator.push(context, MaterialPageRoute(builder: (context) => AddOrderScreen()));
       setState(() {
+
+        print("IS IN AFTER EFFECT");
+
+        cartCount = 0;
         for (int n = 0; n < NavigationService.listItems.length; n++)
         {
           for (int i = 0; i < NavigationService.listItemsTmp.length; i++)
           {
             if (NavigationService.listItems[n].id == NavigationService.listItemsTmp[i].id)
             {
-              if (NavigationService.listItems[n].isSelected == true)
+              if (NavigationService.listItems[n].isSelected ?? false)
               {
                 Records getSet = Records();
-
+                cartCount += NavigationService.listItemsTmp[i].quantity?.toInt() ?? 0;
                 getSet = Records(
-                    id:  NavigationService.listItemsTmp[i].id,
-                    description:  NavigationService.listItemsTmp[i].description,
-                    name:  NavigationService.listItemsTmp[i].name,
-                    icon:  NavigationService.listItemsTmp[i].icon,
-                    productCode:  NavigationService.listItemsTmp[i].productCode,
-                    unit:  NavigationService.listItemsTmp[i].unit,
-                    variationName:  NavigationService.listItemsTmp[i].variationName,
-                    skuCode:  NavigationService.listItemsTmp[i].skuCode,
-                    salePrice:  NavigationService.listItemsTmp[i].salePrice,
-                    mrpPrice:  NavigationService.listItemsTmp[i].mrpPrice,
-                    dpPrice:  NavigationService.listItemsTmp[i].dpPrice,
-                    category:  NavigationService.listItemsTmp[i].category,
-                    variationId:  NavigationService.listItemsTmp[i].variationId,
-                    categoryId:  NavigationService.listItemsTmp[i].categoryId,
-                    isSelected :  NavigationService.listItemsTmp[i].isSelected,
+                    id: NavigationService.listItemsTmp[i].id,
+                    description: NavigationService.listItemsTmp[i].description,
+                    name: NavigationService.listItemsTmp[i].name,
+                    icon: NavigationService.listItemsTmp[i].icon,
+                    productCode: NavigationService.listItemsTmp[i].productCode,
+                    unit: NavigationService.listItemsTmp[i].unit,
+                    variationName: NavigationService.listItemsTmp[i].variationName,
+                    skuCode: NavigationService.listItemsTmp[i].skuCode,
+                    salePrice: NavigationService.listItemsTmp[i].salePrice,
+                    mrpPrice: NavigationService.listItemsTmp[i].mrpPrice,
+                    dpPrice: NavigationService.listItemsTmp[i].dpPrice,
+                    category: NavigationService.listItemsTmp[i].category,
+                    variationId: NavigationService.listItemsTmp[i].variationId,
+                    categoryId: NavigationService.listItemsTmp[i].categoryId,
+                    isSelected: NavigationService.listItemsTmp[i].isSelected,
                     quantity: NavigationService.listItemsTmp[i].quantity,
-                    amount: num.parse( NavigationService.listItemsTmp[i].salePrice.toString()),
-                    updateCartCount: cartCount
+                    amount: num.parse(NavigationService.listItemsTmp[i].salePrice.toString()),
+                    // updateCartCount: cartCount
                 );
 
                 NavigationService.listItems[n] = getSet;

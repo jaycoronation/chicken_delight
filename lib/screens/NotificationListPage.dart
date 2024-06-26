@@ -235,6 +235,7 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
   @override
   void initState() {
     super.initState();
+
     ApiService.fetchData().then((response) {
       var data = response as CommonResponseModel;
       if (data.success == 1)
@@ -448,7 +449,7 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
 
   void notificationRead(String notificationId, String orderID) async {
     if (isOnline)
-      {
+    {
         HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
           HttpLogger(logLevel: LogLevel.BODY),
         ]);
@@ -488,7 +489,7 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
 
   void notificationClearRequest() async {
     if (isOnline)
-      {
+    {
         setState(() {
           _isLoading = true;
         });
@@ -527,7 +528,7 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
         }
       }
     else
-      {
+    {
         noInternetSnackBar(context);
       }
   }

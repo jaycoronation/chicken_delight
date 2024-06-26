@@ -41,6 +41,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
 
   @override
   void initState() {
+
     ApiService.fetchData().then((response) {
       var data = response as CommonResponseModel;
       if (data.success == 1)
@@ -91,7 +92,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
               onTap: () {
                 Navigator.pop(context); //"1"
               },
-              child:getBackArrowBlack()
+              child: getBackArrowBlack()
           ),
           elevation: 0,
           backgroundColor: chicken_bg,
@@ -191,11 +192,13 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                                   if (NavigationService.listItemsTmp[index].quantity == 1) {
                                                     removeItem(index);
                                                   } else {
-                                                    NavigationService.listItemsTmp[index].quantity = NavigationService.listItemsTmp[index].quantity! - 1;
+                                                    NavigationService.listItemsTmp[index].quantity = (NavigationService.listItemsTmp[index].quantity ?? 0) - 1;
+                                                  //  NavigationService.listItemsTmp[index].updateCartCount = (NavigationService.listItemsTmp[index].updateCartCount ?? 0) - 1;                                                    // cartCount -= 1;
                                                   }
 
                                                   var total = num.parse(NavigationService.listItemsTmp[index].salePrice.toString()) * num.parse(NavigationService.listItemsTmp[index].quantity.toString());
                                                   NavigationService.listItemsTmp[index].amount = total;
+
                                                   getPriceCalculated();
                                                 }
                                                 else
@@ -203,7 +206,6 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                                   noInternetSnackBar(context);
                                                 }
                                               });
-
                                             },
                                             icon:const Icon(Icons.remove, color: white,size: 20,)//Image.asset('assets/images/ic_blue_minus.png', height: 24, width: 24),
                                         ),
@@ -214,7 +216,8 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                               setState(() {
                                                 if (isOnline)
                                                 {
-                                                  NavigationService.listItemsTmp[index].quantity = (NavigationService.listItemsTmp[index].quantity! + 1);
+                                                  NavigationService.listItemsTmp[index].quantity = ((NavigationService.listItemsTmp[index].quantity ?? 0)  + 1);
+                                                 // NavigationService.listItemsTmp[index].updateCartCount  = (NavigationService.listItemsTmp[index].updateCartCount ?? 0) + 1;                                                    // cartCount -= 1;
 
                                                   var total = num.parse(NavigationService.listItemsTmp[index].salePrice.toString()) * num.parse(NavigationService.listItemsTmp[index].quantity.toString());
                                                   NavigationService.listItemsTmp[index].amount = total;
@@ -267,7 +270,6 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                           GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: () {
-
                               setState(() {
                                 isRepeat = true;
                               });
@@ -449,8 +451,6 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                   margin: const EdgeInsets.only(top: 20, bottom: 30, left: 60, right: 60),
                   width: MediaQuery.of(context).size.width,
                   child: getCommonButtonLoad("Proceed", isLoading,() {
-                      print("isRepeat====");
-                      print(isRepeat);
 
                       if (NavigationService.listItemsTmp.isEmpty)
                       {
@@ -515,8 +515,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                         Container(
                           alignment: Alignment.center,
                           padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
-                          child: const Text(
-                            "Select Option",
+                          child: const Text("Select Option",
                             style: TextStyle(color: primaryColor, fontWeight: FontWeight.w500, fontSize: 16),
                           ),
                         ),
@@ -538,9 +537,8 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                           behavior: HitTestBehavior.opaque,
                                           onTap: () {
                                             updateState(() {
-                                             // orderRepeatOption[index].isSelected = !(orderRepeatOption[index].isSelected ?? false);
-                                             selectRepeatController.text = orderRepeatOption[index].name?.toString() ?? "";
-                                             repeatDays = orderRepeatOption[index].id?.toString() ?? "";
+                                             selectRepeatController.text = orderRepeatOption[index].name.toString() ?? "";
+                                             repeatDays = orderRepeatOption[index].id.toString() ?? "";
                                             });
                                             Navigator.pop(context);
                                           },
@@ -682,6 +680,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                       }
                                     }
 
+                                   // NavigationService.listItemsTmp[index].updateCartCount = (NavigationService.listItemsTmp[index].updateCartCount ?? 0) - 1;                                                    // cartCount -= 1;
 
                                     NavigationService.listItemsTmp.removeAt(index);
                                     getPriceCalculated();
@@ -704,6 +703,8 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
 
                                       NavigationService.listItemsTmp.removeAt(index);
                                       getPriceCalculated();
+
+                                     // NavigationService.listItemsTmp[index].updateCartCount = (NavigationService.listItemsTmp[index].updateCartCount ?? 0) - 1;                                                    // cartCount -= 1;
 
                                       NavigationService.listItems[index].quantity = 0;
                                       NavigationService.listItems[index].isSelected = false;

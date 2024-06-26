@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:chicken_delight/constant/global_context.dart';
 import 'package:chicken_delight/model/common/CommonResponseModel.dart';
 import 'package:chicken_delight/screens/AddOrderScreen.dart';
-import 'package:chicken_delight/screens/save_file_mobile.dart';
+import 'package:chicken_delight/utils/save_file_mobile.dart';
 import 'package:chicken_delight/tabs/tabnavigation.dart';
 import 'package:chicken_delight/widget/loading.dart';
 import 'package:flutter/material.dart';
@@ -382,7 +382,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text("Shipping From",
-                                style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
+                                style: TextStyle(fontSize: medium, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
                             ),
                             const Gap(10),
                             Text(warehouseName,
@@ -412,7 +412,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text("Shipping To",
-                                style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
+                                style: TextStyle(fontSize: medium, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
                             ),
                             Container(
                               margin: const EdgeInsets.only(top: 10, bottom: 5),
