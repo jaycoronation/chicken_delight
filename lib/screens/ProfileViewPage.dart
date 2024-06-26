@@ -52,7 +52,7 @@ class _ProfileViewPageState extends BaseState<ProfileViewPage> {
       }
     });
 
-    _getProfile();
+    getProfile();
     super.initState();
   }
 
@@ -297,7 +297,7 @@ class _ProfileViewPageState extends BaseState<ProfileViewPage> {
   }
 
   //API call function...
-  _getProfile() async {
+  getProfile() async {
     setState(() {
       _isLoading = true;
     });

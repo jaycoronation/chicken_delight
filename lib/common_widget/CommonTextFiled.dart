@@ -470,6 +470,7 @@ class OutlineTextField extends StatelessWidget {
       cursorColor: black,
       controller: controller,
       maxLength: maxLength,
+      textCapitalization: TextCapitalization.sentences,
       keyboardType: inputType,
       textInputAction: inputAction,
       style: getTextFieldStyle(),

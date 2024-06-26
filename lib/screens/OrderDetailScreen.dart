@@ -253,7 +253,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                                                   mainAxisAlignment: MainAxisAlignment.start,
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    Text(getSetInner.item ?? "",
+                                                    Text(toDisplayCase(getSetInner.item ?? ""),
                                                         style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
                                                         overflow: TextOverflow.clip
                                                     ),
@@ -913,7 +913,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
   //  page.graphics.drawRectangle(bounds: Rect.fromLTWH(0, 0, pageSize.width, pageSize.height),pen: PdfPen(PdfColor(142, 170, 219, 255)));
 
     //Draw the header section by creating text element
-    final PdfLayoutResult result = _drawHeader(page, pageSize);
+    final PdfLayoutResult result = drawHeader(page, pageSize);
     //_getGridBillTo(page, result);
     _getGrid(page,result);
     _getGridBottom(page,result);
@@ -933,6 +933,64 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
   }
 
   //Draw the invoice header
+
+  PdfLayoutResult drawHeader(PdfPage page, Size pageSize) {
+    final PdfFont contentFont = PdfStandardFont(PdfFontFamily.helvetica, 9);
+
+    String shipToNumber =
+        '\nShip to:\r\n\r\n$franchiseName\n${orderDetailData.addressLine1}\n${orderDetailData.addressLine2}\r\n${orderDetailData.addressLine3}\n${orderDetailData.addressLine4}';
+
+    String billToNumber = "Melnex Enterprise Ltd.\r\n395 Berry Street\r\nWinnipeg Manitoba R3J 1N6\n\n\n\nBill To:\r\n\r\n$franchiseName\r\n${orderDetailData.addressLine1}\n${orderDetailData.addressLine2}\r\n${orderDetailData.addressLine3}\n${orderDetailData.addressLine4}";
+    final Size contentSizeShip = contentFont.measureString(shipToNumber);
+    final Size contentSizeBillTo = contentFont.measureString(billToNumber);
+
+    PdfTextElement(text: shipToNumber, font: contentFont).draw(
+        page: page,
+        bounds: Rect.fromLTRB(pageSize.width - (contentSizeShip.width + 95), 50, 0, pageSize.height - 300));
+
+
+    final Rect billToBounds = Rect.fromLTRB(6, 0, pageSize.width - (contentSizeBillTo.width + 20), pageSize.height - 155);
+
+    page.graphics.drawRectangle(
+      bounds: Rect.fromLTRB(0, 75, pageSize.width - (billToBounds.width - 20), pageSize.height - (billToBounds.height + 30)),
+      pen: PdfPens.black,
+    );
+    final Rect shipToBounds = Rect.fromLTRB(pageSize.width - (contentSizeShip.width + 100), 35, pageSize.width - 32, contentSizeShip.height + 45);
+
+    page.graphics.drawRectangle(
+      bounds: Rect.fromLTRB(shipToBounds.left, shipToBounds.top + 40, shipToBounds.right + 30, shipToBounds.bottom + 5),
+      pen: PdfPens.black,
+    );
+
+    // Create a grid to display the invoice number and date
+    final PdfGrid invoiceGrid = PdfGrid();
+    invoiceGrid.columns.add(count: 2);
+    invoiceGrid.headers.add(1);
+
+    final PdfGridRow headerRow = invoiceGrid.headers[0];
+    headerRow.cells[0].value = 'Invoice Number';
+    headerRow.cells[1].value = orderNumber;
+
+    final PdfGridRow row = invoiceGrid.rows.add();
+    row.cells[0].value = 'Date';
+    row.cells[1].value = universalDateConverter("MMM dd, yyyy hh:mm a", "MMM dd, yyyy", orderDetailData.timestamp?.toString() ?? "");
+
+    headerRow.cells[0].style = cellStyle1;
+    headerRow.cells[1].style = cellStyle1;
+    row.cells[0].style = cellStyle1;
+    row.cells[1].style = cellStyle1;
+
+    invoiceGrid.style.font = contentFont;
+
+    invoiceGrid.draw(
+        page: page,
+        bounds: Rect.fromLTRB(pageSize.width - (contentSizeShip.width + 100), 5, pageSize.width + 320, pageSize.height - 300));
+
+
+    // Draw the "Bill To" text
+    return PdfTextElement(text: billToNumber, font: contentFont).draw(page: page, bounds: billToBounds)!;
+  }
+
   _drawHeader(PdfPage page, Size pageSize)
   {
     //Draw rectangle
@@ -1132,6 +1190,19 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
     cellPadding: PdfPaddings(left: 3, right: 3, top: 3, bottom: 3),
     font: PdfStandardFont(PdfFontFamily.helvetica, 9),
    format: PdfStringFormat(alignment: PdfTextAlignment.center, lineAlignment: PdfVerticalAlignment.middle, wordSpacing: 4),
+   textBrush: PdfBrushes.black,
+  );
+
+  PdfGridCellStyle cellStyle1 = PdfGridCellStyle(
+    backgroundBrush: PdfBrushes.white,
+    borders: PdfBorders(
+        left: PdfPen(PdfColor(0, 0, 0), width: 1),
+        top: PdfPen(PdfColor(0, 0, 0), width: 1),
+        bottom: PdfPen(PdfColor(0, 0, 0), width: 1),
+        right: PdfPen(PdfColor(0, 0, 0), width: 1)),
+    cellPadding: PdfPaddings(left: 3, right: 3, top: 3, bottom: 3),
+    font: PdfStandardFont(PdfFontFamily.helvetica, 9),
+   format: PdfStringFormat(alignment: PdfTextAlignment.left,  wordSpacing: 4),
    textBrush: PdfBrushes.black,
   );
 

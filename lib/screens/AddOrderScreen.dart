@@ -151,7 +151,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text((NavigationService.listItemsTmp[index].name ?? ""),
+                                          Text(toDisplayCase(NavigationService.listItemsTmp[index].name ?? ""),
                                             style: const TextStyle(fontSize: 13, color: black,fontWeight: FontWeight.w600,
                                               overflow: TextOverflow.clip,
                                             ),
@@ -354,6 +354,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                         child: OutlineTextField(
                           controller: remarksController,
                           hintText: "Enter Remark",
+                          inputAction: TextInputAction.done,
                           onTapClear: () {
 
                           },
@@ -670,6 +671,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
                             child: TextButton(
                               onPressed: () async {
                                 setState(() {
+
                                   if (NavigationService.listItemsTmp.length == 1)
                                   {
                                     for (int i = 0; i < NavigationService.listItemsTmp.length; i++)
@@ -692,7 +694,7 @@ class _AddOrderScreenState extends BaseState<AddOrderScreen> {
 
                                   }
                                   else
-                                    {
+                                  {
                                       for (int i = 0; i < NavigationService.listItemsTmp.length; i++)
                                       {
                                         if (NavigationService.listItemsTmp[i].id == NavigationService.listItemsTmp[index].id)

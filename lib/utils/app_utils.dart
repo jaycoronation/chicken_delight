@@ -140,7 +140,7 @@ isValidPhoneNumber(String? input)
 
 /*convert string to CamelCase*/
 toDisplayCase (String str) {
-  print("str === $str");
+  //print("str === $str");
 
   if(str.toString().isNotEmpty)
     {

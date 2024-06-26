@@ -104,6 +104,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
     getItemListData(true);
 
     super.initState();
+
   }
 
   void pagination() {
@@ -129,7 +130,6 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
     super.didChangeDependencies();
 
     var textRefresh = context.watch<TextChanger>().refreshProductList;
-    print("Chart data<<><><><><><>>$textRefresh}");
 
     if (textRefresh.isNotEmpty) {
       getItemListData(true);
@@ -484,211 +484,214 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
               child: SlideAnimation(
                 verticalOffset: 50.0,
                 child: FadeInAnimation(
-                  child: Card(
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(kTextFieldCornerRadius),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Flexible(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const Gap(8),
-                                Text(toDisplayCase(getSet.name ?? ""),
-                                    style: TextStyle(fontSize: title, color: black,fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),
-                                    textAlign: TextAlign.left,
-                                    overflow: TextOverflow.clip
-                                ),
-                                const Gap(8),
-                                /*Text(getSet.productCode ?? "",
-                                    style: TextStyle(fontSize: title, color: black,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,),
-                                    textAlign: TextAlign.left,
-                                    overflow: TextOverflow.clip
-                                ),
-                                const Gap(8),*/
-                                Row(
-                                  children: [
-                                    Text(getPrice(getSet.salePrice ?? ""),
-                                        style: TextStyle(fontSize: medium, color: black,fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
-                                        overflow: TextOverflow.clip
-                                    ),
-                                    const Gap(5),
-                                    Text(getPrice(getSet.mrpPrice ?? ""),
-                                      style: TextStyle(fontSize: title, color: gray_dark,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,decoration: TextDecoration.lineThrough),
-                                      textAlign: TextAlign.left,
-                                      overflow: TextOverflow.clip,
-                                    ),
-                                  ],
-                                ),
-                                const Gap(5),
-                                // Visibility(
-                                //   visible:getSet.quantity != null && getSet.quantity.toString() != "0",
-                                //   child: Text(getPrice(getSet.amount?.toStringAsFixed(2) ?? "") ,
-                                //     style: TextStyle(fontSize: description, color: black,
-                                //       fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),
-                                //     textAlign: TextAlign.right,
-                                //   ),
-                                // ),
-                              ],
-                            ),
-                          ),
-                          const Gap(18),
-                          Column(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Image.network(getSet.icon ?? "",
-                                  fit: BoxFit.cover,
-                                  height: 70,
-                                  width: 70,
-                                ),
-                              ),
-                              const Gap(18),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 6),
+                    child: Card(
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(kTextFieldCornerRadius),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Flexible(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Visibility(
-                                    visible:getSet.quantity == null || getSet.quantity.toString() == "0",
-                                    child: InkWell(
-                                      //behavior: HitTestBehavior.opaque,
-                                      onTap: () {
-                                        if (Platform.isAndroid)
-                                        {
-                                          HapticFeedback.vibrate();
-                                        }
-                                        else
-                                        {
-                                          HapticFeedback.lightImpact();
-                                        }
-
-                                        setState(() {
-                                          getSet.quantity = 1;
-                                          cartCount += 1;
-                                          var total = num.parse(getSet.salePrice.toString()) * num.parse((getSet.quantity ?? "").toString());
-                                          getSet.amount = total;
-
-                                          if (NavigationService.listItems[index].isSelected ?? false) {
-                                            NavigationService.listItems[index].isSelected = false;
-                                          } else {
-                                            NavigationService.listItems[index].isSelected = true;
+                                  const Gap(8),
+                                  Text(toDisplayCase(getSet.name ?? ""),
+                                      style: TextStyle(fontSize: title, color: black,fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),
+                                      textAlign: TextAlign.left,
+                                      overflow: TextOverflow.clip
+                                  ),
+                                  const Gap(8),
+                                  /*Text(getSet.productCode ?? "",
+                                      style: TextStyle(fontSize: title, color: black,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,),
+                                      textAlign: TextAlign.left,
+                                      overflow: TextOverflow.clip
+                                  ),
+                                  const Gap(8),*/
+                                  Row(
+                                    children: [
+                                      Text(getPrice(getSet.salePrice ?? ""),
+                                          style: const TextStyle(fontSize: 17, color: black,fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
+                                          overflow: TextOverflow.clip
+                                      ),
+                                      const Gap(5),
+                                      Text(getPrice(getSet.mrpPrice ?? ""),
+                                        style: TextStyle(fontSize: title, color: gray_dark,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,decoration: TextDecoration.lineThrough),
+                                        textAlign: TextAlign.left,
+                                        overflow: TextOverflow.clip,
+                                      ),
+                                    ],
+                                  ),
+                                  const Gap(5),
+                                  // Visibility(
+                                  //   visible:getSet.quantity != null && getSet.quantity.toString() != "0",
+                                  //   child: Text(getPrice(getSet.amount?.toStringAsFixed(2) ?? "") ,
+                                  //     style: TextStyle(fontSize: description, color: black,
+                                  //       fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),
+                                  //     textAlign: TextAlign.right,
+                                  //   ),
+                                  // ),
+                                ],
+                              ),
+                            ),
+                            const Gap(18),
+                            Column(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.network(getSet.icon ?? "",
+                                    fit: BoxFit.cover,
+                                    height: 70,
+                                    width: 70,
+                                  ),
+                                ),
+                                const Gap(18),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Visibility(
+                                      visible:getSet.quantity == null || getSet.quantity.toString() == "0",
+                                      child: InkWell(
+                                        //behavior: HitTestBehavior.opaque,
+                                        onTap: () {
+                                          if (Platform.isAndroid)
+                                          {
+                                            HapticFeedback.vibrate();
                                           }
-                                        });
+                                          else
+                                          {
+                                            HapticFeedback.lightImpact();
+                                          }
 
-                                        // print("Count ==== ${cartCount}");
+                                          setState(() {
+                                            getSet.quantity = 1;
+                                            cartCount += 1;
+                                            var total = num.parse(getSet.salePrice.toString()) * num.parse((getSet.quantity ?? "").toString());
+                                            getSet.amount = total;
 
-                                        shakeKey.currentState?.shake();
+                                            if (NavigationService.listItems[index].isSelected ?? false) {
+                                              NavigationService.listItems[index].isSelected = false;
+                                            } else {
+                                              NavigationService.listItems[index].isSelected = true;
+                                            }
+                                          });
 
-                                      },
+                                          // print("Count ==== ${cartCount}");
+
+                                          shakeKey.currentState?.shake();
+
+                                        },
+                                        child: Container(
+                                          height: 40,
+                                          width: 100,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(8),
+                                            border: Border.all(color: black, width: 0.8),
+                                          ),
+                                          alignment: Alignment.center,
+                                          child: Text("ADD",
+                                              style: TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: description)),
+                                        ),
+                                      ),
+                                    ),
+                                    Visibility(
+                                      visible: getSet.quantity != null && getSet.quantity.toString() != "0",
                                       child: Container(
                                         height: 40,
-                                        width: 100,
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(8),
                                           border: Border.all(color: black, width: 0.8),
+                                          color: black,
                                         ),
                                         alignment: Alignment.center,
-                                        child: Text("ADD",
-                                            style: TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: description)),
-                                      ),
-                                    ),
-                                  ),
-                                  Visibility(
-                                    visible: getSet.quantity != null && getSet.quantity.toString() != "0",
-                                    child: Container(
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8),
-                                        border: Border.all(color: black, width: 0.8),
-                                        color: black,
-                                      ),
-                                      alignment: Alignment.center,
-                                      child: Row(
-                                        children: [
-                                          IconButton(
-                                              onPressed: () {
-                                                if (Platform.isAndroid)
-                                                {
-                                                  HapticFeedback.vibrate();
-                                                }
-                                                else
-                                                {
-                                                  HapticFeedback.lightImpact();
-                                                }
-
-                                                setState(() {
-                                                  if (isOnline)
+                                        child: Row(
+                                          children: [
+                                            IconButton(
+                                                onPressed: () {
+                                                  if (Platform.isAndroid)
                                                   {
-                                                    if (getSet.quantity == 1) {
-                                                      removeItem(index);
-                                                    } else {
-                                                      getSet.quantity = getSet.quantity! - 1;
-                                                      cartCount -= 1;
+                                                    HapticFeedback.vibrate();
+                                                  }
+                                                  else
+                                                  {
+                                                    HapticFeedback.lightImpact();
+                                                  }
+
+                                                  setState(() {
+                                                    if (isOnline)
+                                                    {
+                                                      if (getSet.quantity == 1) {
+                                                        removeItem(index);
+                                                      } else {
+                                                        getSet.quantity = getSet.quantity! - 1;
+                                                        cartCount -= 1;
+                                                      }
+
+                                                      var total = num.parse(getSet.salePrice.toString()) * num.parse((getSet.quantity ?? "").toString());
+                                                      getSet.amount = total;
+
+                                                      shakeKey.currentState?.shake();
+                                                    }
+                                                    else
+                                                    {
+                                                      noInternetSnackBar(context);
                                                     }
 
-                                                    var total = num.parse(getSet.salePrice.toString()) * num.parse((getSet.quantity ?? "").toString());
-                                                    getSet.amount = total;
+                                                  });
 
-                                                    shakeKey.currentState?.shake();
+                                                },
+                                                icon: const Icon(Icons.remove, color: white,)//Image.asset('assets/images/ic_blue_minus.png', height: 24, width: 24),
+                                            ),
+                                            Text((getSet.quantity ?? 0).toString(),
+                                                style: TextStyle(fontWeight: FontWeight.w600, color: white, fontSize: description)),
+                                            IconButton(
+                                                onPressed: () {
+                                                  if (Platform.isAndroid)
+                                                  {
+                                                    HapticFeedback.vibrate();
                                                   }
                                                   else
                                                   {
-                                                    noInternetSnackBar(context);
+                                                    HapticFeedback.lightImpact();
                                                   }
+                                                  setState(() {
+                                                    if (isOnline)
+                                                    {
+                                                      getSet.quantity = ((getSet.quantity ?? 0) + 1);
+                                                      cartCount += 1;
 
-                                                });
+                                                      var total = num.parse(getSet.salePrice.toString()) * num.parse(getSet.quantity.toString());
+                                                      getSet.amount = total;
 
-                                              },
-                                              icon: const Icon(Icons.remove, color: white,)//Image.asset('assets/images/ic_blue_minus.png', height: 24, width: 24),
-                                          ),
-                                          Text((getSet.quantity ?? 0).toString(),
-                                              style: TextStyle(fontWeight: FontWeight.w600, color: white, fontSize: description)),
-                                          IconButton(
-                                              onPressed: () {
-                                                if (Platform.isAndroid)
-                                                {
-                                                  HapticFeedback.vibrate();
-                                                }
-                                                else
-                                                {
-                                                  HapticFeedback.lightImpact();
-                                                }
-                                                setState(() {
-                                                  if (isOnline)
-                                                  {
-                                                    getSet.quantity = ((getSet.quantity ?? 0) + 1);
-                                                    cartCount += 1;
-
-                                                    var total = num.parse(getSet.salePrice.toString()) * num.parse(getSet.quantity.toString());
-                                                    getSet.amount = total;
-
-                                                    shakeKey.currentState?.shake();
-                                                  }
-                                                  else
-                                                  {
-                                                    noInternetSnackBar(context);
-                                                  }
-                                                });
-                                              },
-                                              icon: const Icon(Icons.add,color: white,)//Image.asset('assets/images/ic_blue_add.png', height: 24, width: 24),
-                                          )
-                                        ],
+                                                      shakeKey.currentState?.shake();
+                                                    }
+                                                    else
+                                                    {
+                                                      noInternetSnackBar(context);
+                                                    }
+                                                  });
+                                                },
+                                                icon: const Icon(Icons.add,color: white,)//Image.asset('assets/images/ic_blue_add.png', height: 24, width: 24),
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -718,7 +721,6 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
           physics: const NeverScrollableScrollPhysics(),
           padding: const EdgeInsets.only(bottom: 100),
           itemCount: NavigationService.listItems.length,
-          controller: _scrollViewController,
           itemBuilder: (BuildContext context, int index) {
             var getSet = NavigationService.listItems[index];
 
@@ -775,12 +777,12 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                           Row(
                             children: [
                               Text(getPrice(getSet.salePrice ?? ""),
-                                  style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
+                                  style: TextStyle(fontSize: 17, color: black,fontWeight: FontWeight.w600, overflow: TextOverflow.clip,),textAlign: TextAlign.left,
                                   overflow: TextOverflow.clip
                               ),
                               const Gap(5),
                               Text(getPrice(getSet.mrpPrice ?? ""),
-                                style: TextStyle(fontSize: title, color: gray_dark,fontWeight: FontWeight.w500, overflow: TextOverflow.clip,decoration: TextDecoration.lineThrough),
+                                style: TextStyle(fontSize: title, color: gray_dark,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,decoration: TextDecoration.lineThrough),
                                 textAlign: TextAlign.left,
                                 overflow: TextOverflow.clip,
                               ),
@@ -1061,11 +1063,11 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                     margin: const EdgeInsets.only(top: 10, bottom: 10),
                   ),
                   Container(margin: const EdgeInsets.only(top: 10, bottom: 10),
-                      child: Text('Remove Product', style: TextStyle(fontSize: medium, fontWeight: FontWeight.w700, color: black))
+                      child: Text('Remove Item', style: TextStyle(fontSize: medium, fontWeight: FontWeight.w700, color: black))
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 10, bottom: 15),
-                    child: Text('Are you sure want to remove this product?', style: TextStyle(fontSize: subTitle, fontWeight: FontWeight.w400, color: black)),
+                    child: Text('Are you sure want to remove this item?', style: TextStyle(fontSize: subTitle, fontWeight: FontWeight.w400, color: black)),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 20, right: 20, bottom: 30),

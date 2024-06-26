@@ -203,7 +203,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
             ),
             const Gap(15)
           ],
-          bottom: _isLoading ? null : PreferredSize(
+          bottom: PreferredSize(
             preferredSize: const Size.fromHeight(36),
             child: Column(
               children: [
@@ -486,7 +486,7 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                               const Gap(5),
                                               Text(listOrders[index].remarks ?? "",
                                                 textAlign: TextAlign.start,
-                                                style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.bold),
+                                                style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w500),
                                               ),
                                               Card(
                                                 clipBehavior: Clip.antiAliasWithSaveLayer,
