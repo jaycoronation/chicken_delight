@@ -502,52 +502,8 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
                           ],
                         ),
                       ),
-                      /*Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Shipping To",
-                              style: TextStyle(fontSize: subTitle, color: black,fontWeight: FontWeight.w600),textAlign: TextAlign.left
-                          ),
-                          const Gap(10),
-                          Text(franchiseName,
-                              style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
-                          ),
-                          Text("$addressLine1,$addressLine2",
-                              style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w400),textAlign: TextAlign.left
-                          ),
-                        ],
-                      ),*/
                     ),
                   ),
-                  /*Visibility(
-                    visible: paymentStatus.isNotEmpty,
-                    child: Card(
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(kContainerCornerRadius),
-                      ),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Payment Status",
-                                style: TextStyle(fontSize: subTitle, color: black, fontWeight: FontWeight.w600),textAlign: TextAlign.left
-                            ),
-                            const Gap(10),
-                            Text(paymentStatus,
-                                style: TextStyle(fontSize: description, color: black,fontWeight: FontWeight.w500),textAlign: TextAlign.left
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  const Gap(10),*/
                   Visibility(
                     visible: status == "Placed" || status == "Accepted",
                     child: Container(
@@ -719,7 +675,6 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
     setState(() {
       for (int i = 0; i < listSelectedItems.length; i++)
       {
-
           Records getSet = Records();
 
           getSet = Records(
@@ -729,15 +684,15 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
             icon: listSelectedItems[i].icon?.toString() ?? "",
             productCode: "",
             unit: listSelectedItems[i].unit?.toString() ?? "",
-            variationName: "",//listSelectedItems[i].variationId?.toString() ?? "",
+            variationName: "",
             skuCode: listSelectedItems[i].skuCode?.toString() ?? "",
             salePrice: listSelectedItems[i].salePrice?.toString() ?? "",
             mrpPrice: "",
-            dpPrice: "",// listItems[i].itemsInnerList?[n].dpPrice,
+            dpPrice: "",
             category: listSelectedItems[i].category?.toString() ?? "",
             variationId: listSelectedItems[i].variationId?.toString() ?? "",
             categoryId: listSelectedItems[i].categoryId?.toString() ?? "",
-            isSelected: true,//listSelectedItems[i].is?.toString() ?? "",
+            isSelected: true,
             quantity: num.parse(listSelectedItems[i].quantity?.toString() ?? ""),
             amount: num.parse(listSelectedItems[i].amount?.toString() ?? ""),
             // updateCartCount: cartCount
@@ -746,49 +701,9 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
          NavigationService.listItemsTmp.add(getSet);
         }
 
-
     });
 
     await Navigator.push(context, MaterialPageRoute(builder: (context) => AddOrderScreen()));
-    /*setState(() {
-        for (int n = 0; n < NavigationService.listItems.length; n++)
-        {
-          for (int i = 0; i < NavigationService.listItemsTmp.length; i++)
-          {
-            if (NavigationService.listItems[n].id == NavigationService.listItemsTmp[i].id)
-            {
-              if (NavigationService.listItems[n].isSelected == true)
-              {
-                Records getSet = Records();
-
-                getSet = Records(
-                    id:  NavigationService.listItemsTmp[i].id,
-                    description:  NavigationService.listItemsTmp[i].description,
-                    name:  NavigationService.listItemsTmp[i].name,
-                    icon:  NavigationService.listItemsTmp[i].icon,
-                    productCode:  NavigationService.listItemsTmp[i].productCode,
-                    unit:  NavigationService.listItemsTmp[i].unit,
-                    variationName:  NavigationService.listItemsTmp[i].variationName,
-                    skuCode:  NavigationService.listItemsTmp[i].skuCode,
-                    salePrice:  NavigationService.listItemsTmp[i].salePrice,
-                    mrpPrice:  NavigationService.listItemsTmp[i].mrpPrice,
-                    dpPrice:  NavigationService.listItemsTmp[i].dpPrice,
-                    category:  NavigationService.listItemsTmp[i].category,
-                    variationId:  NavigationService.listItemsTmp[i].variationId,
-                    categoryId:  NavigationService.listItemsTmp[i].categoryId,
-                    isSelected :  NavigationService.listItemsTmp[i].isSelected,
-                    quantity: NavigationService.listItemsTmp[i].quantity,
-                    amount: num.parse( NavigationService.listItemsTmp[i].salePrice.toString()),
-                    // updateCartCount: cartCount
-                );
-
-                NavigationService.listItems[n] = getSet;
-              }
-            }
-          }
-        }
-      });*/
-
 
   }
 
@@ -935,12 +850,12 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
   //Draw the invoice header
 
   PdfLayoutResult drawHeader(PdfPage page, Size pageSize) {
-    final PdfFont contentFont = PdfStandardFont(PdfFontFamily.helvetica, 9);
+    final PdfFont contentFont = PdfStandardFont(PdfFontFamily.timesRoman, 9);
 
     String shipToNumber =
-        '\nShip to:\r\n\r\n$franchiseName\n${orderDetailData.addressLine1}\n${orderDetailData.addressLine2}\r\n${orderDetailData.addressLine3}\n${orderDetailData.addressLine4}';
+        '\n\nShip to:\r\n\r\n$franchiseName\n${orderDetailData.addressLine1}\n${orderDetailData.addressLine2}\r\n${orderDetailData.addressLine3} ${orderDetailData.addressLine4}';
 
-    String billToNumber = "Melnex Enterprise Ltd.\r\n395 Berry Street\r\nWinnipeg Manitoba R3J 1N6\n\n\n\nBill To:\r\n\r\n$franchiseName\r\n${orderDetailData.addressLine1}\n${orderDetailData.addressLine2}\r\n${orderDetailData.addressLine3}\n${orderDetailData.addressLine4}";
+    String billToNumber = "Melnex Enterprise Ltd.\r\n395 Berry Street\r\nWinnipeg Manitoba R3J 1N6\n\n\n\n\nBill To:\r\n\r\n  $franchiseName\r\n  ${orderDetailData.addressLine1}\n  ${orderDetailData.addressLine2}\n  ${orderDetailData.addressLine3} ${orderDetailData.addressLine4}";
     final Size contentSizeShip = contentFont.measureString(shipToNumber);
     final Size contentSizeBillTo = contentFont.measureString(billToNumber);
 
@@ -948,14 +863,13 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
         page: page,
         bounds: Rect.fromLTRB(pageSize.width - (contentSizeShip.width + 95), 50, 0, pageSize.height - 300));
 
-
     final Rect billToBounds = Rect.fromLTRB(6, 0, pageSize.width - (contentSizeBillTo.width + 20), pageSize.height - 155);
 
     page.graphics.drawRectangle(
-      bounds: Rect.fromLTRB(0, 75, pageSize.width - (billToBounds.width - 20), pageSize.height - (billToBounds.height + 30)),
+      bounds: Rect.fromLTRB(5, 86, pageSize.width - (billToBounds.width - 30), pageSize.height - (billToBounds.height + 28)),
       pen: PdfPens.black,
     );
-    final Rect shipToBounds = Rect.fromLTRB(pageSize.width - (contentSizeShip.width + 100), 35, pageSize.width - 32, contentSizeShip.height + 45);
+    final Rect shipToBounds = Rect.fromLTRB(pageSize.width - (contentSizeShip.width + 100), 45, pageSize.width - 32, contentSizeShip.height + 42);
 
     page.graphics.drawRectangle(
       bounds: Rect.fromLTRB(shipToBounds.left, shipToBounds.top + 40, shipToBounds.right + 30, shipToBounds.bottom + 5),
@@ -984,7 +898,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
 
     invoiceGrid.draw(
         page: page,
-        bounds: Rect.fromLTRB(pageSize.width - (contentSizeShip.width + 100), 5, pageSize.width + 320, pageSize.height - 300));
+        bounds: Rect.fromLTRB(pageSize.width - (contentSizeShip.width + 90), 2, pageSize.width + 335, pageSize.height - 300));
 
 
     // Draw the "Bill To" text
@@ -1045,30 +959,6 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
             contentSize1.width, pageSize.height - 80));
   }
 
-  PdfGrid _getGridBillTo(PdfPage page, PdfLayoutResult result) {
-    //Create a PDF grid
-    final PdfGrid grid = PdfGrid();
-    //Set the columns count to the grid.
-    grid.columns.add(count: 1);
-    //Create the header row of the grid.
-
-    final PdfGridRow row = grid.rows.add();
-    row.cells[0].value = 'Bill to';
-//
-    String billAddress = 'Bill to:\r\n$franchiseName\r\n${orderDetailData.addressLine1}\n${orderDetailData.addressLine2}\r\n${orderDetailData.addressLine3}\n${orderDetailData.addressLine4}';
-    PdfGridRow row1 = grid.rows.add();
-
-    row1.style = cellStyle;
-    row1.cells[0].value = billAddress;
-
-    for (int i = 0; i < grid.columns.count; i++) {
-      row.cells[i].style = cellStyle;
-    }
-
-    grid.draw(page: page, bounds: Rect.fromLTWH(0, result.bounds.bottom + 10, 0, 0));
-
-    return grid;
-  }
 
   //Create PDF grid and return
   PdfGrid _getGrid(PdfPage page, PdfLayoutResult result) {
@@ -1098,7 +988,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
       row.cells[i].style = cellStyle;
       row1.cells[i].style = cellStyle;
     }
-    grid.draw(page: page, bounds: Rect.fromLTWH(0, result.bounds.bottom + 30, 0, 0));
+    grid.draw(page: page, bounds: Rect.fromLTWH(5, result.bounds.bottom + 30, 0, 0));
 
     return grid;
   }
@@ -1173,7 +1063,7 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
       }
     }
 
-    grid.draw(page: page, bounds: Rect.fromLTWH(0, result.bounds.bottom + 70, 0, 0));
+    grid.draw(page: page, bounds: Rect.fromLTWH(5, result.bounds.bottom + 66, 0, 0));
 
     return grid;
   }
@@ -1187,9 +1077,9 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
         top: PdfPen(PdfColor(0, 0, 0), width: 1),
         bottom: PdfPen(PdfColor(0, 0, 0), width: 1),
         right: PdfPen(PdfColor(0, 0, 0), width: 1)),
-    cellPadding: PdfPaddings(left: 3, right: 3, top: 3, bottom: 3),
-    font: PdfStandardFont(PdfFontFamily.helvetica, 9),
-   format: PdfStringFormat(alignment: PdfTextAlignment.center, lineAlignment: PdfVerticalAlignment.middle, wordSpacing: 4),
+    cellPadding: PdfPaddings(left: 6, right: 6, top: 2, bottom: 2),
+    font: PdfStandardFont(PdfFontFamily.timesRoman, 9),
+   format: PdfStringFormat(alignment: PdfTextAlignment.left, lineAlignment: PdfVerticalAlignment.middle, wordSpacing: 2),
    textBrush: PdfBrushes.black,
   );
 
@@ -1200,9 +1090,9 @@ class _OrderDetailScreenState extends BaseState<OrderDetailScreen> {
         top: PdfPen(PdfColor(0, 0, 0), width: 1),
         bottom: PdfPen(PdfColor(0, 0, 0), width: 1),
         right: PdfPen(PdfColor(0, 0, 0), width: 1)),
-    cellPadding: PdfPaddings(left: 3, right: 3, top: 3, bottom: 3),
-    font: PdfStandardFont(PdfFontFamily.helvetica, 9),
-   format: PdfStringFormat(alignment: PdfTextAlignment.left,  wordSpacing: 4),
+    cellPadding: PdfPaddings(left: 6, right: 6, top: 3, bottom:0),
+    font: PdfStandardFont(PdfFontFamily.timesRoman, 9),
+   format: PdfStringFormat(alignment: PdfTextAlignment.left,  wordSpacing: 2),
    textBrush: PdfBrushes.black,
   );
 
