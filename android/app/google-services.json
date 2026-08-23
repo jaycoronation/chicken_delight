@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "490374553898",
     "project_id": "chickendelight-12107",
-    "storage_bucket": "chickendelight-12107.appspot.com"
+    "storage_bucket": "chickendelight-12107.firebasestorage.app"
   },
   "client": [
     {
@@ -10,6 +10,25 @@
         "mobilesdk_app_id": "1:490374553898:android:b72bc8394368a1d3587e53",
         "android_client_info": {
           "package_name": "com.coronation.chicken_delight"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgtANhinev_C0toFoo7a-5ik8ABTY4_zU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:490374553898:android:490eb984e3b861f7587e53",
+        "android_client_info": {
+          "package_name": "com.salt.chickendelight"
         }
       },
       "oauth_client": [],

@@ -428,7 +428,7 @@ class _MyProfileScreenState extends BaseState<MyProfileScreen> {
                       fontSize: subTitle,
                       color: black,
                     ),
-                    onTap: (){
+                    onTap: () {
                       openCountryBottomSheet();
                     },
                     decoration: InputDecoration(

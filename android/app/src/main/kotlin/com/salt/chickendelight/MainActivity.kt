@@ -1,4 +1,4 @@
-package com.coronation.chicken_delight
+package com.salt.chickendelight
 
 import io.flutter.embedding.android.FlutterActivity
 

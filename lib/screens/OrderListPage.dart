@@ -671,7 +671,6 @@ class _OrderListPageState extends BaseState<OrderListPage> {
                                               getOrderListData(true);
 
                                               Navigator.pop(context);
-
                                             }
                                             else if (selectedDateFilter == "Tomorrow")
                                             {

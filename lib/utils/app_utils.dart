@@ -138,7 +138,7 @@ isValidPhoneNumber(String? input)
   }
 }
 
-/*convert string to CamelCase*/
+/*convert string to CamelCase*//*
 toDisplayCase (String str) {
   //print("str === $str");
 
@@ -159,7 +159,27 @@ toDisplayCase (String str) {
     {
       return "";
     }
+}*/
+
+
+String toDisplayCase(String str) {
+  try {
+    // Check if the string is null or empty
+    if (str.isEmpty) return str;
+
+    // Convert the string to lowercase, then split into words
+    return str.toLowerCase().split(' ').map((word) {
+      // Handle each word: capitalize first letter and leave the rest lowercase
+      if (word.isEmpty) return word; // Handle extra spaces between words
+      String leftText = (word.length > 1) ? word.substring(1) : '';
+      return word[0].toUpperCase() + leftText;
+    }).join(' ');
+  } catch (e) {
+    debugPrint('Error in toDisplayCase: $e');
+  }
+  return str; // Return original string in case of error
 }
+
 
 startActivityAnimation(BuildContext context, Widget screen){
   Navigator.push(
@@ -291,7 +311,7 @@ String getPriceComma(String text) {
   }
 }
 
- void showLoadingToast(BuildContext activity)
+void showLoadingToast(BuildContext activity)
 {
   showToast("Loading Please Wait...",activity);
 }

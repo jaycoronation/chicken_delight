@@ -645,7 +645,7 @@ class _DashboardPageState extends BaseState<DashboardPage> {
               titleColorStatic: "#ff809dd6",
               bgColorStatic: "#ffe7ebf7",
               itemIconStatic: "assets/images/slicing-27.png",
-              countStatic: records?.todayOrderCount.toString() ?? "",
+              countStatic: records?.todayOrderCount ?? "",
               arrowColorStatic: "#ff95b5ad"),
           HomePageMenuGetSet(
               nameStatic: "Today's Total Amount",

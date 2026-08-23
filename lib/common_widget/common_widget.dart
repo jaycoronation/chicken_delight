@@ -140,7 +140,7 @@ Widget getSmallButtonWithoutFill(String title, bool isLoading, void Function() o
   return TextButton(
     onPressed: onPressed,
     style: ButtonStyle(
-      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
         RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0),
           side: const BorderSide(color: black),),
       ),

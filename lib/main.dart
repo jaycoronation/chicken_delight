@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:chicken_delight/push_notification/PushNotificationService.dart';
 import 'package:chicken_delight/screens/LoginScreen.dart';
@@ -17,16 +18,51 @@ import 'package:provider/provider.dart';
 import 'constant/colors.dart';
 import 'constant/global_context.dart';
 
+// Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+//   // you need to initialize firebase first
+//   await Firebase.initializeApp();
+//   print("Handling a background message: ${message.data.toString()}");
+// }
+
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // you need to initialize firebase first
-  await Firebase.initializeApp();
+  if (Platform.isIOS) {
+    await Firebase.initializeApp();
+  } else {
+    await Firebase.initializeApp(
+      name: "ChickenDelight",
+      options: const FirebaseOptions(
+        apiKey: "AIzaSyAgtANhinev_C0toFoo7a-5ik8ABTY4_zU",
+        appId: "1:490374553898:android:490eb984e3b861f7587e53",
+        messagingSenderId: "490374553898",
+        projectId: "chickendelight-12107",
+      ),
+    );
+  }
   print("Handling a background message: ${message.data.toString()}");
 }
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp();
+  if (Platform.isIOS) {
+    await Firebase.initializeApp();
+  } else {
+
+    try {
+      await Firebase.initializeApp(
+        options: const FirebaseOptions(
+          apiKey: "AIzaSyAgtANhinev_C0toFoo7a-5ik8ABTY4_zU",
+          appId: "1:490374553898:android:490eb984e3b861f7587e53",
+          messagingSenderId: "490374553898",
+          projectId: "chickendelight-12107",
+        ),
+      );
+      print('Firebase initialized successfully');
+    } catch (e) {
+      print('Error initializing Firebase: $e');
+    }
+  }
 
   await SessionManagerMethods.init();
 
@@ -39,12 +75,11 @@ Future<void> main() async {
     NavigationService.notif_id = initialMessage.data['content_id'];
   }
 
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
-  flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
-      AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestNotificationsPermission();
 
   await PushNotificationService().setupInteractedMessage();
+
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((value) => runApp(
       MultiProvider(

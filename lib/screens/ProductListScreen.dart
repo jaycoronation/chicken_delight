@@ -524,7 +524,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                                       ),
                                       const Gap(5),
                                       Text(getPrice(getSet.mrpPrice ?? ""),
-                                        style: TextStyle(fontSize: title, color: gray_dark,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,decoration: TextDecoration.lineThrough),
+                                        style: TextStyle(fontSize: description, color: gray_dark,fontWeight: FontWeight.w400, overflow: TextOverflow.clip,decoration: TextDecoration.lineThrough),
                                         textAlign: TextAlign.left,
                                         overflow: TextOverflow.clip,
                                       ),
@@ -975,7 +975,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
               categoryId:  NavigationService.listItems[i].categoryId,
               isSelected :  NavigationService.listItems[i].isSelected,
               quantity: NavigationService.listItems[i].quantity,
-              amount: num.parse(NavigationService.listItems[i].salePrice.toString()),
+              amount: num.parse(NavigationService.listItems[i].salePrice ?? ""),
               // updateCartCount: cartCount
           );
 
@@ -1020,7 +1020,7 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
                     categoryId: NavigationService.listItemsTmp[i].categoryId,
                     isSelected: NavigationService.listItemsTmp[i].isSelected,
                     quantity: NavigationService.listItemsTmp[i].quantity,
-                    amount: num.parse(NavigationService.listItemsTmp[i].salePrice.toString()),
+                    amount: num.parse(NavigationService.listItemsTmp[i].salePrice ?? ""),
                     // updateCartCount: cartCount
                 );
 
@@ -1185,8 +1185,8 @@ class _ProductListScreenState extends BaseState<ProductListScreen> {
             listCategory.add(CategoryMenu(idStatic: "all", nameStatic: "All", isSelectedStatic: true));
             for (int i = 0; i < NavigationService.listItems.length; i++)
             {
-              listCategory.add(CategoryMenu(idStatic: NavigationService.listItems[i].categoryId.toString(),
-                  nameStatic: NavigationService.listItems[i].category.toString(), isSelectedStatic: false));
+              listCategory.add(CategoryMenu(idStatic: NavigationService.listItems[i].categoryId ?? "",
+                  nameStatic: NavigationService.listItems[i].category ?? "", isSelectedStatic: false));
             }
 
             final ids = listCategory.map((e) => e.id).toSet();

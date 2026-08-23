@@ -103,7 +103,7 @@ class PushNotificationService {
 
     var androidSettings = const AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    var iOSSettings = IOSInitializationSettings(
+    var iOSSettings = DarwinInitializationSettings(
       requestSoundPermission: true,
       requestBadgePermission: true,
       requestAlertPermission: true,
@@ -132,7 +132,7 @@ class PushNotificationService {
           print('<><> onMessage contentType--->$contentType');
           print("<><> onMessage Image URL : $image <><>");
           print("<><> onMessage Payload : $payload <><>");
-          const IOSNotificationDetails iOSPlatformChannelSpecifics = IOSNotificationDetails(presentSound: true, presentAlert: true);
+          const DarwinNotificationDetails iOSPlatformChannelSpecifics = DarwinNotificationDetails(presentSound: true,presentAlert: true, );
          /* if (image != null)
           {
             if(image.toString().isNotEmpty)
@@ -223,7 +223,7 @@ class PushNotificationService {
 
     var initSettings = InitializationSettings(android: androidSettings, iOS: iOSSettings);
 
-    flutterLocalNotificationsPlugin.initialize(initSettings, onSelectNotification: (payload) {
+    flutterLocalNotificationsPlugin.initialize(initSettings, onDidReceiveNotificationResponse: (payload) {
       // This function handles the click in the notification when the app is in foreground
       // Get.toNamed(NOTIFICATIOINS_ROUTE);
       try {
@@ -278,8 +278,8 @@ class PushNotificationService {
          print('<><> onMessage id--->$id');
         print('<><> onMessage contentType--->$contentType');
         print("<><> onMessage Image URL : $image <><>");
-        const IOSNotificationDetails iOSPlatformChannelSpecifics = IOSNotificationDetails(
-            presentSound: true, presentAlert: true);
+        const DarwinNotificationDetails iOSPlatformChannelSpecifics = DarwinNotificationDetails(presentSound: true,presentAlert: true, );
+
        /* if (image != null)
         {
             if(image.toString().isNotEmpty)

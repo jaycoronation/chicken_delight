@@ -8,6 +8,7 @@ import 'api_end_point.dart';
 class ApiService {
   static Future<dynamic> fetchData() async {
     SessionManager sessionManager = SessionManager();
+
     HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
       HttpLogger(logLevel: LogLevel.BODY),
     ]);

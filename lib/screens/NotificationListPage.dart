@@ -256,6 +256,7 @@ class _NotificationListPageState extends BaseState<NotificationListPage> {
           setState(() {});
         }
       }
+
       if (_scrollViewController.position.userScrollDirection == ScrollDirection.forward) {
         if (isScrollingDown) {
           isScrollingDown = false;
